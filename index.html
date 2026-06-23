@@ -704,18 +704,15 @@
   <section class="page-section" style="padding-top:40px;">
     <div style="max-width:1100px; margin:0 auto 8px;"><h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Admin</h2><p style="color:var(--text-soft);">Create sessions, add resources, and follow up on college inquiries.</p></div>
     <div style="max-width:1100px; margin:0 auto 24px; background:#fff8e6; border:1px solid #f0d999; border-radius:10px; padding:12px 16px; font-size:0.82rem; color:#7a5c00;">⚠️ Note: changes made here are stored temporarily in this browser session and are not yet permanently saved across all visitors. A permanent database connection is planned before the site goes live.</div>
-    <div style="max-width:1100px; margin:0 auto 24px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
+    <div style="max-width:1100px; margin:0 auto 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
       <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#eaf0fc;">👥</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatStudents">0</div><span style="font-size:0.8rem;">Total Students</span></div></div>
       <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic">📅</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatSessions">0</div><span style="font-size:0.8rem;">Total Sessions</span></div></div>
-      <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#f3e8fc;">🎓</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatColleges">0</div><span style="font-size:0.8rem;">Colleges</span></div></div>
       <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#fcefe3;">🎙️</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatSpeakers">0</div><span style="font-size:0.8rem;">Speakers</span></div></div>
     </div>
     <div style="max-width:1100px; margin:0 auto 22px; display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--border);">
       <button class="admin-tab active" data-admintab="sessions">Sessions</button>
       <button class="admin-tab" data-admintab="speakers">Speakers</button>
       <button class="admin-tab" data-admintab="library">Library</button>
-      <button class="admin-tab" data-admintab="inquiries">College Inquiries</button>
-      <button class="admin-tab" data-admintab="speakerapps">Speaker Applications</button>
     </div>
     <div style="max-width:1100px; margin:0 auto;" id="adminTabContent"></div>
   </section>
@@ -1657,8 +1654,6 @@ function renderAdminTabs() {
   if (activeAdminTab === 'sessions') renderAdminSessions(content);
   else if (activeAdminTab === 'speakers') renderAdminSpeakers(content);
   else if (activeAdminTab === 'library') renderAdminLibrary(content);
-  else if (activeAdminTab === 'inquiries') renderAdminInquiries(content);
-  else if (activeAdminTab === 'speakerapps') renderAdminSpeakerApps(content);
 }
 
 function renderAdminSessions(content) {
@@ -2013,9 +2008,67 @@ function deleteInquiry(index) {
   showToast('Inquiry removed');
 }
 
-function submitCollegeInquiry(data) {
-  COLLEGE_INQUIRIES.push(data);
-  showToast('Thanks! Your inquiry has been submitted — we will be in touch soon.');
+var GOOGLE_FORM_PARTNER = {
+  action: 'https://docs.google.com/forms/d/e/1FAIpQLScbrQXKfuzIIDwcGm8G_KhQZvJKHo81ufp81qaPNRfNJZFjXQ/formResponse',
+  fields: {
+    institution: 'entry.1247555719',
+    contactName: 'entry.905747467',
+    designation: 'entry.1493768612',
+    email: 'entry.1923057498',
+    phone: 'entry.621362513',
+    department: 'entry.833819075',
+    studentCount: 'entry.1988630701',
+    message: 'entry.1395325285'
+  }
+};
+
+var GOOGLE_FORM_SPEAKER = {
+  action: 'https://docs.google.com/forms/d/e/1FAIpQLSfUCHNjvgqtUxMOAZG8RNW5IWkZCLjmbHDrUo2UqBSOImXDCA/formResponse',
+  fields: {
+    name: 'entry.786342420',
+    email: 'entry.1861028057',
+    role: 'entry.1790331350',
+    org: 'entry.1446652882',
+    country: 'entry.1240267644',
+    experience: 'entry.939986238',
+    expertise: 'entry.1789950771',
+    message: 'entry.454497605',
+    linkedin: 'entry.659556247'
+  }
+};
+
+function submitToGoogleForm(formConfig, dataObj) {
+  return new Promise(function(resolve) {
+    var iframeName = 'hidden_submit_frame_' + Date.now();
+    var iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    var form = document.createElement('form');
+    form.action = formConfig.action;
+    form.method = 'POST';
+    form.target = iframeName;
+
+    var fieldKeys = Object.keys(formConfig.fields);
+    for (var i = 0; i < fieldKeys.length; i++) {
+      var key = fieldKeys[i];
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = formConfig.fields[key];
+      input.value = dataObj[key] || '';
+      form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    setTimeout(function() {
+      form.remove();
+      iframe.remove();
+      resolve(true);
+    }, 800);
+  });
 }
 
 function handlePartnerFormSubmit() {
@@ -2049,18 +2102,22 @@ function handlePartnerFormSubmit() {
     phone: document.getElementById('pfPhone').value.trim(),
     department: document.getElementById('pfDepartment').value.trim(),
     studentCount: document.getElementById('pfStudentCount').value.trim(),
-    message: message,
-    submittedAt: new Date().toISOString()
+    message: message
   };
-  submitCollegeInquiry(data);
 
-  var fieldIds = ['pfInstitution','pfContactName','pfDesignation','pfEmail','pfPhone','pfDepartment','pfStudentCount','pfMessage'];
-  for (var i = 0; i < fieldIds.length; i++) {
-    var el = document.getElementById(fieldIds[i]);
-    if (el) el.value = '';
-  }
-  successEl.style.display = 'block';
-  setTimeout(function() { successEl.style.display = 'none'; }, 5000);
+  var submitBtn = document.getElementById('pfSubmitBtn');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
+
+  submitToGoogleForm(GOOGLE_FORM_PARTNER, data).then(function() {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Inquiry'; }
+    var fieldIds = ['pfInstitution','pfContactName','pfDesignation','pfEmail','pfPhone','pfDepartment','pfStudentCount','pfMessage'];
+    for (var i = 0; i < fieldIds.length; i++) {
+      var el = document.getElementById(fieldIds[i]);
+      if (el) el.value = '';
+    }
+    successEl.style.display = 'block';
+    setTimeout(function() { successEl.style.display = 'none'; }, 5000);
+  });
 }
 
 function handleSpeakerApplySubmit() {
@@ -2097,19 +2154,22 @@ function handleSpeakerApplySubmit() {
     experience: document.getElementById('saExperience').value.trim(),
     expertise: expertise,
     message: message,
-    linkedin: document.getElementById('saLinkedin').value.trim(),
-    submittedAt: new Date().toISOString()
+    linkedin: document.getElementById('saLinkedin').value.trim()
   };
-  SPEAKER_APPLICATIONS.push(data);
-  showToast('Application submitted — thank you!');
 
-  var fieldIds = ['saName','saEmail','saRole','saOrg','saCountry','saExperience','saExpertise','saMessage','saLinkedin'];
-  for (var i = 0; i < fieldIds.length; i++) {
-    var el = document.getElementById(fieldIds[i]);
-    if (el) el.value = '';
-  }
-  successEl.style.display = 'block';
-  setTimeout(function() { successEl.style.display = 'none'; }, 5000);
+  var submitBtn = document.getElementById('saSubmitBtn');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
+
+  submitToGoogleForm(GOOGLE_FORM_SPEAKER, data).then(function() {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Application'; }
+    var fieldIds = ['saName','saEmail','saRole','saOrg','saCountry','saExperience','saExpertise','saMessage','saLinkedin'];
+    for (var i = 0; i < fieldIds.length; i++) {
+      var el = document.getElementById(fieldIds[i]);
+      if (el) el.value = '';
+    }
+    successEl.style.display = 'block';
+    setTimeout(function() { successEl.style.display = 'none'; }, 5000);
+  });
 }
 
 var SECRET_ADMIN_HASH = 't2r-founders-only-7732';
