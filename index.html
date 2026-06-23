@@ -5,7 +5,7 @@
   to be migrated to a real backend (Supabase) for production use.
 -->
 <!DOCTYPE html>
-<html lang="en">images/suresh.jpg
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -294,14 +294,7 @@
 <nav>
   <div class="nav-left">
     <div class="logo-badge" id="navLogoBadge">
-      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="38" r="13" stroke="#1a4d3a" stroke-width="3" fill="none"/>
-        <path d="M50 25 a13 13 0 0 1 0 26" stroke="#2f7d5e" stroke-width="2" fill="none"/>
-        <path d="M20 48 Q35 30 50 48 Q65 30 80 48" stroke="#1a4d3a" stroke-width="2.5" fill="none"/>
-        <path d="M25 50 L25 62 M35 50 L35 62 M45 50 L45 62 M55 50 L55 62 M65 50 L65 62 M75 50 L75 62" stroke="#1a4d3a" stroke-width="2"/>
-        <line x1="20" y1="62" x2="80" y2="62" stroke="#1a4d3a" stroke-width="2.5"/>
-        <path d="M25 78 Q50 68 50 78 Q50 68 75 78 L75 84 Q50 76 50 84 Q50 76 25 84 Z" fill="#1a4d3a"/>
-      </svg>
+      <img src="images/logo.jpg" alt="T2R Logo" id="navLogoImg">
     </div>
     <div class="logo-text">
       <span class="t2r">T2R</span>
@@ -311,19 +304,12 @@
   <button class="nav-toggle" id="navToggle">☰</button>
   <div class="nav-links" id="navLinks">
     <a href="#home" data-page="home">Home</a>
-    <a href="#dashboard" data-page="dashboard">Dashboard</a>
     <a href="#sessions" data-page="sessions">Sessions</a>
     <a href="#speakers" data-page="speakers">Speakers</a>
     <a href="#library" data-page="library">Library</a>
     <a href="#about" data-page="about">About</a>
-    <a href="#admin" data-page="admin" id="adminNavLink" style="display:none;">Admin</a>
   </div>
-  <div class="nav-right">
-    <div class="nav-user" id="navUser">
-      <span id="navUserName">Sign in</span>
-      <div class="nav-avatar" id="navAvatar">?</div>
-    </div>
-  </div>
+  <div class="nav-right"></div>
 </nav>
 
 <div id="page-home">
@@ -343,10 +329,12 @@
         </div>
       </div>
       <div class="hero-image reveal" id="heroImageWrap">
-        <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80" alt="Engineering in action" id="heroRotatingImg" style="opacity:1; transition: opacity 0.8s ease;">
+        <video id="heroVideo" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
+          <source src="images/t2r-intro.mp4" type="video/mp4">
+        </video>
         <div class="hero-image-tag">
-          <div class="small" id="heroImgTagSmall">Engineering in Action</div>
-          <div class="big" id="heroImgTagBig">Structural & Construction Engineering</div>
+          <div class="small">T2R in Action</div>
+          <div class="big">Meet Our Experts & Students</div>
         </div>
       </div>
     </div>
@@ -525,72 +513,6 @@
       <a href="#sessions" class="btn btn-secondary" style="background:white; color:var(--green);" onclick="navigateTo('sessions')">Explore Sessions →</a>
       <a href="#partner" class="btn btn-secondary" onclick="navigateTo('partner')">Partner With Us</a>
       <a href="#speakerapply" class="btn btn-secondary" onclick="navigateTo('speakerapply')">Become a Speaker</a>
-    </div>
-  </section>
-</div>
-
-<div id="page-dashboard" class="page-hidden">
-  <section class="page-section" style="padding-top:40px;">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; max-width:1100px; margin:0 auto 36px; flex-wrap:wrap; gap:16px;">
-      <div>
-        <h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Welcome to T2R – Theory to Reality</h2>
-        <p style="color:var(--text-soft); margin-bottom:6px;">Bridging engineering concepts with real-world projects, tools, and careers</p>
-        <p style="color:var(--green); font-size:0.88rem; font-weight:600;" id="dashSignedInAs">Signed in as —</p>
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a href="#sessions" class="btn btn-primary" onclick="navigateTo('sessions')">⚡ Browse Sessions</a>
-        <a href="#about" class="btn btn-secondary" onclick="navigateTo('about')">📘 About T2R</a>
-      </div>
-    </div>
-
-    <div style="max-width:1100px; margin:0 auto 24px; border:1px solid var(--border); border-radius:14px; padding:24px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" id="profileToggle">
-        <div style="display:flex; gap:12px; align-items:center;">
-          <div class="builtfor-ic">👤</div>
-          <div><h4 style="font-size:1rem; font-weight:700;">Your Profile</h4><span style="font-size:0.82rem; color:var(--text-soft);" id="profileSubtext">Complete your profile to get personalised content</span></div>
-        </div>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <span id="profileCompletionBadge" style="font-size:0.78rem; font-weight:700; color:var(--green); background:var(--sage); padding:4px 12px; border-radius:20px;">0 of 3 complete</span>
-          <span id="profileChevron" style="font-size:1.1rem; color:var(--text-soft);">▾</span>
-        </div>
-      </div>
-      <div id="profileFormWrap" style="margin-top:20px;">
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:14px;">
-          <div><label style="display:block; font-size:0.84rem; font-weight:600; margin-bottom:6px;">College Name</label><input type="text" id="profCollege" placeholder="e.g. VIT Vellore" style="width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit;"></div>
-          <div><label style="display:block; font-size:0.84rem; font-weight:600; margin-bottom:6px;">Branch</label><select id="profBranch" style="width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit;"><option value="">Select branch</option><option>Mechanical</option><option>Civil</option><option>Electrical</option><option>Electronics</option><option>Computer Science</option><option>General</option></select></div>
-          <div><label style="display:block; font-size:0.84rem; font-weight:600; margin-bottom:6px;">Year of Study</label><select id="profYear" style="width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit;"><option value="">Select year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Graduated</option></select></div>
-        </div>
-        <button class="btn btn-primary" id="saveProfileBtn" style="padding:11px 22px; font-size:0.88rem;">Save Profile</button>
-      </div>
-    </div>
-
-    <div style="max-width:1100px; margin:0 auto 30px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
-      <div class="mini-card" style="display:flex; align-items:center; gap:14px; padding:20px;"><div class="builtfor-ic" style="width:42px;height:42px; font-size:1.1rem;">📅</div><div><div style="font-size:1.5rem; font-weight:800;" id="statUpcoming">0</div><span style="font-size:0.82rem;">Upcoming Sessions</span></div></div>
-      <div class="mini-card" style="display:flex; align-items:center; gap:14px; padding:20px;"><div class="builtfor-ic" style="width:42px;height:42px; font-size:1.1rem;">✅</div><div><div style="font-size:1.5rem; font-weight:800;" id="statCompleted">0</div><span style="font-size:0.82rem;">Sessions Completed</span></div></div>
-      <div class="mini-card" style="display:flex; align-items:center; gap:14px; padding:20px;"><div class="builtfor-ic" style="width:42px;height:42px; font-size:1.1rem;">📖</div><div><div style="font-size:1.5rem; font-weight:800;" id="statTotal">0</div><span style="font-size:0.82rem;">Total Registered</span></div></div>
-    </div>
-
-    <div style="max-width:1100px; margin:0 auto 30px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;"><h3 style="font-size:1.15rem; font-weight:700;">Registered Sessions</h3><a href="#sessions" onclick="navigateTo('sessions')" style="font-size:0.85rem; color:var(--green); font-weight:600;">Browse all →</a></div>
-      <div id="registeredSessionsBox" style="border:1px solid var(--border); border-radius:14px; padding:50px 20px; text-align:center; background:var(--sage-2);">
-        <div style="font-size:1.8rem; margin-bottom:10px; opacity:0.4;">📅</div>
-        <p style="color:var(--text-soft); margin-bottom:16px;">You haven't registered for any sessions yet.</p>
-        <a href="#sessions" class="btn btn-primary" onclick="navigateTo('sessions')" style="font-size:0.86rem; padding:10px 20px;">Browse Sessions</a>
-      </div>
-    </div>
-
-    <div style="max-width:1100px; margin:0 auto 30px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;"><div><h3 style="font-size:1.15rem; font-weight:700;">Resource Library</h3><span style="font-size:0.8rem; color:var(--text-soft);" id="dashLibrarySubtext">Most recent resources</span></div><a href="#library" onclick="navigateTo('library')" style="font-size:0.85rem; color:var(--green); font-weight:600;">View all →</a></div>
-      <div id="dashLibraryGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;"></div>
-    </div>
-
-    <div style="max-width:1100px; margin:0 auto; border:1px solid var(--border); border-radius:14px; padding:36px; text-align:center; background:var(--sage-2);">
-      <h3 style="font-size:1.25rem; font-weight:800; margin-bottom:8px;">Explore Real Engineering. Build Your Career.</h3>
-      <p style="color:var(--text-soft); margin-bottom:20px;">Discover expert-led sessions across all engineering disciplines.</p>
-      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-        <a href="#sessions" class="btn btn-primary" onclick="navigateTo('sessions')">Browse All Sessions</a>
-        <a href="#about" class="btn btn-secondary" onclick="navigateTo('about')">About T2R</a>
-      </div>
     </div>
   </section>
 </div>
@@ -806,12 +728,7 @@
     <div>
       <div class="footer-logo">
         <div class="logo-badge" id="footerLogoBadge" style="width:44px;height:44px;">
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:32px;height:32px;">
-            <circle cx="50" cy="38" r="13" stroke="#1a4d3a" stroke-width="3" fill="none"/>
-            <path d="M20 48 Q35 30 50 48 Q65 30 80 48" stroke="#1a4d3a" stroke-width="2.5" fill="none"/>
-            <line x1="20" y1="62" x2="80" y2="62" stroke="#1a4d3a" stroke-width="2.5"/>
-            <path d="M25 78 Q50 68 50 78 Q50 68 75 78 L75 84 Q50 76 50 84 Q50 76 25 84 Z" fill="#1a4d3a"/>
-          </svg>
+          <img src="images/logo.jpg" alt="T2R Logo" id="footerLogoImg">
         </div>
         T2R
       </div>
@@ -819,7 +736,7 @@
     </div>
     <div>
       <h5>Explore</h5>
-      <ul><li><a href="#sessions" onclick="navigateTo('sessions')">Sessions</a></li><li><a href="#library" onclick="navigateTo('library')">Library</a></li><li><a href="#partner" onclick="navigateTo('partner')">For Colleges</a></li><li><a href="#speakerapply" onclick="navigateTo('speakerapply')">Become a Speaker</a></li><li><a href="#dashboard" onclick="navigateTo('dashboard')">My Dashboard</a></li></ul>
+      <ul><li><a href="#sessions" onclick="navigateTo('sessions')">Sessions</a></li><li><a href="#library" onclick="navigateTo('library')">Library</a></li><li><a href="#partner" onclick="navigateTo('partner')">For Colleges</a></li><li><a href="#speakerapply" onclick="navigateTo('speakerapply')">Become a Speaker</a></li></ul>
     </div>
     <div>
       <h5>Contact</h5>
@@ -830,6 +747,21 @@
 </footer>
 
 <script>
+function setupLogoFallback(imgId) {
+  var img = document.getElementById(imgId);
+  if (!img) return;
+  img.addEventListener('error', function() {
+    this.style.display = 'none';
+    var parent = this.parentElement;
+    if (parent) parent.textContent = 'T2R';
+    if (parent) {
+      parent.style.fontWeight = '800';
+      parent.style.color = '#1a4d3a';
+      parent.style.fontSize = '0.85rem';
+    }
+  });
+}
+
 function initials(name) {
   return name.split(' ').map(function(w) { return w[0]; }).slice(0,2).join('').toUpperCase();
 }
@@ -979,47 +911,29 @@ function openRoleModal(forRole) {
   }
 }
 
-document.getElementById('navUser').addEventListener('click', function() {
-  if (currentUser.role) {
-    currentUser = { role: null, name: null };
-    updateNavUser();
-    showToast('Signed out');
-    navigateTo('home');
-  } else {
-    openRoleModal();
-  }
-});
-
-var HERO_IMAGES = [
-  { url: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80", small: "Engineering in Action", big: "Structural & Construction Engineering" },
-  { url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=900&q=80", small: "Engineering in Action", big: "Mechanical & Industrial Design" },
-  { url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=900&q=80", small: "Engineering in Action", big: "Civil Engineering & Infrastructure" },
-  { url: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=900&q=80", small: "Engineering in Action", big: "Hydropower & Hydraulic Systems" },
-  { url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=80", small: "Engineering in Action", big: "Software & Embedded Systems" },
-  { url: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80", small: "Engineering in Action", big: "Sustainable & Green Building Design" }
-];
-var heroImageIndex = 0;
-var heroImageTimer = null;
-
-function rotateHeroImage() {
-  var img = document.getElementById('heroRotatingImg');
-  var small = document.getElementById('heroImgTagSmall');
-  var big = document.getElementById('heroImgTagBig');
-  if (!img) return;
-  heroImageIndex = (heroImageIndex + 1) % HERO_IMAGES.length;
-  var next = HERO_IMAGES[heroImageIndex];
-  img.style.opacity = '0';
-  setTimeout(function() {
-    img.src = next.url;
-    if (small) small.textContent = next.small;
-    if (big) big.textContent = next.big;
-    img.style.opacity = '1';
-  }, 400);
+var navUserEl = document.getElementById('navUser');
+if (navUserEl) {
+  navUserEl.addEventListener('click', function() {
+    // no-op: public login removed
+  });
 }
 
-function startHeroImageRotation() {
-  if (heroImageTimer) return;
-  heroImageTimer = setInterval(rotateHeroImage, 4500);
+function setupHeroVideoFallback() {
+  var video = document.getElementById('heroVideo');
+  if (!video) return;
+  video.addEventListener('error', function() {
+    var wrap = document.getElementById('heroImageWrap');
+    if (wrap) {
+      var img = document.createElement('img');
+      img.src = 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80';
+      img.alt = 'Engineering in action';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.display = 'block';
+      video.replaceWith(img);
+    }
+  }, true);
 }
 
 var COUNTRY_COORDS = {
@@ -1033,9 +947,9 @@ var COUNTRY_COORDS = {
 };
 
 var SPEAKERS = [
-  { name:"Suresh Tankala", country:"Germany", role:"Project Manager", org:"Smoltczyk & Partner GmbH", blurb:"Master's in Water Science and Engineering (KIT, Germany). 3+ years in geotechnical engineering and hydrology.", expertise:"Geotechnical Engineering & Hydrology", founder:true, photo:"images/founders/Suresh.jpg" },
-  { name:"Pradeep Hegde", country:"Germany", role:"Project Engineer", org:"Fichtner GmbH & Co. KG", blurb:"Master's in Water Science and Engineering (KIT, Germany). 7+ years in hydropower and hydraulic engineering.", expertise:"Hydropower & Hydraulic Engineering", founder:true, photo:"images/founders/pradeep.jpg" },
-  { name:"Narayana Rao Bhogapurapu", country:"India", role:"Postdoctoral Research Associate", org:"Caltech & UMass Amherst", blurb:"PhD in Geoinformatics and Natural Resources Engineering (IIT Bombay). 8+ years in remote sensing and geoinformatics.", expertise:"Geoinformatics & Remote Sensing", founder:true, photo:"images/founders/Narayana.jpg" },
+  { name:"Suresh Tankala", country:"Germany", role:"Project Manager", org:"Smoltczyk & Partner GmbH", blurb:"Master's in Water Science and Engineering (KIT, Germany). 3+ years in geotechnical engineering and hydrology.", expertise:"Geotechnical Engineering & Hydrology", founder:true, photo:"images/suresh.jpg" },
+  { name:"Pradeep Hegde", country:"Germany", role:"Project Engineer", org:"Fichtner GmbH & Co. KG", blurb:"Master's in Water Science and Engineering (KIT, Germany). 7+ years in hydropower and hydraulic engineering.", expertise:"Hydropower & Hydraulic Engineering", founder:true, photo:"images/pradeep.jpg" },
+  { name:"Narayana Rao Bhogapurapu", country:"India", role:"Postdoctoral Research Associate", org:"Caltech & UMass Amherst", blurb:"PhD in Geoinformatics and Natural Resources Engineering (IIT Bombay). 8+ years in remote sensing and geoinformatics.", expertise:"Geoinformatics & Remote Sensing", founder:true, photo:"images/narayana.jpg" },
   { name:"Rajesh Kumar", country:"India", role:"Senior Mechanical Engineer", org:"NTPC Ltd.", blurb:"Worked on pumped storage hydropower projects in Rajasthan", expertise:"Mechanical Engineering", photo:"" },
   { name:"Priya Nair", country:"India", role:"M.Tech – Structural Engineering", org:"AECOM India", blurb:"Designed bridges and flyovers for NHAI expressway projects", expertise:"Structural Engineering", photo:"" },
   { name:"Klaus Weber", country:"Germany", role:"PhD – Automotive Engineering", org:"BMW Group", blurb:"Led CAE simulation projects for electric vehicle chassis at BMW", expertise:"Automotive Engineering", photo:"" },
@@ -1476,16 +1390,13 @@ function renderSessions() {
   var html = '';
   for (var j = 0; j < list.length; j++) {
     var s = list[j];
-    var isRegistered = registeredSessionIds.indexOf(s.id) !== -1;
     var footerRight;
     if (s.status === 'completed' && s.recording) {
       footerRight = s.recordingUrl
         ? '<a href="' + s.recordingUrl + '" target="_blank" rel="noopener" class="session-action-link">Watch Recording →</a>'
         : '<button class="session-action-link" onclick="showToast(\'Recording link coming soon\')">Watch Recording →</button>';
     } else if (s.status === 'upcoming') {
-      footerRight = isRegistered
-        ? '<button class="session-action-link" style="color:#b3261e;" onclick="cancelRegistration(\'' + s.id + '\')">Cancel Registration</button>'
-        : '<button class="session-register-btn" onclick="openSessionModal(\'' + s.id + '\')">Register</button>';
+      footerRight = '<button class="session-register-btn" onclick="openSessionModal(\'' + s.id + '\')">Register</button>';
     } else {
       footerRight = '<span style="font-size:0.8rem; color:var(--text-soft);">Completed</span>';
     }
@@ -1511,11 +1422,6 @@ function openSessionModal(sessionId) {
   var s = null;
   for (var i = 0; i < SESSIONS.length; i++) { if (SESSIONS[i].id === sessionId) { s = SESSIONS[i]; break; } }
   if (!s) return;
-  if (!currentUser.role) {
-    openRoleModal('student');
-    showToast('Please sign in to register');
-    return;
-  }
   var overlay = document.getElementById('sessionModalOverlay');
   var content = document.getElementById('sessionModalContent');
   content.innerHTML =
@@ -1525,25 +1431,23 @@ function openSessionModal(sessionId) {
     '<div style="margin-bottom:6px;"><strong>Speaker:</strong> ' + s.speaker + '</div>' +
     '<div style="margin-bottom:6px;"><strong>Date:</strong> ' + formatDate(s.date) + ' · ' + s.time + '</div>' +
     '<div><strong>Duration:</strong> ' + s.duration + '</div></div>' +
+    '<div class="admin-form-group"><label>Your Name *</label><input type="text" id="regName"></div>' +
+    '<div class="admin-form-group"><label>Your Email *</label><input type="email" id="regEmail"></div>' +
     '<button class="btn-go" id="confirmRegisterBtn">Confirm Registration</button>' +
     '<button class="role-option" id="addToCalendarBtn" style="margin-top:10px; justify-content:center;">📅 Add to Calendar (.ics)</button>' +
     '<a href="#" class="back-link" id="cancelRegisterBtn">Cancel</a>';
   overlay.style.display = 'flex';
-  document.getElementById('confirmRegisterBtn').addEventListener('click', function() { registerForSession(s.id); });
+  document.getElementById('confirmRegisterBtn').addEventListener('click', function() { registerForSession(s); });
   document.getElementById('addToCalendarBtn').addEventListener('click', function() { downloadIcs(s); });
   document.getElementById('cancelRegisterBtn').addEventListener('click', function(e) { e.preventDefault(); overlay.style.display = 'none'; });
 }
 
-async function registerForSession(sessionId) {
-  if (registeredSessionIds.indexOf(sessionId) === -1) {
-    registeredSessionIds.push(sessionId);
-    var key = 'registrations:' + currentUser.name.toLowerCase().replace(/\s+/g,'_');
-    await storageSet(key, registeredSessionIds, false);
-  }
+function registerForSession(s) {
+  var name = document.getElementById('regName').value.trim();
+  var email = document.getElementById('regEmail').value.trim();
+  if (!name || !email) { showToast('Please enter your name and email'); return; }
   document.getElementById('sessionModalOverlay').style.display = 'none';
-  renderSessions();
-  updateDashboardStats();
-  showToast('Registered successfully!');
+  showToast('Registered! A confirmation will be sent to ' + email);
 }
 
 async function cancelRegistration(sessionId) {
@@ -1896,6 +1800,7 @@ function openSessionForm(sessionId) {
   var durationVal = existing ? existing.duration : '';
   var descVal = existing ? existing.desc : '';
   var recordingVal = (existing && existing.recordingUrl) ? existing.recordingUrl : '';
+  var imgVal = existing && existing.img ? existing.img : '';
   var heading = existing ? 'Edit Session' : 'Create Session';
   var saveLabel = existing ? 'Save Changes' : 'Create Session';
 
@@ -1918,6 +1823,7 @@ function openSessionForm(sessionId) {
   formHtml += '<div class="admin-form-group"><label>Status</label><select id="sfStatus"><option value="upcoming"' + statusUpSel + '>Upcoming</option><option value="completed"' + statusCompSel + '>Completed</option></select></div>';
   formHtml += '<div class="admin-form-group"><label>Recording URL (optional)</label><input type="text" id="sfRecording" value="' + recordingVal + '"></div>';
   formHtml += '</div>';
+  formHtml += '<div class="admin-form-group"><label>Thumbnail Image URL</label><input type="text" id="sfImg" placeholder="https://..." value="' + imgVal + '"></div>';
   formHtml += '<button class="btn-go" id="sfSaveBtn">' + saveLabel + '</button>';
   formHtml += '<a href="#" class="back-link" id="sfCancelBtn">Cancel</a>';
 
@@ -1935,7 +1841,8 @@ function openSessionForm(sessionId) {
       duration: document.getElementById('sfDuration').value.trim(),
       branch: document.getElementById('sfBranch').value,
       status: document.getElementById('sfStatus').value,
-      recordingUrl: document.getElementById('sfRecording').value.trim()
+      recordingUrl: document.getElementById('sfRecording').value.trim(),
+      img: document.getElementById('sfImg').value.trim()
     };
     if (!data.title) { showToast('Title is required'); return; }
     if (existing) {
@@ -1946,7 +1853,7 @@ function openSessionForm(sessionId) {
       data.id = 's' + Date.now();
       data.guest = true;
       data.recording = data.status === 'completed';
-      data.img = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=70';
+      if (!data.img) { data.img = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=70'; }
       SESSIONS.push(data);
       showToast('Session created');
     }
@@ -2205,17 +2112,22 @@ function handleSpeakerApplySubmit() {
   setTimeout(function() { successEl.style.display = 'none'; }, 5000);
 }
 
-var PAGES = ['home','dashboard','sessions','speakers','library','about','partner','speakerapply','admin'];
+var SECRET_ADMIN_HASH = 't2r-founders-only-7732';
+var PAGES = ['home','sessions','speakers','library','about','partner','speakerapply','admin'];
+var adminUnlocked = false;
 
 function navigateTo(page) {
+  if (page === SECRET_ADMIN_HASH) {
+    if (!adminUnlocked) {
+      promptAdminPassword();
+      return;
+    }
+    page = 'admin';
+  }
   if (PAGES.indexOf(page) === -1) page = 'home';
 
-  if (page === 'admin' && currentUser.role !== 'admin') {
-    openRoleModal('admin');
-    return;
-  }
-  if (page === 'dashboard' && !currentUser.role) {
-    openRoleModal('student');
+  if (page === 'admin' && !adminUnlocked) {
+    promptAdminPassword();
     return;
   }
 
@@ -2231,13 +2143,8 @@ function navigateTo(page) {
     links[j].classList.toggle('active', links[j].dataset.page === page);
   }
 
-  if (page === 'dashboard') {
-    updateDashboardHeader();
-    loadProfile();
-    loadRegistrations().then(updateDashboardStats);
-  }
   if (page === 'sessions') {
-    loadRegistrations().then(renderSessions);
+    renderSessions();
   }
   if (page === 'speakers') {
     renderFullSpeakerGrid();
@@ -2255,7 +2162,40 @@ function navigateTo(page) {
 
   window.scrollTo({ top: 0, behavior: 'auto' });
   document.getElementById('navLinks').classList.remove('open');
-  window.location.hash = page;
+  if (page !== 'admin' || window.location.hash.replace('#','') !== SECRET_ADMIN_HASH) {
+    window.location.hash = page === 'admin' ? SECRET_ADMIN_HASH : page;
+  }
+}
+
+function promptAdminPassword() {
+  var overlay = document.createElement('div');
+  overlay.className = 'role-overlay';
+  overlay.id = 'roleOverlay';
+  overlay.innerHTML =
+    '<div class="role-box">' +
+    '<h3>Admin Access</h3>' +
+    '<p>This area is restricted.</p>' +
+    '<input type="password" id="adminPassInput" placeholder="Admin password">' +
+    '<div class="err" id="adminErr">Incorrect password.</div>' +
+    '<button class="btn-go" id="adminGoBtn">Unlock</button>' +
+    '<a href="#" class="back-link" id="roleCancelBtn">Cancel</a>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  document.getElementById('adminGoBtn').addEventListener('click', function() {
+    var pass = document.getElementById('adminPassInput').value;
+    if (pass === ADMIN_PASSWORD) {
+      adminUnlocked = true;
+      overlay.remove();
+      navigateTo('admin');
+    } else {
+      document.getElementById('adminErr').style.display = 'block';
+    }
+  });
+  document.getElementById('roleCancelBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    overlay.remove();
+    window.location.hash = 'home';
+  });
 }
 
 window.addEventListener('hashchange', function() {
@@ -2297,9 +2237,10 @@ window.renderAdminTabs = renderAdminTabs;
 window.updateAdminStats = updateAdminStats;
 
 function initPage() {
-  updateNavUser();
+  setupLogoFallback('navLogoImg');
+  setupLogoFallback('footerLogoImg');
+  setupHeroVideoFallback();
   initLeafletMap();
-  startHeroImageRotation();
   renderCountryChips();
   renderSpeakerGrid();
   renderFullSpeakerGrid();
@@ -2308,24 +2249,6 @@ function initPage() {
   renderBranchChips();
   renderSessions();
   renderFoundersGrid();
-
-  var profileToggle = document.getElementById('profileToggle');
-  var profileWrap = document.getElementById('profileFormWrap');
-  var profileChevron = document.getElementById('profileChevron');
-  if (profileToggle) {
-    profileToggle.addEventListener('click', function() {
-      var hidden = profileWrap.style.display === 'none';
-      profileWrap.style.display = hidden ? 'block' : 'none';
-      profileChevron.textContent = hidden ? '▾' : '▸';
-    });
-  }
-  var saveBtn = document.getElementById('saveProfileBtn');
-  if (saveBtn) saveBtn.addEventListener('click', saveProfile);
-  var profileFieldIds = ['profCollege','profBranch','profYear'];
-  for (var pf = 0; pf < profileFieldIds.length; pf++) {
-    var el = document.getElementById(profileFieldIds[pf]);
-    if (el) el.addEventListener('input', updateProfileCompletion);
-  }
 
   var tabUp = document.getElementById('tabUpcoming');
   var tabPast = document.getElementById('tabPast');
