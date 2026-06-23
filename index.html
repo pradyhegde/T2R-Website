@@ -294,7 +294,7 @@
 <nav>
   <div class="nav-left">
     <div class="logo-badge" id="navLogoBadge">
-      <img src="images/logo.jpg" alt="T2R Logo" id="navLogoImg">
+      <img src="images/Logo/logo.jpg" alt="T2R Logo" id="navLogoImg">
     </div>
     <div class="logo-text">
       <span class="t2r">T2R</span>
@@ -525,6 +525,7 @@
     <div style="max-width:1100px; margin:0 auto 26px; display:flex; gap:8px;"><button class="session-tab active" data-tab="upcoming" id="tabUpcoming">Upcoming (<span id="countUpcoming">0</span>)</button><button class="session-tab" data-tab="past" id="tabPast">Past & Recordings (<span id="countPast">0</span>)</button></div>
     <div id="sessionGrid" style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:22px;"></div>
     <div id="sessionEmptyState" style="display:none; max-width:1100px; margin:0 auto; text-align:center; padding:60px 0; color:var(--text-soft);">No sessions match your search.</div>
+    <div style="max-width:1100px; margin:30px auto 0; text-align:center;"><button id="sessionsViewAllBtn" class="btn btn-secondary" style="display:none;">View All Sessions</button></div>
   </section>
 </div>
 
@@ -547,6 +548,7 @@
     </div>
     <div id="fullSpeakerGrid" style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:22px;"></div>
     <div id="speakerEmptyState" style="display:none; max-width:1100px; margin:0 auto; text-align:center; padding:60px 0; color:var(--text-soft);">No speakers match your search.</div>
+    <div style="max-width:1100px; margin:30px auto 0; text-align:center;"><button id="speakersViewAllBtn" class="btn btn-secondary" style="display:none;">View All Speakers</button></div>
   </section>
 </div>
 
@@ -560,6 +562,7 @@
     </div>
     <div id="libGrid" style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:18px;"></div>
     <div id="libEmptyState" style="display:none; max-width:1000px; margin:0 auto; text-align:center; padding:60px 0; color:var(--text-soft);">No resources match your search.</div>
+    <div style="max-width:1000px; margin:30px auto 0; text-align:center;"><button id="libraryViewAllBtn" class="btn btn-secondary" style="display:none;">View All Resources</button></div>
   </section>
 </div>
 
@@ -725,7 +728,7 @@
     <div>
       <div class="footer-logo">
         <div class="logo-badge" id="footerLogoBadge" style="width:44px;height:44px;">
-          <img src="images/logo.jpg" alt="T2R Logo" id="footerLogoImg">
+          <img src="images/Logo/logo.jpg" alt="T2R Logo" id="footerLogoImg">
         </div>
         T2R
       </div>
@@ -943,19 +946,44 @@ var COUNTRY_COORDS = {
   "Tunisia": [33.8869, 9.5375]
 };
 
-var SPEAKERS = [
-  { name:"Suresh Tankala", country:"Germany", role:"Project Manager", org:"Smoltczyk & Partner GmbH", blurb:"Master's in Water Science and Engineering (KIT, Germany). 3+ years in geotechnical engineering and hydrology.", expertise:"Geotechnical Engineering & Hydrology", founder:true, photo:"images/suresh.jpg" },
-  { name:"Pradeep Hegde", country:"Germany", role:"Project Engineer", org:"Fichtner GmbH & Co. KG", blurb:"Master's in Water Science and Engineering (KIT, Germany). 7+ years in hydropower and hydraulic engineering.", expertise:"Hydropower & Hydraulic Engineering", founder:true, photo:"images/pradeep.jpg" },
-  { name:"Narayana Rao Bhogapurapu", country:"India", role:"Postdoctoral Research Associate", org:"Caltech & UMass Amherst", blurb:"PhD in Geoinformatics and Natural Resources Engineering (IIT Bombay). 8+ years in remote sensing and geoinformatics.", expertise:"Geoinformatics & Remote Sensing", founder:true, photo:"images/narayana.jpg" },
-  { name:"Rajesh Kumar", country:"India", role:"Senior Mechanical Engineer", org:"NTPC Ltd.", blurb:"Worked on pumped storage hydropower projects in Rajasthan", expertise:"Mechanical Engineering", photo:"" },
-  { name:"Priya Nair", country:"India", role:"M.Tech – Structural Engineering", org:"AECOM India", blurb:"Designed bridges and flyovers for NHAI expressway projects", expertise:"Structural Engineering", photo:"" },
-  { name:"Klaus Weber", country:"Germany", role:"PhD – Automotive Engineering", org:"BMW Group", blurb:"Led CAE simulation projects for electric vehicle chassis at BMW", expertise:"Automotive Engineering", photo:"" },
-  { name:"Michael Chen", country:"USA", role:"Principal Software Engineer", org:"GE Digital", blurb:"Built real-time control systems for industrial robots at GE", expertise:"Embedded Systems", photo:"" },
-  { name:"Emre Yılmaz", country:"Turkey", role:"MSc – Civil & Geotechnical Engineering", org:"Limak Construction", blurb:"Delivered tunnel boring works for Istanbul metro expansion", expertise:"Civil & Geotechnical Engineering", photo:"" },
-  { name:"Marco Ricci", country:"Italy", role:"Industrial Design Engineer", org:"Leonardo S.p.A.", blurb:"Developed mechanical components for aerospace at Leonardo S.p.A.", expertise:"Industrial Design", photo:"" },
-  { name:"Suresh Thapa", country:"Nepal", role:"Civil Engineer – Hydraulics", org:"NEA Engineering", blurb:"Worked on run-of-river hydropower projects in the Himalayas", expertise:"Hydraulic Engineering", photo:"" },
-  { name:"Amira Ben Ali", country:"Tunisia", role:"MSc – Electrical Engineering", org:"STEG Energies Renouvelables", blurb:"Designed solar-wind hybrid grids for North African energy projects", expertise:"Electrical Engineering", photo:"" }
-];
+var SPEAKERS = [];
+var SESSIONS = [];
+var LIBRARY_RESOURCES = [];
+var dataLoaded = { speakers: false, sessions: false, library: false };
+
+async function loadJsonData(path) {
+  try {
+    var res = await fetch(path);
+    if (!res.ok) throw new Error('Fetch failed: ' + path);
+    return await res.json();
+  } catch (err) {
+    console.error('Could not load ' + path, err);
+    return null;
+  }
+}
+
+async function loadAllSiteData() {
+  var speakersData = await loadJsonData('data/speakers.json');
+  if (speakersData) { SPEAKERS = speakersData; }
+  dataLoaded.speakers = true;
+
+  var sessionsData = await loadJsonData('data/sessions.json');
+  if (sessionsData) { SESSIONS = sessionsData; }
+  dataLoaded.sessions = true;
+
+  var libraryData = await loadJsonData('data/library.json');
+  if (libraryData) { LIBRARY_RESOURCES = libraryData; }
+  dataLoaded.library = true;
+
+  initLeafletMap();
+  renderCountryChips();
+  renderSpeakerGrid();
+  renderFullSpeakerGrid();
+  renderLibraryGrid();
+  renderBranchChips();
+  renderSessions();
+  renderFoundersGrid();
+}
 
 function speakerAvatarHtml(s, sizeClass) {
   if (s.photo) {
@@ -1130,6 +1158,8 @@ function populateSpeakerFilterOptions() {
   }
 }
 
+var speakersShowAll = false;
+
 function renderFullSpeakerGrid() {
   var grid = document.getElementById('fullSpeakerGrid');
   var emptyState = document.getElementById('speakerEmptyState');
@@ -1161,14 +1191,18 @@ function renderFullSpeakerGrid() {
   if (list.length === 0) {
     grid.style.display = 'none';
     if (emptyState) emptyState.style.display = 'block';
+    var viewAllBtn0 = document.getElementById('speakersViewAllBtn');
+    if (viewAllBtn0) viewAllBtn0.style.display = 'none';
     return;
   }
   grid.style.display = 'grid';
   if (emptyState) emptyState.style.display = 'none';
 
+  var visibleList = speakersShowAll ? list : list.slice(0, 10);
+
   var html = '';
-  for (var j = 0; j < list.length; j++) {
-    var sp = list[j];
+  for (var j = 0; j < visibleList.length; j++) {
+    var sp = visibleList[j];
     var founderTag = sp.founder ? '<span class="speaker-founder-tag">Founder</span>' : '';
     html += '<div class="speaker-full-card">' +
       '<div class="speaker-full-head">' + speakerAvatarHtml(sp, 'speaker-full-avatar') +
@@ -1180,6 +1214,16 @@ function renderFullSpeakerGrid() {
   }
   grid.innerHTML = html;
   attachAvatarFallbacks(grid);
+
+  var viewAllBtn = document.getElementById('speakersViewAllBtn');
+  if (viewAllBtn) {
+    if (list.length > 10 && !speakersShowAll) {
+      viewAllBtn.style.display = 'inline-flex';
+      viewAllBtn.textContent = 'View All ' + list.length + ' Speakers';
+    } else {
+      viewAllBtn.style.display = 'none';
+    }
+  }
 }
 
 var founderEmails = {
@@ -1270,34 +1314,16 @@ function renderLibraryGrid() {
       '</div></div>';
   }
   grid.innerHTML = html;
-}
 
-function renderDashLibrary(branch) {
-  var grid = document.getElementById('dashLibraryGrid');
-  var subtext = document.getElementById('dashLibrarySubtext');
-  if (!grid) return;
-  var list;
-  if (branch) {
-    var matching = [];
-    for (var i = 0; i < LIBRARY_RESOURCES.length; i++) {
-      if (LIBRARY_RESOURCES[i].branch === branch || LIBRARY_RESOURCES[i].branch === 'General') matching.push(LIBRARY_RESOURCES[i]);
+  var viewAllBtn = document.getElementById('sessionsViewAllBtn');
+  if (viewAllBtn) {
+    if (list.length > 10 && !sessionsShowAll) {
+      viewAllBtn.style.display = 'inline-flex';
+      viewAllBtn.textContent = 'View All ' + list.length + ' Sessions';
+    } else {
+      viewAllBtn.style.display = 'none';
     }
-    list = matching.length ? matching : LIBRARY_RESOURCES;
-    if (subtext) subtext.textContent = matching.length ? ('Recommended for ' + branch + ' students') : 'Most recent resources';
-  } else {
-    list = LIBRARY_RESOURCES;
-    if (subtext) subtext.textContent = 'Most recent resources — set your branch above for personalised picks';
   }
-  var html = '';
-  var limited = list.slice(0,4);
-  for (var j = 0; j < limited.length; j++) {
-    var r = limited[j];
-    html += '<div style="border:1px solid var(--border); border-radius:12px; padding:18px; display:flex; gap:12px;">' +
-      '<div style="width:38px; height:38px; border-radius:8px; background:var(--sage); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1rem;">📄</div>' +
-      '<div><h5 style="font-size:0.92rem; font-weight:700; margin-bottom:4px;">' + r.title + '</h5>' +
-      '<p style="font-size:0.82rem; color:var(--text-soft);">' + r.desc + '</p></div></div>';
-  }
-  grid.innerHTML = html;
 }
 
 var BRANCHES = ['All Branches','Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
@@ -1359,6 +1385,8 @@ function getFilteredSessions() {
   return result;
 }
 
+var sessionsShowAll = false;
+
 function renderSessions() {
   var grid = document.getElementById('sessionGrid');
   var emptyState = document.getElementById('sessionEmptyState');
@@ -1379,14 +1407,18 @@ function renderSessions() {
   if (list.length === 0) {
     grid.style.display = 'none';
     if (emptyState) emptyState.style.display = 'block';
+    var viewAllBtn0 = document.getElementById('sessionsViewAllBtn');
+    if (viewAllBtn0) viewAllBtn0.style.display = 'none';
     return;
   }
   grid.style.display = 'grid';
   if (emptyState) emptyState.style.display = 'none';
 
+  var visibleList = sessionsShowAll ? list : list.slice(0, 10);
+
   var html = '';
-  for (var j = 0; j < list.length; j++) {
-    var s = list[j];
+  for (var j = 0; j < visibleList.length; j++) {
+    var s = visibleList[j];
     var footerRight;
     if (s.status === 'completed' && s.recording) {
       footerRight = s.recordingUrl
@@ -2300,15 +2332,7 @@ function initPage() {
   setupLogoFallback('navLogoImg');
   setupLogoFallback('footerLogoImg');
   setupHeroVideoFallback();
-  initLeafletMap();
-  renderCountryChips();
-  renderSpeakerGrid();
-  renderFullSpeakerGrid();
-  renderLibraryGrid();
-  renderDashLibrary();
-  renderBranchChips();
-  renderSessions();
-  renderFoundersGrid();
+  loadAllSiteData();
 
   var tabUp = document.getElementById('tabUpcoming');
   var tabPast = document.getElementById('tabPast');
@@ -2348,6 +2372,13 @@ function initPage() {
   if (libBranchEl) libBranchEl.addEventListener('change', renderLibraryGrid);
   var libTypeEl = document.getElementById('libTypeFilter');
   if (libTypeEl) libTypeEl.addEventListener('change', renderLibraryGrid);
+
+  var sessionsViewAllBtn = document.getElementById('sessionsViewAllBtn');
+  if (sessionsViewAllBtn) sessionsViewAllBtn.addEventListener('click', function() { sessionsShowAll = true; renderSessions(); });
+  var speakersViewAllBtn = document.getElementById('speakersViewAllBtn');
+  if (speakersViewAllBtn) speakersViewAllBtn.addEventListener('click', function() { speakersShowAll = true; renderFullSpeakerGrid(); });
+  var libraryViewAllBtn = document.getElementById('libraryViewAllBtn');
+  if (libraryViewAllBtn) libraryViewAllBtn.addEventListener('click', function() { libraryShowAll = true; renderLibraryGrid(); });
 
   var adminTabEls = document.querySelectorAll('.admin-tab');
   for (var at = 0; at < adminTabEls.length; at++) {
