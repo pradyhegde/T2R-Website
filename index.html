@@ -2023,17 +2023,17 @@ var GOOGLE_FORM_PARTNER = {
 };
 
 var GOOGLE_FORM_SPEAKER = {
-  action: 'https://docs.google.com/forms/d/e/1FAIpQLSfUCHNjvgqtUxMOAZG8RNW5IWkZCLjmbHDrUo2UqBSOImXDCA/formResponse',
+  action: 'https://docs.google.com/forms/d/e/1FAIpQLSef3IowOoZ-XZzqQ_v33WJf69zq5i-YIwMDjocXRfxtLO2pDQ/formResponse',
   fields: {
-    name: 'entry.786342420',
-    email: 'entry.1861028057',
-    role: 'entry.1790331350',
-    org: 'entry.1446652882',
-    country: 'entry.1240267644',
-    experience: 'entry.939986238',
-    expertise: 'entry.1789950771',
-    message: 'entry.454497605',
-    linkedin: 'entry.659556247'
+    name: 'entry.1569697635',
+    email: 'entry.389772425',
+    role: 'entry.1241882108',
+    org: 'entry.731609774',
+    country: 'entry.799977999',
+    experience: 'entry.1578795549',
+    expertise: 'entry.1160191441',
+    message: 'entry.2002451825',
+    linkedin: 'entry.127104616'
   }
 };
 
@@ -2382,36 +2382,38 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 
 <!-- 
   ============================================================
-  MIGRATION NOTES FOR SUPABASE (read this before going live)
+  CURRENT STATUS NOTES (read this before going live)
   ============================================================
   
-  Things that currently DO NOT persist on GitHub Pages because
-  they rely on Claude's window.storage API (only works inside
-  Claude.ai artifacts):
+  WHAT WORKS WITHOUT ANY BACKEND:
+  - Partner inquiry form and Speaker application form submit
+    directly to Google Forms in the background, with responses
+    landing in their connected Google Sheets. No database needed
+    for these two forms.
   
-  1. Student sign-in (currentUser) — resets on every page reload
-  2. Session registrations (registeredSessionIds)
-  3. Student profile (college/branch/year)
-  4. Admin-added/edited Sessions, Speakers, Library resources
-  5. College partnership inquiries (COLLEGE_INQUIRIES)
-  6. Speaker applications (SPEAKER_APPLICATIONS)
+  WHAT DOES NOT PERSIST (lives only in this browser's memory):
+  - Anything added/edited/deleted via the Admin page —
+    Sessions, Speakers, and Library resources. These reset to
+    their hardcoded defaults on every page reload, and changes
+    made by one visitor (e.g. you, the admin) are never seen by
+    any other visitor. This is the main remaining gap.
   
-  All of the above currently live only in JavaScript memory
-  (regular variables) once on GitHub Pages — they work fine
-  during a single browsing session but reset for every new
-  visitor and every page reload.
+  WHAT WOULD NEED A REAL BACKEND (e.g. Supabase) TO FIX:
+  - Making Admin's changes to Sessions/Speakers/Library actually
+    persist permanently and show up for all visitors, not just
+    the current browser tab
+  - Real file/photo uploads in Admin instead of pasting external
+    image URLs
+  - Anything requiring real user accounts in the future (there
+    currently are none — public login was intentionally removed)
   
-  When migrating to Supabase:
-  - Replace storageSet/storageGet calls with Supabase client
-    calls (supabase.from('table').insert/select/update/delete)
-  - Add Supabase Auth for real student/admin sign-up and login
-    (replaces the current name-only "sign in" and the plain-text
-    ADMIN_PASSWORD variable, which is NOT secure as-is)
-  - Move SESSIONS, SPEAKERS, LIBRARY_RESOURCES, COLLEGE_INQUIRIES,
-    and SPEAKER_APPLICATIONS arrays into Supabase tables instead
-    of hardcoded JavaScript arrays
-  - For speaker/founder photos, use Supabase Storage for real
-    file uploads instead of pasting external image URLs
+  ADMIN ACCESS:
+  - Admin is not linked anywhere in the visible site. It's reached
+    by appending #t2r-founders-only-7732 to the site URL, then
+    entering the ADMIN_PASSWORD defined near the top of the script.
+  - This is obscurity, not real security — the password is visible
+    in this file's source code to anyone who looks. Treat this as
+    a placeholder until real authentication exists.
 -->
 
 </body>
