@@ -706,7 +706,20 @@
 <div id="page-admin" class="page-hidden">
   <section class="page-section" style="padding-top:40px;">
     <div style="max-width:1100px; margin:0 auto 8px;"><h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Admin</h2><p style="color:var(--text-soft);">Create sessions, add resources, and follow up on college inquiries.</p></div>
-    <div style="max-width:1100px; margin:0 auto 24px; background:#fff8e6; border:1px solid #f0d999; border-radius:10px; padding:12px 16px; font-size:0.82rem; color:#7a5c00;">⚠️ Note: changes made here are stored temporarily in this browser session and are not yet permanently saved across all visitors. A permanent database connection is planned before the site goes live.</div>
+    <div style="max-width:1100px; margin:0 auto 24px; background:#fff8e6; border:1px solid #f0d999; border-radius:10px; padding:12px 16px; font-size:0.82rem; color:#7a5c00;">⚠️ Note: changes made here are stored temporarily in this browser session and are not yet permanently saved across all visitors. To add content permanently, edit the JSON files in the /data folder on GitHub directly.</div>
+
+    <div style="max-width:1100px; margin:0 auto 24px; background:var(--sage-2); border:1px solid var(--border); border-radius:10px; padding:18px 20px;">
+      <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:12px; color:var(--green);">📐 Image Size Guide — Crop Before Uploading</h4>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; font-size:0.82rem; color:var(--text-soft);">
+        <div><strong style="color:var(--text);">Speaker Photos (non-founders)</strong><br>Square (1:1), ~400×400px<br>Crop centered on the face — displays as a circle.<br>Folder: <code>images/speakers/</code></div>
+        <div><strong style="color:var(--text);">Founder Photos</strong><br>Square (1:1), ~400×400px<br>Crop centered on the face — displays as a circle.<br>Folder: <code>images/founders/</code></div>
+        <div><strong style="color:var(--text);">Session Thumbnails</strong><br>Landscape (16:9), ~800×450px<br>Wide shot works best — displays as a card banner.<br>Folder: <code>images/sessions/</code></div>
+        <div><strong style="color:var(--text);">Logo</strong><br>Square (1:1), ~300×300px<br>Transparent or white background recommended.<br>Folder: <code>images/Logo/</code></div>
+        <div><strong style="color:var(--text);">Hero Video</strong><br>Landscape (16:9), MP4 format<br>Keep under ~15MB for fast loading.<br>File: <code>images/t2r-intro.mp4</code></div>
+        <div><strong style="color:var(--text);">Library Documents</strong><br>PDF format preferred<br>Link via the <code>fileUrl</code> field in library.json.<br>Folder: suggest creating <code>documents/</code></div>
+      </div>
+      <p style="font-size:0.78rem; color:var(--text-soft); margin-top:12px; border-top:1px solid var(--border); padding-top:10px;">💡 Tip: keep each image under ~200KB where possible so pages load quickly as your content grows. Most phone gallery apps can crop to a square before you upload.</p>
+    </div>
     <div style="max-width:1100px; margin:0 auto 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
       <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#eaf0fc;">👥</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatStudents">0</div><span style="font-size:0.8rem;">Total Students</span></div></div>
       <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic">📅</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatSessions">0</div><span style="font-size:0.8rem;">Total Sessions</span></div></div>
