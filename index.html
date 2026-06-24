@@ -467,11 +467,6 @@
       <span id="mapSideSub" style="font-size:0.85rem; color:var(--text-soft);"></span>
       <div class="country-chips" id="countryChipsContainer"></div>
     </div>
-
-    <div style="max-width:1100px; margin:0 auto 14px; display:flex; justify-content:space-between; align-items:baseline;">
-      <span style="font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); font-weight:700;" id="speakerGridLabel">Select a country to see speakers</span>
-    </div>
-    <div class="speaker-grid reveal" id="allSpeakersGrid"></div>
   </section>
   <div class="divider"></div>
   <section class="page-section">
@@ -480,6 +475,9 @@
       <select id="speakerExpertiseFilter" style="padding:12px 16px; border-radius:10px; border:1.5px solid var(--border); font-size:0.88rem; font-family:inherit; flex:1; min-width:200px;"><option value="All">All Expertise Areas</option></select>
       <select id="speakerCountryFilter" style="padding:12px 16px; border-radius:10px; border:1.5px solid var(--border); font-size:0.88rem; font-family:inherit; flex:1; min-width:160px;"><option value="All">All Countries</option></select>
       <button id="speakerClearFilters" class="btn btn-secondary" style="font-size:0.85rem; padding:11px 18px;">Clear Filters</button>
+    </div>
+    <div style="max-width:1100px; margin:0 auto 14px; display:flex; justify-content:space-between; align-items:baseline;">
+      <span style="font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); font-weight:700;" id="speakerGridLabel">All Speakers</span>
     </div>
     <div id="fullSpeakerGrid" style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:22px;"></div>
     <div id="speakerEmptyState" style="display:none; max-width:1100px; margin:0 auto; text-align:center; padding:60px 0; color:var(--text-soft);">No speakers match your search.</div>
@@ -775,7 +773,6 @@ async function loadAllSiteData(){
   if(libraryData){LIBRARY_RESOURCES=libraryData;}
   initLeafletMap();
   renderCountryChips();
-  renderSpeakerGrid();
   renderFullSpeakerGrid();
   renderLibraryGrid();
   renderBranchChips();
@@ -871,7 +868,7 @@ function filterByCountry(country){
   var count=0;
   for(var i=0;i<SPEAKERS.length;i++){if(SPEAKERS[i].country===country)count++;}
   document.getElementById('mapSideSub').textContent=count+' speaker(s) from '+country;
-  document.getElementById('speakerGridLabel').textContent='Speakers from '+country;
+
   var countryKeys=Object.keys(leafletMarkers);
   for(var k=0;k<countryKeys.length;k++){
     var key=countryKeys[k];var entry=leafletMarkers[key];
@@ -883,25 +880,13 @@ function filterByCountry(country){
     chips[c2].style.background=chips[c2].dataset.country===country?'#1a4d3a':'';
     chips[c2].style.color=chips[c2].dataset.country===country?'white':'';
   }
-  renderSpeakerGrid();
-}
 
-function renderSpeakerGrid(){
-  var grid=document.getElementById('allSpeakersGrid');
-  if(!grid)return;
-  if(!activeCountryFilter){
-    grid.innerHTML='<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-soft); font-size:0.9rem;">🌐 Click a pin on the map or a country chip above to see speakers from that country.</div>';
-    return;
+  var countryDropdown=document.getElementById('speakerCountryFilter');
+  if(countryDropdown){
+    countryDropdown.value=country;
+    renderFullSpeakerGrid();
+    document.getElementById('fullSpeakerGrid').scrollIntoView({behavior:'smooth',block:'nearest'});
   }
-  var list=[];
-  for(var i=0;i<SPEAKERS.length;i++){if(SPEAKERS[i].country===activeCountryFilter)list.push(SPEAKERS[i]);}
-  var html='';
-  for(var j=0;j<list.length;j++){
-    var s=list[j];
-    html+='<div class="mini-speaker"><div class="mini-speaker-head">'+speakerAvatarHtml(s,'mini-avatar')+'<div><h5>'+s.name+'</h5><div class="loc">'+s.country+'</div></div></div><div class="role">'+s.role+'</div><div class="org">'+s.org+'</div><div class="blurb">'+s.blurb+'</div></div>';
-  }
-  grid.innerHTML=html;
-  attachAvatarFallbacks(grid);
 }
 
 function populateSpeakerFilterOptions(){
@@ -1577,6 +1562,18 @@ function initPage(){
     if(speakerSearchEl)speakerSearchEl.value='';
     if(speakerExpEl)speakerExpEl.value='All';
     if(speakerCountryEl)speakerCountryEl.value='All';
+    activeCountryFilter=null;
+    var titleEl=document.getElementById('mapSideTitle');
+    if(titleEl){titleEl.style.display='none';}
+    var subEl=document.getElementById('mapSideSub');
+    if(subEl){subEl.textContent='';}
+    var countryKeys=Object.keys(leafletMarkers);
+    for(var k=0;k<countryKeys.length;k++){
+      var entry=leafletMarkers[countryKeys[k]];
+      entry.marker.setIcon(entry.greenIcon);
+    }
+    var chips=document.querySelectorAll('.country-chip');
+    for(var c=0;c<chips.length;c++){chips[c].style.background='';chips[c].style.color='';}
     renderFullSpeakerGrid();
   });
 
