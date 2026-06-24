@@ -1,1 +1,37 @@
-
+[
+  {
+    "title": "Introduction to AutoCAD for Civil Engineers",
+    "desc": "A beginner-friendly guide covering 2D drafting, layer management, and creating construction drawings in AutoCAD.",
+    "branch": "Civil",
+    "type": "PDF",
+    "fileUrl": "documents/autocad-guide.pdf"
+  },
+  {
+    "title": "GATE Preparation: Electrical Engineering Formula Sheet",
+    "desc": "Quick-reference formula sheet covering Circuit Theory, Power Systems, Control Systems, and Electromagnetics for GATE EE.",
+    "branch": "Electrical",
+    "type": "PDF",
+    "fileUrl": "documents/gate-ee-formulas.pdf"
+  },
+  {
+    "title": "Resume Building Workshop Notes",
+    "desc": "Learn how to craft an ATS-friendly resume that gets noticed by recruiters at Indian IT and core companies.",
+    "branch": "General",
+    "type": "Article",
+    "fileUrl": "documents/resume-workshop-notes.docx"
+  },
+  {
+    "title": "Python for Data Science — Crash Course Recording",
+    "desc": "A 2-hour recording covering NumPy, Pandas, Matplotlib, and basic ML with scikit-learn.",
+    "branch": "Computer Science",
+    "type": "Recording",
+    "fileUrl": ""
+  },
+  {
+    "title": "Arduino IoT Projects — Step-by-Step Tutorial",
+    "desc": "Build 5 real IoT projects with Arduino including temperature monitoring, smart irrigation, and home automation.",
+    "branch": "Electronics",
+    "type": "Tutorial",
+    "fileUrl": ""
+  }
+]
