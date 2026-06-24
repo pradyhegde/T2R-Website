@@ -245,6 +245,26 @@
   .admin-form-group input,.admin-form-group select,.admin-form-group textarea { width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit; }
   .admin-form-group textarea { resize:vertical; min-height:70px; }
   .admin-form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  .journey-timeline { max-width:800px; margin:0 auto; position:relative; padding:10px 0; }
+  .journey-line { position:absolute; left:50%; top:0; bottom:0; width:3px; background:linear-gradient(to bottom, var(--sage), var(--green-light), var(--sage)); transform:translateX(-50%); }
+  .journey-step { position:relative; width:46%; padding:24px 26px; background:white; border:1px solid var(--border); border-radius:14px; margin-bottom:50px; box-shadow:0 8px 24px rgba(26,77,58,0.07); transition: all .3s; }
+  .journey-step:hover { transform:translateY(-4px); box-shadow:0 14px 32px rgba(26,77,58,0.12); border-color:var(--green-light); }
+  .journey-step:nth-child(2) { margin-left:0; }
+  .journey-step:nth-child(3) { margin-left:54%; }
+  .journey-step:nth-child(4) { margin-left:0; }
+  .journey-num { position:absolute; top:-18px; width:42px; height:42px; border-radius:50%; background:var(--green); color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.95rem; box-shadow:0 0 0 6px white; }
+  .journey-step:nth-child(2) .journey-num { right:-21px; }
+  .journey-step:nth-child(3) .journey-num { left:-21px; }
+  .journey-step:nth-child(4) .journey-num { right:-21px; }
+  .journey-icon { font-size:1.6rem; margin-bottom:10px; }
+  .journey-step h4 { font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+  .journey-step p { font-size:0.88rem; color:var(--text-soft); }
+  @media (max-width:700px) {
+    .journey-line { left:20px; }
+    .journey-step, .journey-step:nth-child(3) { width:calc(100% - 50px); margin-left:50px !important; }
+    .journey-num, .journey-step:nth-child(2) .journey-num, .journey-step:nth-child(3) .journey-num, .journey-step:nth-child(4) .journey-num { left:-50px; right:auto; }
+  }
 </style>
 </head>
 <body>
@@ -500,12 +520,23 @@
 </div>
 
 <div id="page-about" class="page-hidden">
-  <section class="page-section" style="padding-top:60px; padding-bottom:50px; text-align:center;">
-    <span class="tag-pill"><span class="pill-dot"></span>About the Platform</span>
-    <h2 style="font-size:2.2rem; font-weight:800; margin-bottom:14px;">Theory to Reality</h2>
-    <p style="color:var(--text-soft); max-width:680px; margin:0 auto;">T2R is an initiative designed to bridge the gap between academic learning and real-world engineering practice — helping students understand how theory becomes impact.</p>
+  <section class="page-section" style="padding-top:50px; padding-bottom:30px;">
+    <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1.1fr 1fr; gap:50px; align-items:center;">
+      <div class="reveal">
+        <span class="tag-pill"><span class="pill-dot"></span>About the Platform</span>
+        <h2 style="font-size:2.3rem; font-weight:800; margin-bottom:16px; line-height:1.15;">Theory to Reality</h2>
+        <p style="color:var(--text-soft); font-size:1.05rem;">T2R is an initiative designed to bridge the gap between academic learning and real-world engineering practice — helping students understand how theory becomes impact.</p>
+      </div>
+      <div class="reveal" style="border-radius:16px; overflow:hidden; aspect-ratio:4/3; position:relative; background:linear-gradient(135deg,#2a4f43,#0f2a20);">
+        <video id="aboutVideo" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
+          <source src="images/t2r-intro.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
   </section>
+
   <div class="divider"></div>
+
   <section class="page-section">
     <div class="two-col">
       <div class="reveal">
@@ -527,30 +558,50 @@
       </div>
     </div>
   </section>
+
   <div class="divider"></div>
+
   <section class="page-section" style="background:var(--sage-2);">
     <div class="two-col">
       <div class="reveal" style="background:white; border-radius:14px; padding:28px;"><div class="builtfor-ic" style="margin-bottom:14px;">👁️</div><h3 style="font-size:1.1rem; font-weight:700; margin-bottom:10px;">Our Vision</h3><p style="color:var(--text-soft); font-size:0.92rem;">To create a platform where every engineering student understands how theory translates into real-world impact — and is equipped to shape the infrastructure and technology of tomorrow.</p></div>
       <div class="reveal" style="background:white; border-radius:14px; padding:28px;"><div class="builtfor-ic" style="margin-bottom:14px;">🎯</div><h3 style="font-size:1.1rem; font-weight:700; margin-bottom:10px;">Our Mission</h3><div class="gain-item"><span class="gain-num">1</span>Bridge the gap between academia and industry practice</div><div class="gain-item"><span class="gain-num">2</span>Provide real project insights from experienced engineers</div><div class="gain-item"><span class="gain-num">3</span>Guide students toward meaningful and rewarding careers</div><div class="gain-item"><span class="gain-num">4</span>Build a global engineering learning ecosystem</div></div>
     </div>
   </section>
+
   <div class="divider"></div>
+
   <section class="page-section">
     <div class="section-head reveal"><span class="tag-pill">The Team</span><h2>Meet the Founders</h2><p>Engineers and researchers from world-class institutions, united by the mission to make engineering education more practical and impactful.</p></div>
     <div class="career-grid reveal" id="foundersGrid"></div>
   </section>
+
   <div class="divider"></div>
-  <section class="page-section">
+
+  <section class="page-section" style="background:var(--sage-2);">
     <div class="section-head reveal"><span class="tag-pill">Our Journey</span><h2>How T2R Started</h2></div>
-    <div style="max-width:900px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-      <div class="step-card reveal"><div style="font-size:1.4rem; margin-bottom:8px;">💡</div><h4>The Idea</h4><p>Three engineers from KIT & IIT Bombay realized students graduate without ever seeing how their subjects apply to real projects.</p></div>
-      <div></div>
-      <div></div>
-      <div class="step-card reveal"><div style="font-size:1.4rem; margin-bottom:8px;">🚀</div><h4>T2R Launches</h4><p>First campus sessions held — live and streamed. Students from multiple colleges connected with global speakers for the first time.</p></div>
-      <div class="step-card reveal"><div style="font-size:1.4rem; margin-bottom:8px;">📈</div><h4>Today & Beyond</h4><p>Expanding to more colleges, more disciplines, and a growing library of real-world sessions. Building India's most practical engineering learning platform.</p></div>
-      <div></div>
+    <div class="journey-timeline">
+      <div class="journey-line"></div>
+      <div class="journey-step reveal">
+        <div class="journey-num">01</div>
+        <div class="journey-icon">💡</div>
+        <h4>The Idea</h4>
+        <p>Three engineers from KIT & IIT Bombay realized students graduate without ever seeing how their subjects apply to real projects.</p>
+      </div>
+      <div class="journey-step reveal">
+        <div class="journey-num">02</div>
+        <div class="journey-icon">🚀</div>
+        <h4>T2R Launches</h4>
+        <p>First campus sessions held — live and streamed. Students from multiple colleges connected with global speakers for the first time.</p>
+      </div>
+      <div class="journey-step reveal">
+        <div class="journey-num">03</div>
+        <div class="journey-icon">📈</div>
+        <h4>Today & Beyond</h4>
+        <p>Expanding to more colleges, more disciplines, and a growing library of real-world sessions. Building India's most practical engineering learning platform.</p>
+      </div>
     </div>
   </section>
+
   <section class="cta-final reveal">
     <h2>Ready to Bridge the Gap?</h2>
     <p>Join T2R and start learning from engineers who've built real projects across the world.</p>
@@ -710,17 +761,23 @@ function setupLogoFallback(imgId){
 }
 
 function setupHeroVideoFallback(){
-  var video=document.getElementById('heroVideo');
-  if(!video)return;
-  video.addEventListener('error',function(){
-    var wrap=document.getElementById('heroImageWrap');
-    if(wrap){
-      var img=document.createElement('img');
-      img.src='https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80';
-      img.alt='Engineering in action';
-      video.replaceWith(img);
-    }
-  },true);
+  var videoIds=['heroVideo','aboutVideo'];
+  for(var v=0;v<videoIds.length;v++){
+    var video=document.getElementById(videoIds[v]);
+    if(!video)continue;
+    (function(vid){
+      vid.addEventListener('error',function(){
+        var wrap=vid.parentElement;
+        if(wrap){
+          var img=document.createElement('img');
+          img.src='https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80';
+          img.alt='Engineering in action';
+          img.style.width='100%';img.style.height='100%';img.style.objectFit='cover';img.style.display='block';
+          vid.replaceWith(img);
+        }
+      },true);
+    })(video);
+  }
 }
 
 var CAMPUS_FALLBACK_PHOTOS=[
