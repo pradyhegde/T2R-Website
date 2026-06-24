@@ -386,39 +386,6 @@
   <div class="divider"></div>
 
   <section class="page-section">
-    <div class="section-head reveal">
-      <span class="tag-pill">Speaker Network</span>
-      <h2>Explore Our Global Expert Network</h2>
-      <p style="color:var(--green); font-weight:600; margin-bottom:6px;">Speakers from 5+ countries working on real engineering projects</p>
-      <p>T2R connects students with professionals from different countries, industries, and real-world project backgrounds.</p>
-    </div>
-    <div class="network-wrap reveal">
-      <div class="map-box" id="mapBox">
-        <div id="leafletMap" style="width:100%; height:100%; min-height:340px; border-radius:16px;"></div>
-        <div style="position:absolute; bottom:10px; left:10px; z-index:500; background:white; padding:5px 10px; border-radius:8px; font-size:0.72rem; color:var(--text-soft); box-shadow:0 2px 8px rgba(0,0,0,0.15);">Scroll to zoom · Drag to pan</div>
-      </div>
-      <div class="map-side">
-        <div class="globe-ic">🌐</div>
-        <div style="font-weight:700; margin-bottom:6px;" id="mapSideTitle">Click a pin</div>
-        <p id="mapSideSub">to view speakers from that country</p>
-        <div class="country-chips" id="countryChipsContainer"></div>
-      </div>
-    </div>
-    <div style="max-width:1100px; margin:0 auto 14px; display:flex; justify-content:space-between; align-items:baseline;">
-      <span style="font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); font-weight:700;" id="speakerGridLabel">Select a country to see speakers</span>
-    </div>
-    <div class="speaker-grid reveal" id="allSpeakersGrid"></div>
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; max-width:1100px; margin:24px auto 0;">
-      <div class="mini-card" style="text-align:center;"><div style="font-size:1.3rem;">🌐</div><h4>5+ Countries</h4><span>Global expert reach</span></div>
-      <div class="mini-card" style="text-align:center;"><div style="font-size:1.3rem;">👥</div><h4>Diverse Backgrounds</h4><span>Multiple industries</span></div>
-      <div class="mini-card" style="text-align:center;"><div style="font-size:1.3rem;">🏛️</div><h4>Live Project Insights</h4><span>Real engineering work</span></div>
-      <div class="mini-card" style="text-align:center;"><div style="font-size:1.3rem;">🔗</div><h4>International Network</h4><span>Beyond local boundaries</span></div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <section class="page-section">
     <div style="display:flex; justify-content:space-between; align-items:flex-end; max-width:1100px; margin:0 auto 30px; flex-wrap:wrap; gap:14px;">
       <div class="reveal">
         <span class="tag-pill">T2R in Classrooms</span>
@@ -476,11 +443,35 @@
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
 
 <div id="page-speakers" class="page-hidden">
-  <section class="page-section" style="padding-top:60px; padding-bottom:30px; text-align:center;">
-    <span class="tag-pill"><span class="pill-dot"></span>Global Experts</span>
-    <h2 style="font-size:2.2rem; font-weight:800; margin-bottom:14px;">Our Speakers</h2>
-    <p style="color:var(--text-soft); max-width:600px; margin:0 auto 20px;">Professionals from across the globe, bringing real-world knowledge and industry experience directly into the classroom.</p>
-    <a href="#speakerapply" class="btn btn-green" onclick="navigateTo('speakerapply')">🎙️ Become a Speaker</a>
+  <section class="page-section" style="padding-bottom:30px;">
+    <div style="max-width:1200px; margin:0 auto 40px; display:grid; grid-template-columns:0.85fr 1.15fr; gap:50px; align-items:center;">
+      <div class="reveal">
+        <span class="tag-pill"><span class="pill-dot"></span>Global Experts</span>
+        <h2 style="font-size:2.1rem; font-weight:800; margin-bottom:14px; letter-spacing:-0.02em;">Our Speakers</h2>
+        <p style="color:var(--text-soft); font-size:1.02rem; margin-bottom:8px;">Professionals from across the globe, bringing real-world knowledge and industry experience directly into the classroom.</p>
+        <p style="color:var(--green); font-weight:600; font-size:0.92rem; margin-bottom:22px;">Speakers from 5+ countries working on real engineering projects</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="#speakerapply" class="btn btn-green" onclick="navigateTo('speakerapply')" style="font-size:0.88rem; padding:12px 22px;">🎙️ Become a Speaker</a>
+          <span style="display:flex; align-items:center; gap:6px; font-size:0.82rem; color:var(--text-soft);">🌐 Click a pin on the map to explore by country</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="map-box" id="mapBox" style="min-height:420px;">
+          <div id="leafletMap" style="width:100%; height:100%; min-height:420px; border-radius:16px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1100px; margin:0 auto 30px; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+      <span id="mapSideTitle" style="font-weight:700; color:var(--green); display:none;"></span>
+      <span id="mapSideSub" style="font-size:0.85rem; color:var(--text-soft);"></span>
+      <div class="country-chips" id="countryChipsContainer"></div>
+    </div>
+
+    <div style="max-width:1100px; margin:0 auto 14px; display:flex; justify-content:space-between; align-items:baseline;">
+      <span style="font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); font-weight:700;" id="speakerGridLabel">Select a country to see speakers</span>
+    </div>
+    <div class="speaker-grid reveal" id="allSpeakersGrid"></div>
   </section>
   <div class="divider"></div>
   <section class="page-section">
@@ -874,7 +865,9 @@ function renderCountryChips(){
 
 function filterByCountry(country){
   activeCountryFilter=country;
-  document.getElementById('mapSideTitle').textContent=country;
+  var titleEl=document.getElementById('mapSideTitle');
+  titleEl.textContent=country;
+  titleEl.style.display='inline';
   var count=0;
   for(var i=0;i<SPEAKERS.length;i++){if(SPEAKERS[i].country===country)count++;}
   document.getElementById('mapSideSub').textContent=count+' speaker(s) from '+country;
