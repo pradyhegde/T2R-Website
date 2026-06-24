@@ -1,9 +1,3 @@
-<!-- 
-  T2R WEBSITE — GitHub Export Version
-  Copy this entire file into index.html in your GitHub repository.
-  See the comment block near the bottom for notes on what still needs
-  to be migrated to a real backend (Supabase) for production use.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,191 +10,165 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <style>
-  :root {
-    --green: #1a4d3a;
-    --green-dark: #0f3526;
-    --green-light: #2f7d5e;
-    --sage: #e8f0ea;
-    --sage-2: #f4f8f5;
-    --text: #1c2620;
-    --text-soft: #5a6b62;
-    --border: #e3e9e5;
-    --white: #ffffff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: var(--white); line-height: 1.65; letter-spacing: -0.005em; }
-  h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: -0.02em; }
-  a { text-decoration: none; color: inherit; }
-  button { cursor: pointer; font-family: inherit; border: none; background: none; }
-  ul { list-style: none; }
-
-  nav { position: sticky; top: 0; z-index: 200; background: rgba(255,255,255,0.98); backdrop-filter: blur(6px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; }
+  :root { --green:#1a4d3a; --green-dark:#0f3526; --green-light:#2f7d5e; --sage:#e8f0ea; --sage-2:#f4f8f5; --text:#1c2620; --text-soft:#5a6b62; --border:#e3e9e5; --white:#ffffff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:var(--text); background:var(--white); line-height:1.65; letter-spacing:-0.005em; }
+  h1,h2,h3,h4,h5,h6 { font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif; letter-spacing:-0.02em; }
+  a { text-decoration:none; color:inherit; }
+  button { cursor:pointer; font-family:inherit; border:none; background:none; }
+  ul { list-style:none; }
+  nav { position:sticky; top:0; z-index:200; background:rgba(255,255,255,0.98); backdrop-filter:blur(6px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:12px 28px; }
   .nav-left { display:flex; align-items:center; gap:14px; }
-  .logo-badge { width: 50px; height: 50px; border-radius: 50%; background-color: #ffffff; display:flex; align-items:center; justify-content:center; position: relative; flex-shrink: 0; overflow:hidden; border: 1.5px solid var(--sage); }
-  .logo-badge img { width: 100%; height: 100%; object-fit: cover; }
-  .logo-badge svg { width: 36px; height: 36px; }
+  .logo-badge { width:50px; height:50px; border-radius:50%; background-color:#ffffff; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; overflow:hidden; border:1.5px solid var(--sage); }
+  .logo-badge img { width:100%; height:100%; object-fit:cover; }
   .logo-text { display:flex; flex-direction:column; line-height:1.05; }
-  .logo-text .t2r { font-family: 'Plus Jakarta Sans', sans-serif; font-weight:800; font-size:1.3rem; color: var(--green); letter-spacing:-0.01em; }
-  .logo-text .full { font-size:0.66rem; color: var(--text-soft); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; }
+  .logo-text .t2r { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.3rem; color:var(--green); letter-spacing:-0.01em; }
+  .logo-text .full { font-size:0.66rem; color:var(--text-soft); letter-spacing:1.5px; text-transform:uppercase; font-weight:600; }
   .nav-links { display:flex; align-items:center; gap:6px; }
-  .nav-links a { font-size:0.92rem; font-weight:500; color: var(--text-soft); padding: 8px 14px; border-radius:7px; transition: all .2s; }
-  .nav-links a:hover { background: var(--sage-2); color: var(--text); }
-  .nav-links a.active { background: var(--sage); color: var(--green); font-weight:700; }
+  .nav-links a { font-size:0.92rem; font-weight:500; color:var(--text-soft); padding:8px 14px; border-radius:7px; transition:all .2s; }
+  .nav-links a:hover { background:var(--sage-2); color:var(--text); }
+  .nav-links a.active { background:var(--sage); color:var(--green); font-weight:700; }
   .nav-right { display:flex; align-items:center; gap:14px; }
-  .nav-user { display:flex; align-items:center; gap:10px; font-size:0.9rem; color: var(--text-soft); cursor:pointer; }
-  .nav-avatar { width:30px; height:30px; border-radius:50%; background: var(--green); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; }
-  .nav-toggle { display:none; font-size:1.5rem; color: var(--green); }
-  @media (max-width: 980px) {
+  .nav-toggle { display:none; font-size:1.5rem; color:var(--green); }
+  @media (max-width:980px) {
     .nav-links { position:absolute; top:100%; left:0; right:0; background:white; flex-direction:column; align-items:stretch; padding:10px; border-bottom:1px solid var(--border); display:none; gap:2px; }
     .nav-links.open { display:flex; }
     .nav-links a { padding:12px 16px; }
     .nav-toggle { display:block; }
   }
-
-  .role-overlay { position: fixed; inset:0; background: rgba(15,29,20,0.55); z-index: 1000; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .role-overlay { position:fixed; inset:0; background:rgba(15,29,20,0.55); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; }
   .role-box { background:white; border-radius:18px; padding:36px; max-width:380px; width:100%; text-align:center; }
-  .role-box h3 { font-size:1.3rem; margin-bottom:8px; color: var(--green); }
-  .role-box p { color: var(--text-soft); font-size:0.9rem; margin-bottom:24px; }
-  .role-option { display:flex; align-items:center; gap:12px; width:100%; padding:14px; border-radius:10px; border: 1.5px solid var(--border); margin-bottom:12px; font-weight:600; font-size:0.95rem; text-align:left; transition: all .2s; }
-  .role-option:hover { border-color: var(--green-light); background: var(--sage-2); }
-  .role-icon { width:36px; height:36px; border-radius:8px; background: var(--sage); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
-  .role-box input[type="text"], .role-box input[type="password"] { width:100%; padding:12px 14px; border-radius:9px; border:1.5px solid var(--border); font-size:0.95rem; margin-bottom:10px; font-family: inherit; }
+  .role-box h3 { font-size:1.3rem; margin-bottom:8px; color:var(--green); }
+  .role-box p { color:var(--text-soft); font-size:0.9rem; margin-bottom:24px; }
+  .role-option { display:flex; align-items:center; gap:12px; width:100%; padding:14px; border-radius:10px; border:1.5px solid var(--border); margin-bottom:12px; font-weight:600; font-size:0.95rem; text-align:left; transition:all .2s; }
+  .role-icon { width:36px; height:36px; border-radius:8px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  .role-box input[type="text"],.role-box input[type="password"],.role-box input[type="email"] { width:100%; padding:12px 14px; border-radius:9px; border:1.5px solid var(--border); font-size:0.95rem; margin-bottom:10px; font-family:inherit; }
   .role-box .err { color:#b3261e; font-size:0.82rem; margin-bottom:10px; display:none; }
-  .role-box .back-link { font-size:0.85rem; color: var(--text-soft); margin-top:14px; display:inline-block; }
-  .role-box .back-link:hover { color: var(--green); }
-  .btn-go { background: var(--green); color:white; width:100%; padding:13px; border-radius:9px; font-weight:600; font-size:0.95rem; }
-  .btn-go:hover { background: var(--green-dark); }
-  .btn-green { background: var(--green-light); color: white; }
-  .btn-green:hover { background: var(--green-dark); transform: translateY(-2px); }
-
-  .page-section { padding: 70px 8%; }
-  .tag-pill { display:inline-block; background: var(--sage); color: var(--green); font-size:0.76rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:7px 16px; border-radius:30px; margin-bottom:18px; }
-  .pill-dot { width:6px; height:6px; border-radius:50%; background: var(--green); display:inline-block; margin-right:6px; }
-  .btn { display:inline-flex; align-items:center; gap:8px; padding: 14px 26px; border-radius:9px; font-weight:700; font-size:0.95rem; transition: all .2s; letter-spacing:-0.01em; }
-  .btn-primary { background: var(--green); color:white; }
-  .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); }
-  .btn-secondary { background:white; color: var(--text); border: 1.5px solid var(--border); }
-  .btn-secondary:hover { border-color: var(--green-light); background: var(--sage-2); }
-  .reveal { opacity:0; transform: translateY(24px); transition: all .6s ease; }
-  .reveal.visible { opacity:1; transform: translateY(0); }
-
-  .hero { padding: 60px 8% 50px; }
-  .hero-grid { display:grid; grid-template-columns: 1.1fr 1fr; gap:50px; align-items:center; max-width:1200px; margin:0 auto; }
+  .role-box .back-link { font-size:0.85rem; color:var(--text-soft); margin-top:14px; display:inline-block; }
+  .btn-go { background:var(--green); color:white; width:100%; padding:13px; border-radius:9px; font-weight:600; font-size:0.95rem; }
+  .btn-go:hover { background:var(--green-dark); }
+  .btn-green { background:var(--green-light); color:white; }
+  .btn-green:hover { background:var(--green-dark); transform:translateY(-2px); }
+  .page-section { padding:70px 8%; }
+  .tag-pill { display:inline-block; background:var(--sage); color:var(--green); font-size:0.76rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; padding:7px 16px; border-radius:30px; margin-bottom:18px; }
+  .pill-dot { width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block; margin-right:6px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:14px 26px; border-radius:9px; font-weight:700; font-size:0.95rem; transition:all .2s; letter-spacing:-0.01em; }
+  .btn-primary { background:var(--green); color:white; }
+  .btn-primary:hover { background:var(--green-dark); transform:translateY(-2px); }
+  .btn-secondary { background:white; color:var(--text); border:1.5px solid var(--border); }
+  .btn-secondary:hover { border-color:var(--green-light); background:var(--sage-2); }
+  .reveal { opacity:0; transform:translateY(24px); transition:all .6s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .hero { padding:60px 8% 50px; }
+  .hero-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:50px; align-items:center; max-width:1200px; margin:0 auto; }
   @media (max-width:900px) { .hero-grid { grid-template-columns:1fr; } }
-  .hero h1 { font-size: clamp(2.3rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; margin-bottom:18px; color: var(--text); letter-spacing:-0.03em; }
-  .hero h1 .accent { color: var(--green); }
+  .hero h1 { font-size:clamp(2.3rem,5vw,3.2rem); font-weight:800; line-height:1.12; margin-bottom:18px; color:var(--text); letter-spacing:-0.03em; }
+  .hero h1 .accent { color:var(--green); }
   .badge-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
-  .mini-badge { background: var(--sage-2); border:1px solid var(--border); font-size:0.78rem; padding:6px 12px; border-radius:30px; color: var(--text-soft); display:flex; align-items:center; gap:6px; }
-  .hero p.lead { color: var(--text-soft); font-size:1.02rem; margin-bottom:26px; max-width:520px; }
+  .mini-badge { background:var(--sage-2); border:1px solid var(--border); font-size:0.78rem; padding:6px 12px; border-radius:30px; color:var(--text-soft); display:flex; align-items:center; gap:6px; }
+  .hero p.lead { color:var(--text-soft); font-size:1.02rem; margin-bottom:26px; max-width:520px; }
   .hero-ctas { display:flex; gap:12px; flex-wrap:wrap; }
-  .hero-image { border-radius: 18px; overflow:hidden; position:relative; aspect-ratio: 16/11.5; background: linear-gradient(160deg, #2a4f43, #0f2a20); }
-  .hero-image img { width:100%; height:100%; object-fit:cover; display:block; }
-  .hero-image-tag { position:absolute; bottom:16px; left:16px; right:16px; background: rgba(15,40,30,0.55); backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,0.25); border-radius:12px; padding:14px 16px; color:white; }
+  .hero-image { border-radius:18px; overflow:hidden; position:relative; aspect-ratio:16/11.5; background:linear-gradient(160deg,#2a4f43,#0f2a20); }
+  .hero-image img,.hero-image video { width:100%; height:100%; object-fit:cover; display:block; }
+  .hero-image-tag { position:absolute; bottom:16px; left:16px; right:16px; background:rgba(15,40,30,0.55); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.25); border-radius:12px; padding:14px 16px; color:white; }
   .hero-image-tag .small { font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; opacity:0.8; margin-bottom:4px; }
   .hero-image-tag .big { font-weight:700; font-size:1rem; }
-
   .two-col { display:grid; grid-template-columns:1fr 1fr; gap:50px; max-width:1200px; margin:0 auto; align-items:start; }
   @media (max-width:900px) { .two-col { grid-template-columns:1fr; gap:36px; } }
   .two-col h2 { font-size:2rem; font-weight:800; margin-bottom:16px; letter-spacing:-0.02em; }
-  .two-col p { color: var(--text-soft); margin-bottom:14px; font-size:1.02rem; }
-  .bullet-arrow { color: var(--text-soft); padding:6px 0; display:flex; gap:10px; align-items:flex-start; font-size:0.95rem; }
-  .bullet-arrow::before { content:'›'; color: var(--green); font-weight:800; }
+  .two-col p { color:var(--text-soft); margin-bottom:14px; font-size:1.02rem; }
+  .bullet-arrow { color:var(--text-soft); padding:6px 0; display:flex; gap:10px; align-items:flex-start; font-size:0.95rem; }
+  .bullet-arrow::before { content:'›'; color:var(--green); font-weight:800; }
   .mini-cards-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px; }
-  .mini-card { background: var(--sage-2); border:1px solid var(--border); border-radius:12px; padding:18px; }
-  .mini-card .ic { width:34px; height:34px; border-radius:8px; background: var(--sage); display:flex; align-items:center; justify-content:center; margin-bottom:10px; font-size:0.95rem; }
+  .mini-card { background:var(--sage-2); border:1px solid var(--border); border-radius:12px; padding:18px; }
+  .mini-card .ic { width:34px; height:34px; border-radius:8px; background:var(--sage); display:flex; align-items:center; justify-content:center; margin-bottom:10px; font-size:0.95rem; }
   .mini-card h4 { font-size:0.92rem; font-weight:700; margin-bottom:2px; }
-  .mini-card span { font-size:0.78rem; color: var(--text-soft); }
+  .mini-card span { font-size:0.78rem; color:var(--text-soft); }
   .step-list { display:flex; flex-direction:column; gap:14px; }
-  .step-card { background: white; border:1px solid var(--border); border-radius:12px; padding:20px 22px; transition: all .25s; }
-  .step-card:hover { border-color: var(--green-light); box-shadow: 0 8px 20px rgba(26,77,58,0.08); }
-  .step-num { font-size:1.6rem; font-weight:800; color: #d8e3dd; margin-bottom:4px; }
+  .step-card { background:white; border:1px solid var(--border); border-radius:12px; padding:20px 22px; transition:all .25s; }
+  .step-card:hover { border-color:var(--green-light); box-shadow:0 8px 20px rgba(26,77,58,0.08); }
+  .step-num { font-size:1.6rem; font-weight:800; color:#d8e3dd; margin-bottom:4px; }
   .step-card h4 { font-size:1.1rem; font-weight:700; margin-bottom:5px; letter-spacing:-0.01em; }
-  .step-card p { font-size:0.88rem; color: var(--text-soft); margin-bottom:6px; }
-  .step-card .link { font-size:0.85rem; color: var(--green); font-weight:600; }
-  .gain-box { background: var(--sage-2); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-top:14px; }
+  .step-card p { font-size:0.88rem; color:var(--text-soft); margin-bottom:6px; }
+  .step-card .link { font-size:0.85rem; color:var(--green); font-weight:600; }
+  .gain-box { background:var(--sage-2); border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-top:14px; }
   .gain-box h4 { font-size:0.95rem; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-  .gain-item { display:flex; gap:10px; align-items:flex-start; padding:6px 0; font-size:0.88rem; color: var(--text-soft); }
-  .gain-num { width:20px; height:20px; border-radius:50%; background: var(--green); color:white; font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-
+  .gain-item { display:flex; gap:10px; align-items:flex-start; padding:6px 0; font-size:0.88rem; color:var(--text-soft); }
+  .gain-num { width:20px; height:20px; border-radius:50%; background:var(--green); color:white; font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
   .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1200px; margin:0 auto; }
   @media (max-width:900px) { .three-col { grid-template-columns:1fr; } }
   .industry-card { border:1px solid var(--border); border-radius:14px; padding:22px; }
-  .industry-card .tag { font-size:0.74rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color: var(--green); margin-bottom:14px; display:flex; align-items:center; }
-
-  .stats-bar { background: var(--green); padding: 50px 8%; }
+  .industry-card .tag { font-size:0.74rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:14px; display:flex; align-items:center; }
+  .stats-bar { background:var(--green); padding:50px 8%; }
   .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:1100px; margin:0 auto; text-align:center; }
   @media (max-width:700px) { .stats-grid { grid-template-columns:repeat(2,1fr); } }
   .stat-num { font-size:2.8rem; font-weight:800; color:white; letter-spacing:-0.03em; }
-  .stat-label { color: rgba(255,255,255,0.75); font-size:0.88rem; margin-top:4px; }
-
+  .stat-label { color:rgba(255,255,255,0.75); font-size:0.88rem; margin-top:4px; }
   .career-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1200px; margin:0 auto; }
   @media (max-width:900px) { .career-grid { grid-template-columns:1fr; } }
-  .career-card { border:1px solid var(--border); border-radius:14px; padding:22px; transition: all .25s; }
-  .career-card:hover { box-shadow: 0 10px 26px rgba(26,77,58,0.1); transform: translateY(-4px); border-color: var(--green-light); }
+  .career-card { border:1px solid var(--border); border-radius:14px; padding:22px; transition:all .25s; }
+  .career-card:hover { box-shadow:0 10px 26px rgba(26,77,58,0.1); transform:translateY(-4px); border-color:var(--green-light); }
   .career-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
-  .career-ic { width:40px; height:40px; border-radius:9px; background: var(--sage); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+  .career-ic { width:40px; height:40px; border-radius:9px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
   .career-card h4 { font-size:1.1rem; font-weight:700; letter-spacing:-0.01em; }
-  .career-card p.desc { font-size:0.88rem; color: var(--text-soft); margin-bottom:12px; }
+  .career-card p.desc { font-size:0.88rem; color:var(--text-soft); margin-bottom:12px; }
   .career-meta { font-size:0.82rem; }
-  .career-meta strong { color: var(--text); }
-  .career-meta .tools-val { color: var(--text-soft); }
-  .career-meta .proj-val { color: var(--green-light); font-weight:600; }
-
+  .career-meta strong { color:var(--text); }
+  .career-meta .tools-val { color:var(--text-soft); }
+  .career-meta .proj-val { color:var(--green-light); font-weight:600; }
   .compare-table { width:100%; max-width:1000px; margin:0 auto; border-collapse:collapse; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  .compare-table th { background: var(--sage-2); text-align:left; padding:14px 18px; font-size:0.74rem; letter-spacing:1px; text-transform:uppercase; color: var(--text-soft); }
-  .compare-table th.t2r-col { color: var(--green); }
+  .compare-table th { background:var(--sage-2); text-align:left; padding:14px 18px; font-size:0.74rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); }
+  .compare-table th.t2r-col { color:var(--green); }
   .compare-table td { padding:14px 18px; border-top:1px solid var(--border); font-size:0.9rem; }
-  .compare-table td.bad { color: #b3261e; }
-  .compare-table td.good { color: var(--green); font-weight:500; }
-
-  .network-wrap { display:grid; grid-template-columns: 1.4fr 1fr; gap:24px; max-width:1100px; margin:0 auto 36px; }
+  .compare-table td.bad { color:#b3261e; }
+  .compare-table td.good { color:var(--green); font-weight:500; }
+  .network-wrap { display:grid; grid-template-columns:1.4fr 1fr; gap:24px; max-width:1100px; margin:0 auto 36px; }
   @media (max-width:900px) { .network-wrap { grid-template-columns:1fr; } }
-  .map-box { background: var(--sage-2); border:1px solid var(--border); border-radius:16px; min-height:340px; position:relative; overflow:hidden; }
+  .map-box { background:var(--sage-2); border:1px solid var(--border); border-radius:16px; min-height:340px; position:relative; overflow:hidden; }
   .map-side { background:white; border:1px solid var(--border); border-radius:16px; padding:26px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
   .map-side .globe-ic { font-size:2rem; margin-bottom:10px; }
-  .map-side p { font-size:0.85rem; color: var(--text-soft); margin-bottom:14px; }
+  .map-side p { font-size:0.85rem; color:var(--text-soft); margin-bottom:14px; }
   .country-chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-  .country-chip { background: var(--sage-2); border:1px solid var(--border); font-size:0.78rem; padding:5px 12px; border-radius:20px; color: var(--green); font-weight:600; cursor:pointer; transition: all .2s; }
-
+  .country-chip { background:var(--sage-2); border:1px solid var(--border); font-size:0.78rem; padding:5px 12px; border-radius:20px; color:var(--green); font-weight:600; cursor:pointer; transition:all .2s; }
   .speaker-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; max-width:1100px; margin:0 auto; }
   @media (max-width:900px) { .speaker-grid { grid-template-columns:repeat(2,1fr); } }
   @media (max-width:560px) { .speaker-grid { grid-template-columns:1fr; } }
   .mini-speaker { border:1px solid var(--border); border-radius:12px; padding:16px; }
   .mini-speaker-head { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
-  .mini-avatar { width:42px; height:42px; border-radius:50%; background: var(--sage); color:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem; flex-shrink:0; }
+  .mini-avatar { width:42px; height:42px; border-radius:50%; background:var(--sage); color:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem; flex-shrink:0; }
   .mini-speaker-head h5 { font-size:0.92rem; font-weight:700; }
-  .mini-speaker-head .loc { font-size:0.76rem; color: var(--text-soft); }
-  .mini-speaker .role { font-size:0.82rem; color: var(--green); font-weight:600; }
-  .mini-speaker .org { font-size:0.78rem; color: var(--text-soft); margin-bottom:6px; }
-  .mini-speaker .blurb { font-size:0.78rem; color: var(--text-soft); font-style:italic; }
-
-  .campus-grid { display:grid; grid-template-columns: 2fr 1fr; gap:14px; max-width:1100px; margin:0 auto; }
-  @media (max-width:800px) { .campus-grid { grid-template-columns:1fr; } }
-  .campus-main { border-radius:14px; overflow:hidden; aspect-ratio:16/10; position:relative; background: var(--sage-2); }
-  .campus-main img { width:100%; height:100%; object-fit:cover; }
-  .campus-credit { position:absolute; bottom:10px; left:12px; color:white; font-size:0.72rem; background:rgba(0,0,0,0.4); padding:3px 9px; border-radius:20px; }
-  .campus-side { display:flex; flex-direction:column; gap:14px; }
-  .campus-thumb { border-radius:14px; overflow:hidden; aspect-ratio:16/10; background: var(--sage-2); position:relative; }
-  .campus-thumb img { width:100%; height:100%; object-fit:cover; }
-
+  .mini-speaker-head .loc { font-size:0.76rem; color:var(--text-soft); }
+  .mini-speaker .role { font-size:0.82rem; color:var(--green); font-weight:600; }
+  .mini-speaker .org { font-size:0.78rem; color:var(--text-soft); margin-bottom:6px; }
+  .mini-speaker .blurb { font-size:0.78rem; color:var(--text-soft); font-style:italic; }
+  .campus-filmstrip-wrap { max-width:1100px; margin:0 auto; overflow:hidden; border-radius:16px; position:relative; }
+  .campus-filmstrip-wrap::before,.campus-filmstrip-wrap::after { content:''; position:absolute; top:0; bottom:0; width:60px; z-index:2; pointer-events:none; }
+  .campus-filmstrip-wrap::before { left:0; background:linear-gradient(to right,white,transparent); }
+  .campus-filmstrip-wrap::after { right:0; background:linear-gradient(to left,white,transparent); }
+  .campus-filmstrip { display:flex; gap:16px; width:max-content; animation:campusScroll 40s linear infinite; }
+  .campus-filmstrip:hover { animation-play-state:paused; }
+  .campus-filmstrip-item { flex-shrink:0; width:280px; height:190px; border-radius:14px; overflow:hidden; position:relative; background:var(--sage-2); box-shadow:0 4px 14px rgba(26,77,58,0.08); }
+  .campus-filmstrip-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s; }
+  .campus-filmstrip-item:hover img { transform:scale(1.06); }
+  .campus-filmstrip-caption { position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent,rgba(0,0,0,0.65)); color:white; font-size:0.74rem; padding:18px 12px 8px; }
+  @keyframes campusScroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+  @media (max-width:700px) { .campus-filmstrip-item { width:220px; height:150px; } }
   .builtfor-card { border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:18px; }
   .builtfor-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-  .builtfor-ic { width:36px; height:36px; border-radius:8px; background: var(--sage); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  .builtfor-ic { width:36px; height:36px; border-radius:8px; background:var(--sage); display:flex; align-items:center; justify-content:center; font-size:1rem; }
   .builtfor-card h4 { font-size:1.02rem; font-weight:700; }
   .testimonial-card { border:1px solid var(--border); border-radius:14px; padding:22px; margin-bottom:16px; }
-  .stars { color: #e6a623; margin-bottom:10px; font-size:0.9rem; }
+  .stars { color:#e6a623; margin-bottom:10px; font-size:0.9rem; }
   .testimonial-card .quote { font-size:0.92rem; font-style:italic; margin-bottom:12px; }
   .testimonial-author { display:flex; align-items:center; gap:10px; }
   .testimonial-card .auth-name { font-size:0.88rem; font-weight:700; }
-  .testimonial-card .auth-org { font-size:0.78rem; color: var(--text-soft); }
-
-  .cta-final { background: var(--green); color:white; padding:60px 8%; text-align:center; }
+  .testimonial-card .auth-org { font-size:0.78rem; color:var(--text-soft); }
+  .cta-final { background:var(--green); color:white; padding:60px 8%; text-align:center; }
   .cta-final h2 { font-size:2.2rem; margin-bottom:10px; font-weight:800; letter-spacing:-0.025em; }
-  .cta-final p { color: rgba(255,255,255,0.8); margin-bottom:26px; }
-  .cta-final .btn-secondary { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color:white; }
-  .cta-final .btn-secondary:hover { background: rgba(255,255,255,0.18); }
-
-  footer { background: var(--green-dark); color: rgba(255,255,255,0.65); padding: 50px 8% 26px; }
+  .cta-final p { color:rgba(255,255,255,0.8); margin-bottom:26px; }
+  .cta-final .btn-secondary { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.3); color:white; }
+  .cta-final .btn-secondary:hover { background:rgba(255,255,255,0.18); }
+  footer { background:var(--green-dark); color:rgba(255,255,255,0.65); padding:50px 8% 26px; }
   .footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; max-width:1100px; margin:0 auto 30px; }
   @media (max-width:700px) { .footer-grid { grid-template-columns:1fr; gap:24px; } }
   .footer-logo { display:flex; align-items:center; gap:10px; color:white; font-weight:700; margin-bottom:12px; }
@@ -208,83 +176,73 @@
   footer ul li { padding:5px 0; font-size:0.86rem; }
   footer ul li a:hover { color:white; }
   .footer-bottom { border-top:1px solid rgba(255,255,255,0.12); padding-top:20px; text-align:center; font-size:0.8rem; max-width:1100px; margin:0 auto; }
-
   .section-head { text-align:center; max-width:680px; margin:0 auto 44px; }
-  .section-head h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight:800; margin-bottom:12px; letter-spacing:-0.025em; }
-  .section-head p { color: var(--text-soft); font-size:1.05rem; }
+  .section-head h2 { font-size:clamp(1.9rem,4vw,2.6rem); font-weight:800; margin-bottom:12px; letter-spacing:-0.025em; }
+  .section-head p { color:var(--text-soft); font-size:1.05rem; }
   .divider { border-top:1px solid var(--border); }
   .page-hidden { display:none; }
-  .coming-soon { padding: 120px 8%; text-align:center; }
-  .coming-soon .ic { font-size:3rem; margin-bottom:16px; }
-  .coming-soon h2 { font-size:1.6rem; margin-bottom:10px; }
-  .coming-soon p { color: var(--text-soft); max-width:480px; margin:0 auto; }
-
-  .branch-chip { padding: 9px 16px; border-radius: 8px; border: 1.5px solid var(--border); font-size:0.86rem; font-weight:600; background: white; color: var(--text-soft); transition: all .2s; }
-  .branch-chip:hover { border-color: var(--green-light); }
-  .branch-chip.active { background: var(--green); color: white; border-color: var(--green); }
-  .session-tab { padding: 9px 16px; border-radius: 8px; font-size:0.86rem; font-weight:600; color: var(--text-soft); background: var(--sage-2); transition: all .2s; }
-  .session-tab.active { background: var(--green); color: white; }
-  .session-card { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition: all .25s; background:white; }
-  .session-card:hover { box-shadow: 0 12px 28px rgba(26,77,58,0.1); transform: translateY(-4px); }
-  .session-thumb { aspect-ratio:16/9.5; position:relative; overflow:hidden; background: linear-gradient(135deg, #2a4f43, #0f2a20); }
+  .branch-chip { padding:9px 16px; border-radius:8px; border:1.5px solid var(--border); font-size:0.86rem; font-weight:600; background:white; color:var(--text-soft); transition:all .2s; }
+  .branch-chip.active { background:var(--green); color:white; border-color:var(--green); }
+  .session-tab { padding:9px 16px; border-radius:8px; font-size:0.86rem; font-weight:600; color:var(--text-soft); background:var(--sage-2); transition:all .2s; }
+  .session-tab.active { background:var(--green); color:white; }
+  .session-card { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all .25s; background:white; }
+  .session-card:hover { box-shadow:0 12px 28px rgba(26,77,58,0.1); transform:translateY(-4px); }
+  .session-thumb { aspect-ratio:16/9.5; position:relative; overflow:hidden; background:linear-gradient(135deg,#2a4f43,#0f2a20); }
   .session-thumb img { width:100%; height:100%; object-fit:cover; }
   .session-badge-row { position:absolute; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; }
   .sbadge { font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:20px; }
-  .sbadge.completed { background: rgba(255,255,255,0.92); color: var(--green); }
-  .sbadge.upcoming { background: #e6a623; color: white; }
-  .sbadge.guest { background: rgba(15,29,20,0.65); color: white; backdrop-filter: blur(3px); }
-  .session-body { padding: 18px; }
+  .sbadge.completed { background:rgba(255,255,255,0.92); color:var(--green); }
+  .sbadge.upcoming { background:#e6a623; color:white; }
+  .sbadge.guest { background:rgba(15,29,20,0.65); color:white; backdrop-filter:blur(3px); }
+  .session-body { padding:18px; }
   .session-body h4 { font-size:1rem; font-weight:700; margin-bottom:6px; line-height:1.3; }
-  .session-body .desc { font-size:0.82rem; color: var(--text-soft); margin-bottom:12px; }
+  .session-body .desc { font-size:0.82rem; color:var(--text-soft); margin-bottom:12px; }
   .session-speaker { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .session-speaker-info h6 { font-size:0.84rem; font-weight:700; }
-  .session-speaker-info span { font-size:0.74rem; color: var(--text-soft); }
-  .session-meta-row { font-size:0.78rem; color: var(--text-soft); display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+  .session-speaker-info span { font-size:0.74rem; color:var(--text-soft); }
+  .session-meta-row { font-size:0.78rem; color:var(--text-soft); display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
   .session-footer { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px; }
-  .session-branch-tag { font-size:0.74rem; font-weight:600; background: var(--sage); color: var(--green); padding:4px 10px; border-radius:20px; }
-  .session-action-link { font-size:0.82rem; font-weight:700; color: var(--green); background:none; border:none; cursor:pointer; }
+  .session-branch-tag { font-size:0.74rem; font-weight:600; background:var(--sage); color:var(--green); padding:4px 10px; border-radius:20px; }
+  .session-action-link { font-size:0.82rem; font-weight:700; color:var(--green); background:none; border:none; cursor:pointer; }
   .session-register-btn { font-size:0.82rem; font-weight:700; color:white; background:var(--green); padding:7px 14px; border-radius:7px; }
-  .session-register-btn:hover { background: var(--green-dark); }
-  @media (max-width:900px) { #sessionGrid { grid-template-columns: repeat(2,1fr) !important; } }
-  @media (max-width:600px) { #sessionGrid { grid-template-columns: 1fr !important; } }
-
-  .speaker-full-card { border:1px solid var(--border); border-radius:14px; padding:22px; background:white; transition: all .25s; }
-  .speaker-full-card:hover { box-shadow: 0 12px 26px rgba(26,77,58,0.1); transform: translateY(-4px); border-color: var(--green-light); }
+  .session-register-btn:hover { background:var(--green-dark); }
+  @media (max-width:900px) { #sessionGrid { grid-template-columns:repeat(2,1fr) !important; } }
+  @media (max-width:600px) { #sessionGrid { grid-template-columns:1fr !important; } }
+  .speaker-full-card { border:1px solid var(--border); border-radius:14px; padding:22px; background:white; transition:all .25s; }
+  .speaker-full-card:hover { box-shadow:0 12px 26px rgba(26,77,58,0.1); transform:translateY(-4px); border-color:var(--green-light); }
   .speaker-full-head { display:flex; gap:12px; align-items:center; margin-bottom:14px; }
-  .speaker-full-avatar { width:48px; height:48px; border-radius:50%; background: var(--sage); color: var(--green); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; flex-shrink:0; }
+  .speaker-full-avatar { width:48px; height:48px; border-radius:50%; background:var(--sage); color:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; flex-shrink:0; }
   .speaker-full-head h4 { font-size:1.02rem; font-weight:700; }
-  .speaker-full-head .loc { font-size:0.8rem; color: var(--text-soft); display:flex; align-items:center; gap:4px; }
-  .speaker-full-card .role { font-size:0.9rem; font-weight:600; color: var(--text); margin-bottom:2px; }
-  .speaker-full-card .org { font-size:0.84rem; color: var(--text-soft); margin-bottom:12px; }
-  .speaker-expertise-tag { display:inline-block; font-size:0.78rem; font-weight:700; color: var(--green); background: var(--sage); padding:5px 12px; border-radius:8px; }
-  .speaker-founder-tag { font-size:0.68rem; font-weight:700; color:white; background: var(--green); padding:3px 9px; border-radius:20px; margin-left:8px; vertical-align:middle; }
-  @media (max-width:900px) { #fullSpeakerGrid { grid-template-columns: repeat(2,1fr) !important; } }
-  @media (max-width:600px) { #fullSpeakerGrid { grid-template-columns: 1fr !important; } }
-
-  .lib-card { border:1px solid var(--border); border-radius:12px; padding:18px; display:flex; gap:12px; background:white; transition: all .2s; }
-  .lib-card:hover { border-color: var(--green-light); box-shadow: 0 8px 20px rgba(26,77,58,0.08); }
+  .speaker-full-head .loc { font-size:0.8rem; color:var(--text-soft); display:flex; align-items:center; gap:4px; }
+  .speaker-full-card .role { font-size:0.9rem; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .speaker-full-card .org { font-size:0.84rem; color:var(--text-soft); margin-bottom:12px; }
+  .speaker-expertise-tag { display:inline-block; font-size:0.78rem; font-weight:700; color:var(--green); background:var(--sage); padding:5px 12px; border-radius:8px; }
+  .speaker-founder-tag { font-size:0.68rem; font-weight:700; color:white; background:var(--green); padding:3px 9px; border-radius:20px; margin-left:8px; vertical-align:middle; }
+  @media (max-width:900px) { #fullSpeakerGrid { grid-template-columns:repeat(2,1fr) !important; } }
+  @media (max-width:600px) { #fullSpeakerGrid { grid-template-columns:1fr !important; } }
+  .lib-card { border:1px solid var(--border); border-radius:12px; padding:18px; display:flex; gap:12px; background:white; transition:all .2s; }
+  .lib-card:hover { border-color:var(--green-light); box-shadow:0 8px 20px rgba(26,77,58,0.08); }
   .lib-ic-box { width:38px; height:38px; border-radius:8px; background:var(--sage); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1rem; }
   .lib-card h5 { font-size:0.94rem; font-weight:700; margin-bottom:5px; }
   .lib-card .desc { font-size:0.82rem; color:var(--text-soft); margin-bottom:10px; }
-  .lib-tags { display:flex; gap:6px; }
+  .lib-tags { display:flex; gap:6px; flex-wrap:wrap; }
   .lib-tag { font-size:0.7rem; font-weight:700; padding:3px 9px; border-radius:20px; }
-  .lib-tag.branch { background: var(--sage); color: var(--green); }
+  .lib-tag.branch { background:var(--sage); color:var(--green); }
   .lib-tag.type { background:#eef0f4; color:#4a5568; }
-  @media (max-width:700px) { #libGrid { grid-template-columns: 1fr !important; } }
-
+  @media (max-width:700px) { #libGrid { grid-template-columns:1fr !important; } }
   .admin-tab { padding:11px 18px; font-size:0.9rem; font-weight:600; color:var(--text-soft); border-bottom:3px solid transparent; }
-  .admin-tab.active { color: var(--green); border-bottom-color: var(--green); }
+  .admin-tab.active { color:var(--green); border-bottom-color:var(--green); }
   .admin-list-item { border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
   .admin-list-item .info h5 { font-size:0.94rem; font-weight:700; margin-bottom:3px; }
   .admin-list-item .info .meta { font-size:0.8rem; color:var(--text-soft); }
   .admin-list-actions { display:flex; gap:8px; flex-shrink:0; }
-  .admin-icon-btn { width:32px; height:32px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; transition: background .2s; }
-  .admin-icon-btn:hover { background: var(--sage-2); }
+  .admin-icon-btn { width:32px; height:32px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; transition:background .2s; }
+  .admin-icon-btn:hover { background:var(--sage-2); }
   .admin-icon-btn.danger:hover { background:#fdeaea; }
   .admin-empty { text-align:center; padding:50px 0; color:var(--text-soft); }
   .admin-form-group { margin-bottom:16px; }
   .admin-form-group label { display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px; }
-  .admin-form-group input, .admin-form-group select, .admin-form-group textarea { width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit; }
+  .admin-form-group input,.admin-form-group select,.admin-form-group textarea { width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit; }
   .admin-form-group textarea { resize:vertical; min-height:70px; }
   .admin-form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 </style>
@@ -293,13 +251,8 @@
 
 <nav>
   <div class="nav-left">
-    <div class="logo-badge" id="navLogoBadge">
-      <img src="images/Logo/logo.jpg" alt="T2R Logo" id="navLogoImg">
-    </div>
-    <div class="logo-text">
-      <span class="t2r">T2R</span>
-      <span class="full">Theory to Reality</span>
-    </div>
+    <div class="logo-badge" id="navLogoBadge"><img src="images/Logo/logo.jpg" alt="T2R Logo" id="navLogoImg"></div>
+    <div class="logo-text"><span class="t2r">T2R</span><span class="full">Theory to Reality</span></div>
   </div>
   <button class="nav-toggle" id="navToggle">☰</button>
   <div class="nav-links" id="navLinks">
@@ -329,13 +282,10 @@
         </div>
       </div>
       <div class="hero-image reveal" id="heroImageWrap">
-        <video id="heroVideo" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
+        <video id="heroVideo" autoplay muted loop playsinline>
           <source src="images/t2r-intro.mp4" type="video/mp4">
         </video>
-        <div class="hero-image-tag">
-          <div class="small">T2R in Action</div>
-          <div class="big">Meet Our Experts & Students</div>
-        </div>
+        <div class="hero-image-tag"><div class="small">T2R in Action</div><div class="big">Meet Our Experts & Students</div></div>
       </div>
     </div>
   </section>
@@ -454,7 +404,7 @@
         <div class="country-chips" id="countryChipsContainer"></div>
       </div>
     </div>
-    <div style="max-width:1100px; margin: 0 auto 14px; display:flex; justify-content:space-between; align-items:baseline;">
+    <div style="max-width:1100px; margin:0 auto 14px; display:flex; justify-content:space-between; align-items:baseline;">
       <span style="font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; color:var(--text-soft); font-weight:700;" id="speakerGridLabel">Select a country to see speakers</span>
     </div>
     <div class="speaker-grid reveal" id="allSpeakersGrid"></div>
@@ -477,13 +427,7 @@
       </div>
       <a href="#sessions" class="btn btn-secondary" onclick="navigateTo('sessions')">Explore Campus Sessions →</a>
     </div>
-    <div class="campus-grid reveal">
-      <div class="campus-main"><img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=900&q=80" alt="Campus session"><div class="campus-credit">Sample photo — replace with real campus session photo</div></div>
-      <div class="campus-side">
-        <div class="campus-thumb"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&q=70" alt="Session"></div>
-        <div class="campus-thumb"><img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=500&q=70" alt="Session"></div>
-      </div>
-    </div>
+    <div class="campus-filmstrip-wrap reveal"><div class="campus-filmstrip" id="campusFilmstrip"></div></div>
   </section>
 
   <div class="divider"></div>
@@ -705,20 +649,20 @@
 
 <div id="page-admin" class="page-hidden">
   <section class="page-section" style="padding-top:40px;">
-    <div style="max-width:1100px; margin:0 auto 8px;"><h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Admin</h2><p style="color:var(--text-soft);">Create sessions, add resources, and follow up on college inquiries.</p></div>
-    <div style="max-width:1100px; margin:0 auto 24px; background:#fff8e6; border:1px solid #f0d999; border-radius:10px; padding:12px 16px; font-size:0.82rem; color:#7a5c00;">⚠️ Note: changes made here are stored temporarily in this browser session and are not yet permanently saved across all visitors. To add content permanently, edit the JSON files in the /data folder on GitHub directly.</div>
-
+    <div style="max-width:1100px; margin:0 auto 8px;"><h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Admin</h2><p style="color:var(--text-soft);">Reference panel for managing content. Permanent changes happen by editing JSON files on GitHub.</p></div>
+    <div style="max-width:1100px; margin:0 auto 24px; background:#fff8e6; border:1px solid #f0d999; border-radius:10px; padding:12px 16px; font-size:0.82rem; color:#7a5c00;">⚠️ Note: changes made here are stored temporarily in this browser session only. To add content permanently, edit the JSON files in the /data folder on GitHub directly.</div>
     <div style="max-width:1100px; margin:0 auto 24px; background:var(--sage-2); border:1px solid var(--border); border-radius:10px; padding:18px 20px;">
       <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:12px; color:var(--green);">📐 Image Size Guide — Crop Before Uploading</h4>
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; font-size:0.82rem; color:var(--text-soft);">
+        <div><strong style="color:var(--text);">Founder Photos</strong><br>Square (1:1), ~800×800px<br>Top of head ~12% from top, crop ends at collar.<br>Folder: <code>images/founders/</code></div>
         <div><strong style="color:var(--text);">Speaker Photos (non-founders)</strong><br>Square (1:1), ~400×400px<br>Crop centered on the face — displays as a circle.<br>Folder: <code>images/speakers/</code></div>
-        <div><strong style="color:var(--text);">Founder Photos</strong><br>Square (1:1), ~400×400px<br>Crop centered on the face — displays as a circle.<br>Folder: <code>images/founders/</code></div>
-        <div><strong style="color:var(--text);">Session Thumbnails</strong><br>Landscape (16:9), ~800×450px<br>Wide shot works best — displays as a card banner.<br>Folder: <code>images/sessions/</code></div>
-        <div><strong style="color:var(--text);">Logo</strong><br>Square (1:1), ~300×300px<br>Transparent or white background recommended.<br>Folder: <code>images/Logo/</code></div>
-        <div><strong style="color:var(--text);">Hero Video</strong><br>Landscape (16:9), MP4 format<br>Keep under ~15MB for fast loading.<br>File: <code>images/t2r-intro.mp4</code></div>
-        <div><strong style="color:var(--text);">Library Documents</strong><br>PDF format preferred<br>Link via the <code>fileUrl</code> field in library.json.<br>Folder: suggest creating <code>documents/</code></div>
+        <div><strong style="color:var(--text);">Session Thumbnails</strong><br>Landscape (16:9), ~800×450px<br>Folder: <code>images/sessions/</code></div>
+        <div><strong style="color:var(--text);">Logo</strong><br>Square (1:1), ~300×300px<br>Folder: <code>images/Logo/</code></div>
+        <div><strong style="color:var(--text);">Hero Video</strong><br>Landscape (16:9), MP4, under ~15MB<br>File: <code>images/t2r-intro.mp4</code></div>
+        <div><strong style="color:var(--text);">Campus Photos</strong><br>Landscape, ~600×420px each<br>Add via <code>data/campus.json</code><br>Folder: <code>images/campus/</code></div>
+        <div><strong style="color:var(--text);">Library Documents</strong><br>PDF preferred. Link via <code>fileUrl</code> in library.json.</div>
       </div>
-      <p style="font-size:0.78rem; color:var(--text-soft); margin-top:12px; border-top:1px solid var(--border); padding-top:10px;">💡 Tip: keep each image under ~200KB where possible so pages load quickly as your content grows. Most phone gallery apps can crop to a square before you upload.</p>
+      <p style="font-size:0.78rem; color:var(--text-soft); margin-top:12px; border-top:1px solid var(--border); padding-top:10px;">💡 Tip: keep each image under ~200KB where possible. Most phone gallery apps can crop to a square before upload.</p>
     </div>
     <div style="max-width:1100px; margin:0 auto 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
       <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#eaf0fc;">👥</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatStudents">0</div><span style="font-size:0.8rem;">Total Students</span></div></div>
@@ -739,12 +683,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="footer-logo">
-        <div class="logo-badge" id="footerLogoBadge" style="width:44px;height:44px;">
-          <img src="images/Logo/logo.jpg" alt="T2R Logo" id="footerLogoImg">
-        </div>
-        T2R
-      </div>
+      <div class="footer-logo"><div class="logo-badge" id="footerLogoBadge" style="width:44px;height:44px;"><img src="images/Logo/logo.jpg" alt="T2R Logo" id="footerLogoImg"></div>T2R</div>
       <p style="font-size:0.86rem;">Theory to Reality — Bridging the gap between academic learning and real-world engineering practice for students across India.</p>
     </div>
     <div>
@@ -760,234 +699,89 @@
 </footer>
 
 <script>
-function setupLogoFallback(imgId) {
-  var img = document.getElementById(imgId);
-  if (!img) return;
-  img.addEventListener('error', function() {
-    this.style.display = 'none';
-    var parent = this.parentElement;
-    if (parent) parent.textContent = 'T2R';
-    if (parent) {
-      parent.style.fontWeight = '800';
-      parent.style.color = '#1a4d3a';
-      parent.style.fontSize = '0.85rem';
-    }
-  });
-}
+function initials(name){return name.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();}
 
-function initials(name) {
-  return name.split(' ').map(function(w) { return w[0]; }).slice(0,2).join('').toUpperCase();
-}
-
-function showToast(msg) {
-  var t = document.createElement('div');
-  t.style.position = 'fixed';
-  t.style.bottom = '24px';
-  t.style.right = '24px';
-  t.style.background = '#1a4d3a';
-  t.style.color = 'white';
-  t.style.padding = '13px 20px';
-  t.style.borderRadius = '10px';
-  t.style.fontSize = '0.88rem';
-  t.style.boxShadow = '0 10px 28px rgba(0,0,0,0.18)';
-  t.style.zIndex = '2000';
-  t.textContent = msg;
+function showToast(msg){
+  var t=document.createElement('div');
+  t.style.position='fixed';t.style.bottom='24px';t.style.right='24px';t.style.background='#1a4d3a';
+  t.style.color='white';t.style.padding='13px 20px';t.style.borderRadius='10px';t.style.fontSize='0.88rem';
+  t.style.boxShadow='0 10px 28px rgba(0,0,0,0.18)';t.style.zIndex='2000';t.textContent=msg;
   document.body.appendChild(t);
-  setTimeout(function() { t.remove(); }, 3000);
+  setTimeout(function(){t.remove();},3000);
 }
 
-/* NOTE FOR GITHUB VERSION:
-   The window.storage API (storageSet/storageGet/storageListPrefix below)
-   ONLY works inside Claude.ai artifacts. It will NOT work on GitHub Pages.
-   These functions are kept here so the code doesn't crash, but registrations
-   and profile data will NOT persist once this is hosted on GitHub Pages
-   until you wire up a real backend (e.g. Supabase). See bottom of file
-   for migration notes. */
-async function storageSet(key, value, shared) {
-  try {
-    if (typeof window.storage === 'undefined') { return false; }
-    var result = await window.storage.set(key, JSON.stringify(value), shared);
-    return !!result;
-  } catch (err) {
-    return false;
-  }
-}
-
-async function storageGet(key, shared) {
-  try {
-    if (typeof window.storage === 'undefined') { return null; }
-    var result = await window.storage.get(key, shared);
-    return result ? JSON.parse(result.value) : null;
-  } catch (err) {
-    return null;
-  }
-}
-
-async function storageListPrefix(prefix, shared) {
-  try {
-    if (typeof window.storage === 'undefined') { return []; }
-    var result = await window.storage.list(prefix, shared);
-    return result ? result.keys : [];
-  } catch (err) {
-    return [];
-  }
-}
-
-var currentUser = { role: null, name: null };
-var ADMIN_PASSWORD = 't2r-admin-2026';
-
-function updateNavUser() {
-  var nameEl = document.getElementById('navUserName');
-  var avatarEl = document.getElementById('navAvatar');
-  var adminLink = document.getElementById('adminNavLink');
-  if (currentUser.role) {
-    nameEl.textContent = currentUser.name;
-    avatarEl.textContent = currentUser.name.charAt(0).toUpperCase();
-  } else {
-    nameEl.textContent = 'Sign in';
-    avatarEl.textContent = '?';
-  }
-  if (adminLink) {
-    adminLink.style.display = (currentUser.role === 'admin') ? 'inline-block' : 'none';
-  }
-}
-
-function closeRoleModal() {
-  var overlay = document.getElementById('roleOverlay');
-  if (overlay) overlay.remove();
-}
-
-function openRoleModal(forRole) {
-  var overlay = document.createElement('div');
-  overlay.className = 'role-overlay';
-  overlay.id = 'roleOverlay';
-
-  if (forRole === 'admin') {
-    overlay.innerHTML =
-      '<div class="role-box">' +
-      '<h3>Admin Login</h3>' +
-      '<p>Enter the admin password to continue.</p>' +
-      '<input type="text" id="adminNameInput" placeholder="Your name">' +
-      '<input type="password" id="adminPassInput" placeholder="Admin password">' +
-      '<div class="err" id="adminErr">Incorrect password.</div>' +
-      '<button class="btn-go" id="adminGoBtn">Log In</button>' +
-      '<a href="#" class="back-link" id="roleBackBtn">← Back</a>' +
-      '</div>';
-    document.body.appendChild(overlay);
-    document.getElementById('adminGoBtn').addEventListener('click', function() {
-      var name = document.getElementById('adminNameInput').value.trim() || 'Admin';
-      var pass = document.getElementById('adminPassInput').value;
-      if (pass === ADMIN_PASSWORD) {
-        currentUser = { role: 'admin', name: name };
-        updateNavUser();
-        closeRoleModal();
-        navigateTo('admin');
-        showToast('Welcome, ' + name);
-      } else {
-        document.getElementById('adminErr').style.display = 'block';
-      }
-    });
-    document.getElementById('roleBackBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      closeRoleModal();
-      openRoleModal();
-    });
-  } else {
-    overlay.innerHTML =
-      '<div class="role-box">' +
-      '<h3>Welcome to T2R</h3>' +
-      '<p>Sign in to continue.</p>' +
-      '<input type="text" id="roleNameInput" placeholder="Your name">' +
-      '<div style="font-size:0.74rem; color:var(--text-soft); margin:-4px 0 14px; text-align:left;">⚠️ Preview mode — no password yet. Real accounts are coming soon.</div>' +
-      '<button class="role-option" id="studentOptBtn"><span class="role-icon">🎓</span> Continue as Student</button>' +
-      '<button class="role-option" id="adminOptBtn"><span class="role-icon">🔐</span> Continue as Admin</button>' +
-      '<a href="#" class="back-link" id="roleCancelBtn">Cancel</a>' +
-      '</div>';
-    document.body.appendChild(overlay);
-    document.getElementById('studentOptBtn').addEventListener('click', function() {
-      var name = document.getElementById('roleNameInput').value.trim();
-      if (!name) { showToast('Please enter your name'); return; }
-      currentUser = { role: 'student', name: name };
-      updateNavUser();
-      closeRoleModal();
-      navigateTo('dashboard');
-      showToast('Welcome, ' + name);
-    });
-    document.getElementById('adminOptBtn').addEventListener('click', function() {
-      closeRoleModal();
-      openRoleModal('admin');
-    });
-    document.getElementById('roleCancelBtn').addEventListener('click', function(e) {
-      e.preventDefault();
-      closeRoleModal();
-    });
-  }
-}
-
-var navUserEl = document.getElementById('navUser');
-if (navUserEl) {
-  navUserEl.addEventListener('click', function() {
-    // no-op: public login removed
+function setupLogoFallback(imgId){
+  var img=document.getElementById(imgId);
+  if(!img)return;
+  img.addEventListener('error',function(){
+    img.style.display='none';
+    var parent=img.parentElement;
+    if(parent){parent.textContent='T2R';parent.style.fontWeight='800';parent.style.color='#1a4d3a';parent.style.fontSize='0.85rem';}
   });
 }
 
-function setupHeroVideoFallback() {
-  var video = document.getElementById('heroVideo');
-  if (!video) return;
-  video.addEventListener('error', function() {
-    var wrap = document.getElementById('heroImageWrap');
-    if (wrap) {
-      var img = document.createElement('img');
-      img.src = 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80';
-      img.alt = 'Engineering in action';
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.objectFit = 'cover';
-      img.style.display = 'block';
+function setupHeroVideoFallback(){
+  var video=document.getElementById('heroVideo');
+  if(!video)return;
+  video.addEventListener('error',function(){
+    var wrap=document.getElementById('heroImageWrap');
+    if(wrap){
+      var img=document.createElement('img');
+      img.src='https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&q=80';
+      img.alt='Engineering in action';
       video.replaceWith(img);
     }
-  }, true);
+  },true);
 }
 
-var COUNTRY_COORDS = {
-  "Germany": [51.1657, 10.4515],
-  "India": [20.5937, 78.9629],
-  "USA": [37.0902, -95.7129],
-  "Turkey": [38.9637, 35.2433],
-  "Italy": [41.8719, 12.5674],
-  "Nepal": [28.3949, 84.1240],
-  "Tunisia": [33.8869, 9.5375]
-};
+var CAMPUS_FALLBACK_PHOTOS=[
+  {url:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=70",caption:"Sample — add real photos via data/campus.json"},
+  {url:"https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=70",caption:"Sample — add real photos via data/campus.json"},
+  {url:"https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=600&q=70",caption:"Sample — add real photos via data/campus.json"},
+  {url:"https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=70",caption:"Sample — add real photos via data/campus.json"}
+];
 
-var SPEAKERS = [];
-var SESSIONS = [];
-var LIBRARY_RESOURCES = [];
-var dataLoaded = { speakers: false, sessions: false, library: false };
+function renderCampusFilmstrip(photos){
+  var strip=document.getElementById('campusFilmstrip');
+  if(!strip)return;
+  var doubled=photos.concat(photos);
+  var html='';
+  for(var i=0;i<doubled.length;i++){
+    var p=doubled[i];
+    var captionHtml=p.caption?('<div class="campus-filmstrip-caption">'+p.caption+'</div>'):'';
+    html+='<div class="campus-filmstrip-item"><img src="'+p.url+'" alt="'+(p.caption||'Campus session')+'" loading="lazy">'+captionHtml+'</div>';
+  }
+  strip.innerHTML=html;
+}
 
-async function loadJsonData(path) {
-  try {
-    var res = await fetch(path);
-    if (!res.ok) throw new Error('Fetch failed: ' + path);
+async function loadCampusPhotos(){
+  var photos=await loadJsonData('data/campus.json');
+  if(!photos||!photos.length){photos=CAMPUS_FALLBACK_PHOTOS;}
+  renderCampusFilmstrip(photos);
+}
+
+var SPEAKERS=[];
+var SESSIONS=[];
+var LIBRARY_RESOURCES=[];
+
+async function loadJsonData(path){
+  try{
+    var res=await fetch(path);
+    if(!res.ok)throw new Error('Fetch failed: '+path);
     return await res.json();
-  } catch (err) {
-    console.error('Could not load ' + path, err);
+  }catch(err){
+    console.error('Could not load '+path,err);
     return null;
   }
 }
 
-async function loadAllSiteData() {
-  var speakersData = await loadJsonData('data/speakers.json');
-  if (speakersData) { SPEAKERS = speakersData; }
-  dataLoaded.speakers = true;
-
-  var sessionsData = await loadJsonData('data/sessions.json');
-  if (sessionsData) { SESSIONS = sessionsData; }
-  dataLoaded.sessions = true;
-
-  var libraryData = await loadJsonData('data/library.json');
-  if (libraryData) { LIBRARY_RESOURCES = libraryData; }
-  dataLoaded.library = true;
-
+async function loadAllSiteData(){
+  var speakersData=await loadJsonData('data/speakers.json');
+  if(speakersData){SPEAKERS=speakersData;}
+  var sessionsData=await loadJsonData('data/sessions.json');
+  if(sessionsData){SESSIONS=sessionsData;}
+  var libraryData=await loadJsonData('data/library.json');
+  if(libraryData){LIBRARY_RESOURCES=libraryData;}
   initLeafletMap();
   renderCountryChips();
   renderSpeakerGrid();
@@ -998,1466 +792,856 @@ async function loadAllSiteData() {
   renderFoundersGrid();
 }
 
-function speakerAvatarHtml(s, sizeClass) {
-  if (s.photo) {
-    return '<img src="' + s.photo + '" alt="' + s.name + '" class="' + sizeClass + '" style="border-radius:50%; object-fit:cover;" data-fallback-initials="' + initials(s.name) + '">';
+function speakerAvatarHtml(s,sizeClass){
+  if(s.photo){
+    return '<img src="'+s.photo+'" alt="'+s.name+'" class="'+sizeClass+'" style="border-radius:50%; object-fit:cover;" data-fallback-initials="'+initials(s.name)+'">';
   }
-  return '<div class="' + sizeClass + '" style="background:var(--sage); color:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700;">' + initials(s.name) + '</div>';
+  return '<div class="'+sizeClass+'" style="background:var(--sage); color:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700;">'+initials(s.name)+'</div>';
 }
 
-function attachAvatarFallbacks(container) {
-  if (!container) return;
-  var imgs = container.querySelectorAll('img[data-fallback-initials]');
-  for (var i = 0; i < imgs.length; i++) {
-    imgs[i].addEventListener('error', function() {
-      var fallback = document.createElement('div');
-      fallback.className = this.className;
-      fallback.style.background = 'var(--sage)';
-      fallback.style.color = 'var(--green)';
-      fallback.style.display = 'flex';
-      fallback.style.alignItems = 'center';
-      fallback.style.justifyContent = 'center';
-      fallback.style.fontWeight = '700';
-      fallback.textContent = this.getAttribute('data-fallback-initials') || '';
+function attachAvatarFallbacks(container){
+  if(!container)return;
+  var imgs=container.querySelectorAll('img[data-fallback-initials]');
+  for(var i=0;i<imgs.length;i++){
+    imgs[i].addEventListener('error',function(){
+      var fallback=document.createElement('div');
+      fallback.className=this.className;
+      fallback.style.background='var(--sage)';fallback.style.color='var(--green)';fallback.style.display='flex';
+      fallback.style.alignItems='center';fallback.style.justifyContent='center';fallback.style.fontWeight='700';
+      fallback.textContent=this.getAttribute('data-fallback-initials')||'';
       this.replaceWith(fallback);
     });
   }
 }
 
-var activeCountryFilter = null;
-var leafletMapInstance = null;
-var leafletMarkers = {};
+var activeCountryFilter=null;
+var leafletMapInstance=null;
+var leafletMarkers={};
 
-function makePinIcon(color, size) {
+var COUNTRY_COORDS={
+  "Germany":[51.1657,10.4515],"India":[20.5937,78.9629],"USA":[37.0902,-95.7129],
+  "Turkey":[38.9637,35.2433],"Italy":[41.8719,12.5674],"Nepal":[28.3949,84.1240],"Tunisia":[33.8869,9.5375]
+};
+
+function makePinIcon(color,size){
   return L.divIcon({
-    className: 'custom-map-pin',
-    html: '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color + ';border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
-    iconSize: [size + 6, size + 6],
-    iconAnchor: [(size + 6) / 2, (size + 6) / 2]
+    className:'custom-map-pin',
+    html:'<div style="width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+color+';border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+    iconSize:[size+6,size+6],iconAnchor:[(size+6)/2,(size+6)/2]
   });
 }
 
-function initLeafletMap() {
-  var mapEl = document.getElementById('leafletMap');
-  if (!mapEl || leafletMapInstance || typeof L === 'undefined') return;
-  leafletMapInstance = L.map('leafletMap', { scrollWheelZoom: true, minZoom: 1, maxZoom: 8 }).setView([20, 30], 2);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 8
-  }).addTo(leafletMapInstance);
-
-  var countries = Object.keys(COUNTRY_COORDS);
-  for (var i = 0; i < countries.length; i++) {
-    addCountryMarker(countries[i]);
-  }
-  setTimeout(function() { if (leafletMapInstance) leafletMapInstance.invalidateSize(); }, 300);
+function addCountryMarker(country){
+  if(!leafletMapInstance||leafletMarkers[country]||!COUNTRY_COORDS[country])return;
+  var greenIcon=makePinIcon('#1a4d3a',16);
+  var goldIcon=makePinIcon('#e6a623',20);
+  var marker=L.marker(COUNTRY_COORDS[country],{icon:greenIcon}).addTo(leafletMapInstance);
+  marker.bindTooltip(country,{direction:'top'});
+  marker._t2rCountry=country;
+  marker.on('click',function(){filterByCountry(this._t2rCountry);});
+  leafletMarkers[country]={marker:marker,greenIcon:greenIcon,goldIcon:goldIcon};
 }
 
-function addCountryMarker(country) {
-  if (!leafletMapInstance || leafletMarkers[country] || !COUNTRY_COORDS[country]) return;
-  var greenIcon = makePinIcon('#1a4d3a', 16);
-  var goldIcon = makePinIcon('#e6a623', 20);
-  var marker = L.marker(COUNTRY_COORDS[country], { icon: greenIcon }).addTo(leafletMapInstance);
-  marker.bindTooltip(country, { direction: 'top' });
-  marker._t2rCountry = country;
-  marker.on('click', function() { filterByCountry(this._t2rCountry); });
-  leafletMarkers[country] = { marker: marker, greenIcon: greenIcon, goldIcon: goldIcon };
+function initLeafletMap(){
+  var mapEl=document.getElementById('leafletMap');
+  if(!mapEl||leafletMapInstance||typeof L==='undefined')return;
+  leafletMapInstance=L.map('leafletMap',{scrollWheelZoom:true,minZoom:1,maxZoom:8}).setView([20,30],2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors',maxZoom:8}).addTo(leafletMapInstance);
+  var countries=[];
+  for(var i=0;i<SPEAKERS.length;i++){if(countries.indexOf(SPEAKERS[i].country)===-1)countries.push(SPEAKERS[i].country);}
+  for(var j=0;j<countries.length;j++){addCountryMarker(countries[j]);}
+  setTimeout(function(){if(leafletMapInstance)leafletMapInstance.invalidateSize();},300);
 }
 
-function refreshMapMarkersForNewSpeaker(country) {
-  if (!country) return;
-  if (!COUNTRY_COORDS[country]) { COUNTRY_COORDS[country] = [20, 0]; }
+function refreshMapMarkersForNewSpeaker(country){
+  if(!country)return;
+  if(!COUNTRY_COORDS[country]){COUNTRY_COORDS[country]=[20,0];}
   addCountryMarker(country);
   renderCountryChips();
 }
 
-function renderCountryChips() {
-  var container = document.getElementById('countryChipsContainer');
-  if (!container) return;
-  var countries = [];
-  for (var i = 0; i < SPEAKERS.length; i++) {
-    if (countries.indexOf(SPEAKERS[i].country) === -1) countries.push(SPEAKERS[i].country);
-  }
-  var html = '';
-  for (var j = 0; j < countries.length; j++) {
-    html += '<span class="country-chip" data-country="' + countries[j] + '">' + countries[j] + '</span>';
-  }
-  container.innerHTML = html;
-  var chips = container.querySelectorAll('.country-chip');
-  for (var c = 0; c < chips.length; c++) {
-    chips[c].addEventListener('click', function() {
-      filterByCountry(this.dataset.country);
-    });
-  }
+function renderCountryChips(){
+  var container=document.getElementById('countryChipsContainer');
+  if(!container)return;
+  var countries=[];
+  for(var i=0;i<SPEAKERS.length;i++){if(countries.indexOf(SPEAKERS[i].country)===-1)countries.push(SPEAKERS[i].country);}
+  var html='';
+  for(var j=0;j<countries.length;j++){html+='<span class="country-chip" data-country="'+countries[j]+'">'+countries[j]+'</span>';}
+  container.innerHTML=html;
+  var chips=container.querySelectorAll('.country-chip');
+  for(var c=0;c<chips.length;c++){chips[c].addEventListener('click',function(){filterByCountry(this.dataset.country);});}
 }
 
-function filterByCountry(country) {
-  activeCountryFilter = country;
-  document.getElementById('mapSideTitle').textContent = country;
-  var count = 0;
-  for (var i = 0; i < SPEAKERS.length; i++) { if (SPEAKERS[i].country === country) count++; }
-  document.getElementById('mapSideSub').textContent = count + ' speaker(s) from ' + country;
-  document.getElementById('speakerGridLabel').textContent = 'Speakers from ' + country;
-
-  var countryKeys = Object.keys(leafletMarkers);
-  for (var k = 0; k < countryKeys.length; k++) {
-    var key = countryKeys[k];
-    var entry = leafletMarkers[key];
-    entry.marker.setIcon(key === country ? entry.goldIcon : entry.greenIcon);
+function filterByCountry(country){
+  activeCountryFilter=country;
+  document.getElementById('mapSideTitle').textContent=country;
+  var count=0;
+  for(var i=0;i<SPEAKERS.length;i++){if(SPEAKERS[i].country===country)count++;}
+  document.getElementById('mapSideSub').textContent=count+' speaker(s) from '+country;
+  document.getElementById('speakerGridLabel').textContent='Speakers from '+country;
+  var countryKeys=Object.keys(leafletMarkers);
+  for(var k=0;k<countryKeys.length;k++){
+    var key=countryKeys[k];var entry=leafletMarkers[key];
+    entry.marker.setIcon(key===country?entry.goldIcon:entry.greenIcon);
   }
-  if (leafletMapInstance && COUNTRY_COORDS[country]) {
-    leafletMapInstance.flyTo(COUNTRY_COORDS[country], 4, { duration: 0.8 });
-  }
-
-  var chips = document.querySelectorAll('.country-chip');
-  for (var c = 0; c < chips.length; c++) {
-    chips[c].style.background = chips[c].dataset.country === country ? '#1a4d3a' : '';
-    chips[c].style.color = chips[c].dataset.country === country ? 'white' : '';
+  if(leafletMapInstance&&COUNTRY_COORDS[country]){leafletMapInstance.flyTo(COUNTRY_COORDS[country],4,{duration:0.8});}
+  var chips=document.querySelectorAll('.country-chip');
+  for(var c2=0;c2<chips.length;c2++){
+    chips[c2].style.background=chips[c2].dataset.country===country?'#1a4d3a':'';
+    chips[c2].style.color=chips[c2].dataset.country===country?'white':'';
   }
   renderSpeakerGrid();
 }
 
-function renderSpeakerGrid() {
-  var grid = document.getElementById('allSpeakersGrid');
-  if (!grid) return;
-  if (!activeCountryFilter) {
-    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-soft); font-size:0.9rem;">🌐 Click a pin on the map or a country chip above to see speakers from that country.</div>';
+function renderSpeakerGrid(){
+  var grid=document.getElementById('allSpeakersGrid');
+  if(!grid)return;
+  if(!activeCountryFilter){
+    grid.innerHTML='<div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-soft); font-size:0.9rem;">🌐 Click a pin on the map or a country chip above to see speakers from that country.</div>';
     return;
   }
-  var list = [];
-  for (var i = 0; i < SPEAKERS.length; i++) { if (SPEAKERS[i].country === activeCountryFilter) list.push(SPEAKERS[i]); }
-  var html = '';
-  for (var j = 0; j < list.length; j++) {
-    var s = list[j];
-    html += '<div class="mini-speaker">' +
-      '<div class="mini-speaker-head">' + speakerAvatarHtml(s,'mini-avatar') + '<div><h5>' + s.name + '</h5><div class="loc">' + s.country + '</div></div></div>' +
-      '<div class="role">' + s.role + '</div>' +
-      '<div class="org">' + s.org + '</div>' +
-      '<div class="blurb">' + s.blurb + '</div>' +
-      '</div>';
+  var list=[];
+  for(var i=0;i<SPEAKERS.length;i++){if(SPEAKERS[i].country===activeCountryFilter)list.push(SPEAKERS[i]);}
+  var html='';
+  for(var j=0;j<list.length;j++){
+    var s=list[j];
+    html+='<div class="mini-speaker"><div class="mini-speaker-head">'+speakerAvatarHtml(s,'mini-avatar')+'<div><h5>'+s.name+'</h5><div class="loc">'+s.country+'</div></div></div><div class="role">'+s.role+'</div><div class="org">'+s.org+'</div><div class="blurb">'+s.blurb+'</div></div>';
   }
-  grid.innerHTML = html;
+  grid.innerHTML=html;
   attachAvatarFallbacks(grid);
 }
 
-function populateSpeakerFilterOptions() {
-  var expSelect = document.getElementById('speakerExpertiseFilter');
-  var countrySelect = document.getElementById('speakerCountryFilter');
-  if (expSelect && expSelect.options.length <= 1) {
-    var expertiseList = [];
-    for (var i = 0; i < SPEAKERS.length; i++) {
-      if (expertiseList.indexOf(SPEAKERS[i].expertise) === -1) expertiseList.push(SPEAKERS[i].expertise);
-    }
+function populateSpeakerFilterOptions(){
+  var expSelect=document.getElementById('speakerExpertiseFilter');
+  var countrySelect=document.getElementById('speakerCountryFilter');
+  if(expSelect&&expSelect.options.length<=1){
+    var expertiseList=[];
+    for(var i=0;i<SPEAKERS.length;i++){if(expertiseList.indexOf(SPEAKERS[i].expertise)===-1)expertiseList.push(SPEAKERS[i].expertise);}
     expertiseList.sort();
-    for (var j = 0; j < expertiseList.length; j++) {
-      var opt = document.createElement('option');
-      opt.value = expertiseList[j];
-      opt.textContent = expertiseList[j];
-      expSelect.appendChild(opt);
+    for(var j=0;j<expertiseList.length;j++){
+      var opt=document.createElement('option');opt.value=expertiseList[j];opt.textContent=expertiseList[j];expSelect.appendChild(opt);
     }
   }
-  if (countrySelect && countrySelect.options.length <= 1) {
-    var countryList = [];
-    for (var k = 0; k < SPEAKERS.length; k++) {
-      if (countryList.indexOf(SPEAKERS[k].country) === -1) countryList.push(SPEAKERS[k].country);
-    }
+  if(countrySelect&&countrySelect.options.length<=1){
+    var countryList=[];
+    for(var k=0;k<SPEAKERS.length;k++){if(countryList.indexOf(SPEAKERS[k].country)===-1)countryList.push(SPEAKERS[k].country);}
     countryList.sort();
-    for (var m = 0; m < countryList.length; m++) {
-      var opt2 = document.createElement('option');
-      opt2.value = countryList[m];
-      opt2.textContent = countryList[m];
-      countrySelect.appendChild(opt2);
+    for(var m=0;m<countryList.length;m++){
+      var opt2=document.createElement('option');opt2.value=countryList[m];opt2.textContent=countryList[m];countrySelect.appendChild(opt2);
     }
   }
 }
 
-var speakersShowAll = false;
+var speakersShowAll=false;
 
-function renderFullSpeakerGrid() {
-  var grid = document.getElementById('fullSpeakerGrid');
-  var emptyState = document.getElementById('speakerEmptyState');
-  if (!grid) return;
+function renderFullSpeakerGrid(){
+  var grid=document.getElementById('fullSpeakerGrid');
+  var emptyState=document.getElementById('speakerEmptyState');
+  if(!grid)return;
   populateSpeakerFilterOptions();
-  var searchEl = document.getElementById('speakerSearch');
-  var expEl = document.getElementById('speakerExpertiseFilter');
-  var countryEl = document.getElementById('speakerCountryFilter');
-  var query = searchEl ? searchEl.value.toLowerCase().trim() : '';
-  var expertiseFilter = expEl ? expEl.value : 'All';
-  var countryFilter = countryEl ? countryEl.value : 'All';
-
-  var list = [];
-  for (var i = 0; i < SPEAKERS.length; i++) {
-    var s = SPEAKERS[i];
-    if (expertiseFilter !== 'All' && s.expertise !== expertiseFilter) continue;
-    if (countryFilter !== 'All' && s.country !== countryFilter) continue;
-    if (query) {
-      var matches = s.name.toLowerCase().indexOf(query) !== -1 ||
-                    s.org.toLowerCase().indexOf(query) !== -1 ||
-                    s.expertise.toLowerCase().indexOf(query) !== -1 ||
-                    s.role.toLowerCase().indexOf(query) !== -1 ||
-                    s.country.toLowerCase().indexOf(query) !== -1;
-      if (!matches) continue;
+  var searchEl=document.getElementById('speakerSearch');
+  var expEl=document.getElementById('speakerExpertiseFilter');
+  var countryEl=document.getElementById('speakerCountryFilter');
+  var query=searchEl?searchEl.value.toLowerCase().trim():'';
+  var expertiseFilter=expEl?expEl.value:'All';
+  var countryFilter=countryEl?countryEl.value:'All';
+  var list=[];
+  for(var i=0;i<SPEAKERS.length;i++){
+    var s=SPEAKERS[i];
+    if(expertiseFilter!=='All'&&s.expertise!==expertiseFilter)continue;
+    if(countryFilter!=='All'&&s.country!==countryFilter)continue;
+    if(query){
+      var matches=s.name.toLowerCase().indexOf(query)!==-1||s.org.toLowerCase().indexOf(query)!==-1||s.expertise.toLowerCase().indexOf(query)!==-1||s.role.toLowerCase().indexOf(query)!==-1||s.country.toLowerCase().indexOf(query)!==-1;
+      if(!matches)continue;
     }
     list.push(s);
   }
-
-  if (list.length === 0) {
-    grid.style.display = 'none';
-    if (emptyState) emptyState.style.display = 'block';
-    var viewAllBtn0 = document.getElementById('speakersViewAllBtn');
-    if (viewAllBtn0) viewAllBtn0.style.display = 'none';
+  if(list.length===0){
+    grid.style.display='none';if(emptyState)emptyState.style.display='block';
+    var vab0=document.getElementById('speakersViewAllBtn');if(vab0)vab0.style.display='none';
     return;
   }
-  grid.style.display = 'grid';
-  if (emptyState) emptyState.style.display = 'none';
-
-  var visibleList = speakersShowAll ? list : list.slice(0, 10);
-
-  var html = '';
-  for (var j = 0; j < visibleList.length; j++) {
-    var sp = visibleList[j];
-    var founderTag = sp.founder ? '<span class="speaker-founder-tag">Founder</span>' : '';
-    html += '<div class="speaker-full-card">' +
-      '<div class="speaker-full-head">' + speakerAvatarHtml(sp, 'speaker-full-avatar') +
-      '<div><h4>' + sp.name + founderTag + '</h4><div class="loc">🌐 ' + sp.country + '</div></div></div>' +
-      '<div class="role">' + sp.role + '</div>' +
-      '<div class="org">' + sp.org + '</div>' +
-      '<span class="speaker-expertise-tag">' + sp.expertise + '</span>' +
-      '</div>';
+  grid.style.display='grid';if(emptyState)emptyState.style.display='none';
+  var visibleList=speakersShowAll?list:list.slice(0,10);
+  var html='';
+  for(var j=0;j<visibleList.length;j++){
+    var sp=visibleList[j];
+    var founderTag=sp.founder?'<span class="speaker-founder-tag">Founder</span>':'';
+    html+='<div class="speaker-full-card"><div class="speaker-full-head">'+speakerAvatarHtml(sp,'speaker-full-avatar')+'<div><h4>'+sp.name+founderTag+'</h4><div class="loc">🌐 '+sp.country+'</div></div></div><div class="role">'+sp.role+'</div><div class="org">'+sp.org+'</div><span class="speaker-expertise-tag">'+sp.expertise+'</span></div>';
   }
-  grid.innerHTML = html;
+  grid.innerHTML=html;
   attachAvatarFallbacks(grid);
-
-  var viewAllBtn = document.getElementById('speakersViewAllBtn');
-  if (viewAllBtn) {
-    if (list.length > 10 && !speakersShowAll) {
-      viewAllBtn.style.display = 'inline-flex';
-      viewAllBtn.textContent = 'View All ' + list.length + ' Speakers';
-    } else {
-      viewAllBtn.style.display = 'none';
-    }
+  var viewAllBtn=document.getElementById('speakersViewAllBtn');
+  if(viewAllBtn){
+    if(list.length>10&&!speakersShowAll){viewAllBtn.style.display='inline-flex';viewAllBtn.textContent='View All '+list.length+' Speakers';}
+    else{viewAllBtn.style.display='none';}
   }
 }
 
-var founderEmails = {
-  "Suresh Tankala": "sureshtankala01@gmail.com",
-  "Pradeep Hegde": "pradeep.hegde@fichtner.de",
-  "Narayana Rao Bhogapurapu": "narayana@caltech.edu"
+var founderEmails={
+  "Suresh Tankala":"sureshtankala01@gmail.com","Pradeep Hegde":"pradeep.hegde@fichtner.de","Narayana Rao Bhogapurapu":"narayana@caltech.edu"
 };
 
-function renderFoundersGrid() {
-  var grid = document.getElementById('foundersGrid');
-  if (!grid) return;
-  var founders = [];
-  for (var i = 0; i < SPEAKERS.length; i++) { if (SPEAKERS[i].founder) founders.push(SPEAKERS[i]); }
-  var html = '';
-  for (var j = 0; j < founders.length; j++) {
-    var s = founders[j];
-    var email = founderEmails[s.name];
-    var emailHtml = email ? ('<a href="mailto:' + email + '" style="font-size:0.82rem; color:var(--text-soft); display:inline-flex; align-items:center; gap:5px; margin-top:8px;">✉️ Email</a>') : '';
+function renderFoundersGrid(){
+  var grid=document.getElementById('foundersGrid');
+  if(!grid)return;
+  var founders=[];
+  for(var i=0;i<SPEAKERS.length;i++){if(SPEAKERS[i].founder)founders.push(SPEAKERS[i]);}
+  var html='';
+  for(var j=0;j<founders.length;j++){
+    var s=founders[j];
+    var email=founderEmails[s.name];
+    var emailHtml=email?('<a href="mailto:'+email+'" style="font-size:0.82rem; color:var(--text-soft); display:inline-flex; align-items:center; gap:5px; margin-top:8px;">✉️ Email</a>'):'';
     var photoBlock;
-    if (s.photo) {
-      photoBlock = '<img src="' + s.photo + '" alt="' + s.name + '" style="width:100%; height:100%; object-fit:cover; display:block;" data-fallback-initials="' + initials(s.name) + '">';
-    } else {
-      photoBlock = '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:2.4rem; font-weight:700; color:var(--green); background:var(--sage);">' + initials(s.name) + '</div>';
+    if(s.photo){
+      photoBlock='<img src="'+s.photo+'" alt="'+s.name+'" style="width:100%; height:100%; object-fit:cover; display:block;" data-fallback-initials="'+initials(s.name)+'">';
+    }else{
+      photoBlock='<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:2.4rem; font-weight:700; color:var(--green); background:var(--sage);">'+initials(s.name)+'</div>';
     }
-    html += '<div class="career-card" style="padding:0; overflow:hidden;">' +
-      '<div style="aspect-ratio:4/3.3; background:var(--sage-2); overflow:hidden;">' + photoBlock + '</div>' +
-      '<div style="padding:20px;">' +
-      '<span class="speaker-founder-tag" style="margin-left:0; margin-bottom:10px; display:inline-block;">Co-Founder</span>' +
-      '<h4 style="margin-bottom:3px; font-size:1.05rem;">' + s.name + '</h4>' +
-      '<div style="font-size:0.84rem; color:var(--green); font-weight:600; margin-bottom:12px;">' + s.role + ', ' + s.org + '</div>' +
-      '<p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:12px;">' + s.blurb + '</p>' +
-      emailHtml +
-      '</div></div>';
+    html+='<div class="career-card" style="padding:0; overflow:hidden;"><div style="aspect-ratio:4/3.3; background:var(--sage-2); overflow:hidden;">'+photoBlock+'</div><div style="padding:20px;"><span class="speaker-founder-tag" style="margin-left:0; margin-bottom:10px; display:inline-block;">Co-Founder</span><h4 style="margin-bottom:3px; font-size:1.05rem;">'+s.name+'</h4><div style="font-size:0.84rem; color:var(--green); font-weight:600; margin-bottom:12px;">'+s.role+', '+s.org+'</div><p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:12px;">'+s.blurb+'</p>'+emailHtml+'</div></div>';
   }
-  grid.innerHTML = html;
+  grid.innerHTML=html;
   attachAvatarFallbacks(grid);
 }
 
-var LIBRARY_RESOURCES = [
-  { title:"Python for Data Science — Crash Course Recording", desc:"A 2-hour recording covering NumPy, Pandas, Matplotlib, and basic ML with scikit-learn. Perfect for CS and IT students.", branch:"Computer Science", type:"Recording" },
-  { title:"GATE Preparation: Electrical Engineering Formula Sheet", desc:"Quick-reference formula sheet covering Circuit Theory, Power Systems, Control Systems, and Electromagnetics for GATE EE.", branch:"Electrical", type:"PDF" },
-  { title:"Arduino IoT Projects — Step-by-Step Tutorial", desc:"Build 5 real IoT projects with Arduino including temperature monitoring, smart irrigation, and home automation.", branch:"Electronics", type:"Tutorial" },
-  { title:"Resume Building Workshop Recording", desc:"Learn how to craft an ATS-friendly resume that gets noticed by recruiters at Indian IT and core companies.", branch:"General", type:"Recording" },
-  { title:"Introduction to AutoCAD for Civil Engineers", desc:"A beginner-friendly article covering 2D drafting, layer management, and creating construction drawings in AutoCAD.", branch:"Civil", type:"Article" },
-  { title:"SolidWorks Essentials for Beginners (PDF Guide)", desc:"A comprehensive 40-page guide covering sketching, part modeling, assemblies, and drawings in SolidWorks — the most used CAD tool in mechanical design.", branch:"Mechanical", type:"PDF" }
-];
+var libraryShowAll=false;
 
-function renderLibraryGrid() {
-  var grid = document.getElementById('libGrid');
-  var emptyState = document.getElementById('libEmptyState');
-  if (!grid) return;
-  var searchEl = document.getElementById('libSearch');
-  var branchEl = document.getElementById('libBranchFilter');
-  var typeEl = document.getElementById('libTypeFilter');
-  var query = searchEl ? searchEl.value.toLowerCase().trim() : '';
-  var branchFilter = branchEl ? branchEl.value : 'All';
-  var typeFilter = typeEl ? typeEl.value : 'All';
-
-  var list = [];
-  for (var i = 0; i < LIBRARY_RESOURCES.length; i++) {
-    var r = LIBRARY_RESOURCES[i];
-    if (branchFilter !== 'All' && r.branch !== branchFilter) continue;
-    if (typeFilter !== 'All' && r.type !== typeFilter) continue;
-    if (query) {
-      var matches = r.title.toLowerCase().indexOf(query) !== -1 || r.desc.toLowerCase().indexOf(query) !== -1;
-      if (!matches) continue;
+function renderLibraryGrid(){
+  var grid=document.getElementById('libGrid');
+  var emptyState=document.getElementById('libEmptyState');
+  if(!grid)return;
+  var searchEl=document.getElementById('libSearch');
+  var branchEl=document.getElementById('libBranchFilter');
+  var typeEl=document.getElementById('libTypeFilter');
+  var query=searchEl?searchEl.value.toLowerCase().trim():'';
+  var branchFilter=branchEl?branchEl.value:'All';
+  var typeFilter=typeEl?typeEl.value:'All';
+  var list=[];
+  for(var i=0;i<LIBRARY_RESOURCES.length;i++){
+    var r=LIBRARY_RESOURCES[i];
+    if(branchFilter!=='All'&&r.branch!==branchFilter)continue;
+    if(typeFilter!=='All'&&r.type!==typeFilter)continue;
+    if(query){
+      var matches=r.title.toLowerCase().indexOf(query)!==-1||r.desc.toLowerCase().indexOf(query)!==-1;
+      if(!matches)continue;
     }
     list.push(r);
   }
-
-  if (list.length === 0) {
-    grid.style.display = 'none';
-    if (emptyState) emptyState.style.display = 'block';
+  if(list.length===0){
+    grid.style.display='none';if(emptyState)emptyState.style.display='block';
+    var vab0=document.getElementById('libraryViewAllBtn');if(vab0)vab0.style.display='none';
     return;
   }
-  grid.style.display = 'grid';
-  if (emptyState) emptyState.style.display = 'none';
-
-  var typeIcons = { PDF:'📄', Recording:'🎥', Article:'📰', Tutorial:'🛠️' };
-  var html = '';
-  for (var j = 0; j < list.length; j++) {
-    var res = list[j];
-    var ic = typeIcons[res.type] || '📄';
-    html += '<div class="lib-card">' +
-      '<div class="lib-ic-box">' + ic + '</div>' +
-      '<div><h5>' + res.title + '</h5><p class="desc">' + res.desc + '</p>' +
-      '<div class="lib-tags"><span class="lib-tag branch">' + res.branch + '</span><span class="lib-tag type">' + res.type + '</span></div>' +
-      '</div></div>';
+  grid.style.display='grid';if(emptyState)emptyState.style.display='none';
+  var visibleList=libraryShowAll?list:list.slice(0,10);
+  var typeIcons={PDF:'📄',Recording:'🎥',Article:'📰',Tutorial:'🛠️'};
+  var html='';
+  for(var j=0;j<visibleList.length;j++){
+    var res=visibleList[j];
+    var ic=typeIcons[res.type]||'📄';
+    var linkWrap=res.fileUrl?('<a href="'+res.fileUrl+'" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">'):'';
+    var linkClose=res.fileUrl?'</a>':'';
+    var downloadTag=res.fileUrl?'<span class="lib-tag" style="background:var(--green); color:white;">⬇ Download</span>':'';
+    html+=linkWrap+'<div class="lib-card"><div class="lib-ic-box">'+ic+'</div><div><h5>'+res.title+'</h5><p class="desc">'+res.desc+'</p><div class="lib-tags"><span class="lib-tag branch">'+res.branch+'</span><span class="lib-tag type">'+res.type+'</span>'+downloadTag+'</div></div></div>'+linkClose;
   }
-  grid.innerHTML = html;
-
-  var viewAllBtn = document.getElementById('sessionsViewAllBtn');
-  if (viewAllBtn) {
-    if (list.length > 10 && !sessionsShowAll) {
-      viewAllBtn.style.display = 'inline-flex';
-      viewAllBtn.textContent = 'View All ' + list.length + ' Sessions';
-    } else {
-      viewAllBtn.style.display = 'none';
-    }
+  grid.innerHTML=html;
+  var viewAllBtn=document.getElementById('libraryViewAllBtn');
+  if(viewAllBtn){
+    if(list.length>10&&!libraryShowAll){viewAllBtn.style.display='inline-flex';viewAllBtn.textContent='View All '+list.length+' Resources';}
+    else{viewAllBtn.style.display='none';}
   }
 }
 
-var BRANCHES = ['All Branches','Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
+var BRANCHES=['All Branches','Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
+var activeBranchFilter='All Branches';
+var activeTab='upcoming';
+var sessionsShowAll=false;
 
-var SESSIONS = [
-  { id: 's1', title: 'Career Paths in Core Mechanical Engineering', desc: 'A panel of industry experts walks through real career trajectories in mechanical engineering — from design to manufacturing to project leadership.', speaker: 'Panel: Industry Experts', speakerRole: 'Multiple Speakers', date: '2026-08-20', time: '10:42 AM', duration: '90 min', branch: 'Mechanical', status: 'upcoming', guest: true, img: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=70' },
-  { id: 's2', title: 'Electric Vehicles and Powertrain dimensioning', desc: 'Explore how embedded systems power the next generation of electric vehicles in India. From battery management to motor control.', speaker: 'Gunank Hora', speakerRole: 'System Engineer – Electric Drive, Axiolift Electric Trucks, Stuttgart, Germany', date: '2026-04-02', time: '2:00 PM', duration: '90 min', branch: 'Mechanical', status: 'completed', guest: true, recording: true, recordingUrl: '', img: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&q=70' },
-  { id: 's3', title: 'From Conventional Building to Green Buildings: What Engineer Must Change', desc: 'This session highlighted the shift from traditional construction practices to sustainable, energy-efficient green building design.', speaker: 'Abdul Moeed Chaudhary', speakerRole: 'Managing Director at Essential India Greenedge Analytics Pvt. Ltd.', date: '2026-03-26', time: '2:30 PM', duration: '90 min', branch: 'Civil', status: 'completed', guest: true, recording: true, recordingUrl: '', img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=70' },
-  { id: 's4', title: 'Hydro Power Plant & Turbine Diameter Calculation', desc: 'This session shows how water head, discharge, and speed are used to calculate turbine runner diameter.', speaker: 'Pradeep Hegde', speakerRole: 'Water Resource / Hydraulic Engineer', date: '2026-02-28', time: '2:30 PM', duration: '90 min', branch: 'Mechanical', status: 'completed', guest: true, recording: true, recordingUrl: '', img: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=600&q=70' },
-  { id: 's5', title: 'Edge Detection in Images Processing for Civil Engineering Applications', desc: 'This session explored how edge detection techniques in image processing help identify boundaries, cracks, and structural defects.', speaker: 'Dr. Narayan Rao Bhogapurapu', speakerRole: 'Assistant Professor, NIT Warangal, India', date: '2026-02-24', time: '10:00 AM', duration: '90 min', branch: 'Civil', status: 'completed', guest: true, recording: true, recordingUrl: '', img: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&q=70' }
-];
-
-var activeBranchFilter = 'All Branches';
-var activeTab = 'upcoming';
-var registeredSessionIds = [];
-
-function renderBranchChips() {
-  var row = document.getElementById('branchFilterRow');
-  if (!row) return;
-  var html = '';
-  for (var i = 0; i < BRANCHES.length; i++) {
-    var b = BRANCHES[i];
-    var activeClass = (b === activeBranchFilter) ? 'active' : '';
-    html += '<button class="branch-chip ' + activeClass + '" data-branch="' + b + '">' + b + '</button>';
+function renderBranchChips(){
+  var row=document.getElementById('branchFilterRow');
+  if(!row)return;
+  var html='';
+  for(var i=0;i<BRANCHES.length;i++){
+    var b=BRANCHES[i];var activeClass=(b===activeBranchFilter)?'active':'';
+    html+='<button class="branch-chip '+activeClass+'" data-branch="'+b+'">'+b+'</button>';
   }
-  row.innerHTML = html;
-  var chips = row.querySelectorAll('.branch-chip');
-  for (var j = 0; j < chips.length; j++) {
-    chips[j].addEventListener('click', function() {
-      activeBranchFilter = this.dataset.branch;
-      renderBranchChips();
-      renderSessions();
-    });
+  row.innerHTML=html;
+  var chips=row.querySelectorAll('.branch-chip');
+  for(var j=0;j<chips.length;j++){
+    chips[j].addEventListener('click',function(){activeBranchFilter=this.dataset.branch;renderBranchChips();renderSessions();});
   }
 }
 
-function formatDate(iso) {
-  var d = new Date(iso + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+function formatDate(iso){
+  var d=new Date(iso+'T00:00:00');
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
 
-function getFilteredSessions() {
-  var searchEl = document.getElementById('sessionSearch');
-  var query = searchEl ? searchEl.value.toLowerCase().trim() : '';
-  var result = [];
-  for (var i = 0; i < SESSIONS.length; i++) {
-    var s = SESSIONS[i];
-    if (activeTab === 'upcoming' && s.status !== 'upcoming') continue;
-    if (activeTab === 'past' && s.status !== 'completed') continue;
-    if (activeBranchFilter !== 'All Branches' && s.branch !== activeBranchFilter) continue;
-    if (query) {
-      var matches = s.title.toLowerCase().indexOf(query) !== -1 ||
-                    s.speaker.toLowerCase().indexOf(query) !== -1 ||
-                    s.desc.toLowerCase().indexOf(query) !== -1;
-      if (!matches) continue;
+function getFilteredSessions(){
+  var searchEl=document.getElementById('sessionSearch');
+  var query=searchEl?searchEl.value.toLowerCase().trim():'';
+  var result=[];
+  for(var i=0;i<SESSIONS.length;i++){
+    var s=SESSIONS[i];
+    if(activeTab==='upcoming'&&s.status!=='upcoming')continue;
+    if(activeTab==='past'&&s.status!=='completed')continue;
+    if(activeBranchFilter!=='All Branches'&&s.branch!==activeBranchFilter)continue;
+    if(query){
+      var matches=s.title.toLowerCase().indexOf(query)!==-1||s.speaker.toLowerCase().indexOf(query)!==-1||s.desc.toLowerCase().indexOf(query)!==-1;
+      if(!matches)continue;
     }
     result.push(s);
   }
   return result;
 }
 
-var sessionsShowAll = false;
-
-function renderSessions() {
-  var grid = document.getElementById('sessionGrid');
-  var emptyState = document.getElementById('sessionEmptyState');
-  if (!grid) return;
-  var list = getFilteredSessions();
-
-  var cu = document.getElementById('countUpcoming');
-  var cp = document.getElementById('countPast');
-  var upCount = 0, pastCount = 0;
-  for (var i = 0; i < SESSIONS.length; i++) {
-    if (activeBranchFilter !== 'All Branches' && SESSIONS[i].branch !== activeBranchFilter) continue;
-    if (SESSIONS[i].status === 'upcoming') upCount++;
-    if (SESSIONS[i].status === 'completed') pastCount++;
+function renderSessions(){
+  var grid=document.getElementById('sessionGrid');
+  var emptyState=document.getElementById('sessionEmptyState');
+  if(!grid)return;
+  var list=getFilteredSessions();
+  var cu=document.getElementById('countUpcoming');
+  var cp=document.getElementById('countPast');
+  var upCount=0,pastCount=0;
+  for(var i=0;i<SESSIONS.length;i++){
+    if(activeBranchFilter!=='All Branches'&&SESSIONS[i].branch!==activeBranchFilter)continue;
+    if(SESSIONS[i].status==='upcoming')upCount++;
+    if(SESSIONS[i].status==='completed')pastCount++;
   }
-  if (cu) cu.textContent = upCount;
-  if (cp) cp.textContent = pastCount;
-
-  if (list.length === 0) {
-    grid.style.display = 'none';
-    if (emptyState) emptyState.style.display = 'block';
-    var viewAllBtn0 = document.getElementById('sessionsViewAllBtn');
-    if (viewAllBtn0) viewAllBtn0.style.display = 'none';
+  if(cu)cu.textContent=upCount;if(cp)cp.textContent=pastCount;
+  if(list.length===0){
+    grid.style.display='none';if(emptyState)emptyState.style.display='block';
+    var vab0=document.getElementById('sessionsViewAllBtn');if(vab0)vab0.style.display='none';
     return;
   }
-  grid.style.display = 'grid';
-  if (emptyState) emptyState.style.display = 'none';
-
-  var visibleList = sessionsShowAll ? list : list.slice(0, 10);
-
-  var html = '';
-  for (var j = 0; j < visibleList.length; j++) {
-    var s = visibleList[j];
+  grid.style.display='grid';if(emptyState)emptyState.style.display='none';
+  var visibleList=sessionsShowAll?list:list.slice(0,10);
+  var html='';
+  for(var j=0;j<visibleList.length;j++){
+    var s=visibleList[j];
     var footerRight;
-    if (s.status === 'completed' && s.recording) {
-      footerRight = s.recordingUrl
-        ? '<a href="' + s.recordingUrl + '" target="_blank" rel="noopener" class="session-action-link">Watch Recording →</a>'
-        : '<button class="session-action-link" onclick="showToast(\'Recording link coming soon\')">Watch Recording →</button>';
-    } else if (s.status === 'upcoming') {
-      footerRight = '<button class="session-register-btn" onclick="openSessionModal(\'' + s.id + '\')">Register</button>';
-    } else {
-      footerRight = '<span style="font-size:0.8rem; color:var(--text-soft);">Completed</span>';
+    if(s.status==='completed'&&s.recording){
+      footerRight=s.recordingUrl?('<a href="'+s.recordingUrl+'" target="_blank" rel="noopener" class="session-action-link">Watch Recording →</a>'):('<button class="session-action-link" onclick="showToast(\'Recording link coming soon\')">Watch Recording →</button>');
+    }else if(s.status==='upcoming'){
+      footerRight='<button class="session-register-btn" onclick="openSessionModal(\''+s.id+'\')">Register</button>';
+    }else{
+      footerRight='<span style="font-size:0.8rem; color:var(--text-soft);">Completed</span>';
     }
-    var guestBadge = s.guest ? '<span class="sbadge guest">Guest Lecture</span>' : '';
-    var statusBadge = s.status === 'completed' ? 'Completed' : 'Upcoming';
-    var statusClass = s.status === 'completed' ? 'completed' : 'upcoming';
-    var shortDesc = s.desc.length > 110 ? (s.desc.slice(0,110) + '…') : s.desc;
-
-    html += '<div class="session-card">' +
-      '<div class="session-thumb"><img src="' + s.img + '" alt="' + s.title + '">' +
-      '<div class="session-badge-row"><span class="sbadge ' + statusClass + '">' + statusBadge + '</span>' + guestBadge + '</div></div>' +
-      '<div class="session-body"><h4>' + s.title + '</h4><p class="desc">' + shortDesc + '</p>' +
-      '<div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">' + initials(s.speaker) + '</div>' +
-      '<div class="session-speaker-info"><h6>' + s.speaker + '</h6><span>' + s.speakerRole + '</span></div></div>' +
-      '<div class="session-meta-row"><span>📅 ' + formatDate(s.date) + '</span><span>🕐 ' + s.time + '</span><span>⏱ ' + s.duration + '</span></div>' +
-      '<div class="session-footer"><span class="session-branch-tag">' + s.branch + '</span>' + footerRight + '</div>' +
-      '</div></div>';
+    var guestBadge=s.guest?'<span class="sbadge guest">Guest Lecture</span>':'';
+    var statusBadge=s.status==='completed'?'Completed':'Upcoming';
+    var statusClass=s.status==='completed'?'completed':'upcoming';
+    var shortDesc=s.desc.length>110?(s.desc.slice(0,110)+'…'):s.desc;
+    html+='<div class="session-card"><div class="session-thumb"><img src="'+s.img+'" alt="'+s.title+'"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+shortDesc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
   }
-  grid.innerHTML = html;
-}
-
-function openSessionModal(sessionId) {
-  var s = null;
-  for (var i = 0; i < SESSIONS.length; i++) { if (SESSIONS[i].id === sessionId) { s = SESSIONS[i]; break; } }
-  if (!s) return;
-  var overlay = document.getElementById('sessionModalOverlay');
-  var content = document.getElementById('sessionModalContent');
-  content.innerHTML =
-    '<h3 style="color:var(--green); margin-bottom:10px; font-size:1.15rem;">' + s.title + '</h3>' +
-    '<p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:14px;">' + s.desc + '</p>' +
-    '<div style="font-size:0.85rem; margin-bottom:18px;">' +
-    '<div style="margin-bottom:6px;"><strong>Speaker:</strong> ' + s.speaker + '</div>' +
-    '<div style="margin-bottom:6px;"><strong>Date:</strong> ' + formatDate(s.date) + ' · ' + s.time + '</div>' +
-    '<div><strong>Duration:</strong> ' + s.duration + '</div></div>' +
-    '<div class="admin-form-group"><label>Your Name *</label><input type="text" id="regName"></div>' +
-    '<div class="admin-form-group"><label>Your Email *</label><input type="email" id="regEmail"></div>' +
-    '<button class="btn-go" id="confirmRegisterBtn">Confirm Registration</button>' +
-    '<button class="role-option" id="addToCalendarBtn" style="margin-top:10px; justify-content:center;">📅 Add to Calendar (.ics)</button>' +
-    '<a href="#" class="back-link" id="cancelRegisterBtn">Cancel</a>';
-  overlay.style.display = 'flex';
-  document.getElementById('confirmRegisterBtn').addEventListener('click', function() { registerForSession(s); });
-  document.getElementById('addToCalendarBtn').addEventListener('click', function() { downloadIcs(s); });
-  document.getElementById('cancelRegisterBtn').addEventListener('click', function(e) { e.preventDefault(); overlay.style.display = 'none'; });
-}
-
-function registerForSession(s) {
-  var name = document.getElementById('regName').value.trim();
-  var email = document.getElementById('regEmail').value.trim();
-  if (!name || !email) { showToast('Please enter your name and email'); return; }
-  document.getElementById('sessionModalOverlay').style.display = 'none';
-  showToast('Registered! A confirmation will be sent to ' + email);
-}
-
-async function cancelRegistration(sessionId) {
-  var idx = registeredSessionIds.indexOf(sessionId);
-  if (idx !== -1) registeredSessionIds.splice(idx, 1);
-  var key = 'registrations:' + currentUser.name.toLowerCase().replace(/\s+/g,'_');
-  await storageSet(key, registeredSessionIds, false);
-  renderSessions();
-  updateDashboardStats();
-  showToast('Registration cancelled');
-}
-
-function downloadIcs(s) {
-  var dateStr = s.date.replace(/-/g,'');
-  var timeMatch = s.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
-  var hour = 9, min = 0;
-  if (timeMatch) {
-    hour = parseInt(timeMatch[1]);
-    min = parseInt(timeMatch[2]);
-    if (/PM/i.test(timeMatch[3]) && hour !== 12) hour += 12;
-    if (/AM/i.test(timeMatch[3]) && hour === 12) hour = 0;
+  grid.innerHTML=html;
+  var viewAllBtn=document.getElementById('sessionsViewAllBtn');
+  if(viewAllBtn){
+    if(list.length>10&&!sessionsShowAll){viewAllBtn.style.display='inline-flex';viewAllBtn.textContent='View All '+list.length+' Sessions';}
+    else{viewAllBtn.style.display='none';}
   }
-  var durationMin = parseInt(s.duration) || 90;
-  var startStr = dateStr + 'T' + String(hour).padStart(2,'0') + String(min).padStart(2,'0') + '00';
-  var endTotalMin = hour * 60 + min + durationMin;
-  var endHour = Math.floor(endTotalMin / 60) % 24;
-  var endMin = endTotalMin % 60;
-  var endStr = dateStr + 'T' + String(endHour).padStart(2,'0') + String(endMin).padStart(2,'0') + '00';
-  var icsLines = [
-    'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
-    'SUMMARY:' + s.title.replace(/,/g,'\\,'),
-    'DESCRIPTION:Speaker: ' + s.speaker + ' | T2R - Theory to Reality',
-    'DTSTART:' + startStr,
-    'DTEND:' + endStr,
-    'LOCATION:Online',
-    'END:VEVENT','END:VCALENDAR'
-  ];
-  var ics = icsLines.join('\r\n');
-  var blob = new Blob([ics], { type: 'text/calendar' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = s.title.replace(/[^a-z0-9]+/gi,'_') + '.ics';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+}
+
+function openSessionModal(sessionId){
+  var s=null;
+  for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){s=SESSIONS[i];break;}}
+  if(!s)return;
+  var overlay=document.getElementById('sessionModalOverlay');
+  var content=document.getElementById('sessionModalContent');
+  content.innerHTML='<h3 style="color:var(--green); margin-bottom:10px; font-size:1.15rem;">'+s.title+'</h3><p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:14px;">'+s.desc+'</p><div style="font-size:0.85rem; margin-bottom:18px;"><div style="margin-bottom:6px;"><strong>Speaker:</strong> '+s.speaker+'</div><div style="margin-bottom:6px;"><strong>Date:</strong> '+formatDate(s.date)+' · '+s.time+'</div><div><strong>Duration:</strong> '+s.duration+'</div></div><div class="admin-form-group"><label>Your Name *</label><input type="text" id="regName"></div><div class="admin-form-group"><label>Your Email *</label><input type="email" id="regEmail"></div><button class="btn-go" id="confirmRegisterBtn">Confirm Registration</button><button class="role-option" id="addToCalendarBtn" style="margin-top:10px; justify-content:center;">📅 Add to Calendar (.ics)</button><a href="#" class="back-link" id="cancelRegisterBtn">Cancel</a>';
+  overlay.style.display='flex';
+  document.getElementById('confirmRegisterBtn').addEventListener('click',function(){registerForSession(s);});
+  document.getElementById('addToCalendarBtn').addEventListener('click',function(){downloadIcs(s);});
+  document.getElementById('cancelRegisterBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
+}
+
+function registerForSession(s){
+  var name=document.getElementById('regName').value.trim();
+  var email=document.getElementById('regEmail').value.trim();
+  if(!name||!email){showToast('Please enter your name and email');return;}
+  document.getElementById('sessionModalOverlay').style.display='none';
+  showToast('Registered! A confirmation will be sent to '+email);
+}
+
+function downloadIcs(s){
+  var dateStr=s.date.replace(/-/g,'');
+  var timeMatch=s.time.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  var hour=9,min=0;
+  if(timeMatch){
+    hour=parseInt(timeMatch[1]);min=parseInt(timeMatch[2]);
+    if(/PM/i.test(timeMatch[3])&&hour!==12)hour+=12;
+    if(/AM/i.test(timeMatch[3])&&hour===12)hour=0;
+  }
+  var durationMin=parseInt(s.duration)||90;
+  var startStr=dateStr+'T'+String(hour).padStart(2,'0')+String(min).padStart(2,'0')+'00';
+  var endTotalMin=hour*60+min+durationMin;
+  var endHour=Math.floor(endTotalMin/60)%24;
+  var endMin=endTotalMin%60;
+  var endStr=dateStr+'T'+String(endHour).padStart(2,'0')+String(endMin).padStart(2,'0')+'00';
+  var icsLines=['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','SUMMARY:'+s.title.replace(/,/g,'\\,'),'DESCRIPTION:Speaker: '+s.speaker+' | T2R - Theory to Reality','DTSTART:'+startStr,'DTEND:'+endStr,'LOCATION:Online','END:VEVENT','END:VCALENDAR'];
+  var ics=icsLines.join('\r\n');
+  var blob=new Blob([ics],{type:'text/calendar'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download=s.title.replace(/[^a-z0-9]+/gi,'_')+'.ics';
+  document.body.appendChild(a);a.click();a.remove();
   URL.revokeObjectURL(url);
 }
 
-async function loadRegistrations() {
-  if (!currentUser.role) { registeredSessionIds = []; return; }
-  var key = 'registrations:' + currentUser.name.toLowerCase().replace(/\s+/g,'_');
-  var data = await storageGet(key, false);
-  registeredSessionIds = data || [];
-}
+var GOOGLE_FORM_PARTNER={
+  action:'https://docs.google.com/forms/d/e/1FAIpQLScbrQXKfuzIIDwcGm8G_KhQZvJKHo81ufp81qaPNRfNJZFjXQ/formResponse',
+  fields:{institution:'entry.1247555719',contactName:'entry.905747467',designation:'entry.1493768612',email:'entry.1923057498',phone:'entry.621362513',department:'entry.833819075',studentCount:'entry.1988630701',message:'entry.1395325285'}
+};
 
-async function loadProfile() {
-  if (!currentUser.role) return;
-  var key = 'profile:' + currentUser.name.toLowerCase().replace(/\s+/g,'_');
-  var data = await storageGet(key, false);
-  if (data) {
-    document.getElementById('profCollege').value = data.college || '';
-    document.getElementById('profBranch').value = data.branch || '';
-    document.getElementById('profYear').value = data.year || '';
-  } else {
-    document.getElementById('profCollege').value = '';
-    document.getElementById('profBranch').value = '';
-    document.getElementById('profYear').value = '';
-  }
-  updateProfileCompletion();
-  renderDashLibrary(document.getElementById('profBranch').value);
-}
+var GOOGLE_FORM_SPEAKER={
+  action:'https://docs.google.com/forms/d/e/1FAIpQLSef3IowOoZ-XZzqQ_v33WJf69zq5i-YIwMDjocXRfxtLO2pDQ/formResponse',
+  fields:{name:'entry.1569697635',email:'entry.389772425',role:'entry.1241882108',org:'entry.731609774',country:'entry.799977999',experience:'entry.1578795549',expertise:'entry.1160191441',message:'entry.2002451825',linkedin:'entry.127104616'}
+};
 
-function updateProfileCompletion() {
-  var college = document.getElementById('profCollege').value.trim();
-  var branch = document.getElementById('profBranch').value;
-  var year = document.getElementById('profYear').value;
-  var count = 0;
-  if (college) count++;
-  if (branch) count++;
-  if (year) count++;
-  var badge = document.getElementById('profileCompletionBadge');
-  var subtext = document.getElementById('profileSubtext');
-  if (badge) {
-    badge.textContent = count + ' of 3 complete';
-    badge.style.background = count === 3 ? 'var(--green)' : 'var(--sage)';
-    badge.style.color = count === 3 ? 'white' : 'var(--green)';
-  }
-  if (subtext) {
-    subtext.textContent = count === 3 ? 'Your profile is complete — enjoy personalised recommendations' : 'Complete your profile to get personalised content';
-  }
-}
-
-function updateRegisteredSessionsEmptyState() {
-  var branchEl = document.getElementById('profBranch');
-  var branch = branchEl ? branchEl.value : '';
-  var box = document.getElementById('registeredSessionsBox');
-  if (!box) return;
-  var registered = [];
-  for (var i = 0; i < SESSIONS.length; i++) {
-    if (registeredSessionIds.indexOf(SESSIONS[i].id) !== -1) registered.push(SESSIONS[i]);
-  }
-  if (registered.length > 0) {
-    var html = '';
-    for (var j = 0; j < registered.length; j++) {
-      var s = registered[j];
-      var statusClass = s.status === 'completed' ? 'completed' : 'upcoming';
-      var statusLabel = s.status === 'completed' ? 'Completed' : 'Upcoming';
-      var cancelBtn = s.status === 'upcoming' ? ('<button onclick="cancelRegistration(\'' + s.id + '\')" style="font-size:0.78rem; color:#b3261e; font-weight:600;">Cancel</button>') : '';
-      html += '<div style="display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--border); text-align:left; gap:12px;">' +
-        '<div><h5 style="font-size:0.92rem; font-weight:700; margin-bottom:2px;">' + s.title + '</h5>' +
-        '<span style="font-size:0.78rem; color:var(--text-soft);">' + formatDate(s.date) + ' · ' + s.time + '</span></div>' +
-        '<div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">' +
-        '<span class="sbadge ' + statusClass + '" style="position:static;">' + statusLabel + '</span>' + cancelBtn + '</div></div>';
+function submitToGoogleForm(formConfig,dataObj){
+  return new Promise(function(resolve){
+    var iframeName='hidden_submit_frame_'+Date.now();
+    var iframe=document.createElement('iframe');
+    iframe.name=iframeName;iframe.style.display='none';
+    document.body.appendChild(iframe);
+    var form=document.createElement('form');
+    form.action=formConfig.action;form.method='POST';form.target=iframeName;
+    var fieldKeys=Object.keys(formConfig.fields);
+    for(var i=0;i<fieldKeys.length;i++){
+      var key=fieldKeys[i];
+      var input=document.createElement('input');
+      input.type='hidden';input.name=formConfig.fields[key];input.value=dataObj[key]||'';
+      form.appendChild(input);
     }
-    box.innerHTML = html;
-    box.style.textAlign = 'left';
-    box.style.background = 'white';
-    return;
-  }
-  box.style.textAlign = 'center';
-  box.style.background = 'var(--sage-2)';
-  var branchLine = branch ? ('<p style="color:var(--text-soft); font-size:0.82rem; margin-top:-8px; margin-bottom:16px;">We\'ll recommend ' + branch + ' sessions for you once they\'re available.</p>') : '';
-  box.innerHTML =
-    '<div style="font-size:1.8rem; margin-bottom:10px; opacity:0.4;">📅</div>' +
-    '<p style="color:var(--text-soft); margin-bottom:6px;">You haven\'t registered for any sessions yet.</p>' +
-    branchLine +
-    '<a href="#sessions" class="btn btn-primary" onclick="navigateTo(\'sessions\')" style="font-size:0.86rem; padding:10px 20px;">Browse Sessions</a>';
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(function(){form.remove();iframe.remove();resolve(true);},800);
+  });
 }
 
-function updateDashboardStats() {
-  var registered = [];
-  for (var i = 0; i < SESSIONS.length; i++) {
-    if (registeredSessionIds.indexOf(SESSIONS[i].id) !== -1) registered.push(SESSIONS[i]);
+function handlePartnerFormSubmit(){
+  var institution=document.getElementById('pfInstitution').value.trim();
+  var contactName=document.getElementById('pfContactName').value.trim();
+  var email=document.getElementById('pfEmail').value.trim();
+  var message=document.getElementById('pfMessage').value.trim();
+  var errorEl=document.getElementById('pfErrorMsg');
+  var successEl=document.getElementById('pfSuccessMsg');
+  if(!institution||!contactName||!email||!message){
+    errorEl.textContent='Please fill in all required fields (marked with *).';
+    errorEl.style.display='block';successEl.style.display='none';return;
   }
-  var upcoming = 0, completed = 0;
-  for (var j = 0; j < registered.length; j++) {
-    if (registered[j].status === 'upcoming') upcoming++;
-    if (registered[j].status === 'completed') completed++;
+  var emailPattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailPattern.test(email)){
+    errorEl.textContent='Please enter a valid email address.';
+    errorEl.style.display='block';successEl.style.display='none';return;
   }
-  var upEl = document.getElementById('statUpcoming');
-  var compEl = document.getElementById('statCompleted');
-  var totEl = document.getElementById('statTotal');
-  if (upEl) upEl.textContent = upcoming;
-  if (compEl) compEl.textContent = completed;
-  if (totEl) totEl.textContent = registered.length;
-  updateRegisteredSessionsEmptyState();
-}
-
-async function saveProfile() {
-  if (!currentUser.role) { showToast('Please sign in first'); return; }
-  var key = 'profile:' + currentUser.name.toLowerCase().replace(/\s+/g,'_');
-  var data = {
-    college: document.getElementById('profCollege').value.trim(),
-    branch: document.getElementById('profBranch').value,
-    year: document.getElementById('profYear').value
+  errorEl.style.display='none';
+  var data={
+    institution:institution,contactName:contactName,designation:document.getElementById('pfDesignation').value.trim(),
+    email:email,phone:document.getElementById('pfPhone').value.trim(),department:document.getElementById('pfDepartment').value.trim(),
+    studentCount:document.getElementById('pfStudentCount').value.trim(),message:message
   };
-  var ok = await storageSet(key, data, false);
-  showToast(ok ? 'Profile saved' : 'Failed to save profile');
-  updateProfileCompletion();
-  renderDashLibrary(data.branch);
-  updateRegisteredSessionsEmptyState();
+  var submitBtn=document.getElementById('pfSubmitBtn');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.textContent='Submitting...';}
+  submitToGoogleForm(GOOGLE_FORM_PARTNER,data).then(function(){
+    if(submitBtn){submitBtn.disabled=false;submitBtn.textContent='Submit Inquiry';}
+    var fieldIds=['pfInstitution','pfContactName','pfDesignation','pfEmail','pfPhone','pfDepartment','pfStudentCount','pfMessage'];
+    for(var i=0;i<fieldIds.length;i++){var el=document.getElementById(fieldIds[i]);if(el)el.value='';}
+    successEl.style.display='block';
+    setTimeout(function(){successEl.style.display='none';},5000);
+  });
 }
 
-function updateDashboardHeader() {
-  var el = document.getElementById('dashSignedInAs');
-  if (el) el.textContent = currentUser.role ? ('Signed in as ' + currentUser.name) : 'Signed in as —';
+function handleSpeakerApplySubmit(){
+  var name=document.getElementById('saName').value.trim();
+  var email=document.getElementById('saEmail').value.trim();
+  var role=document.getElementById('saRole').value.trim();
+  var org=document.getElementById('saOrg').value.trim();
+  var expertise=document.getElementById('saExpertise').value;
+  var message=document.getElementById('saMessage').value.trim();
+  var errorEl=document.getElementById('saErrorMsg');
+  var successEl=document.getElementById('saSuccessMsg');
+  if(!name||!email||!role||!org||!expertise||!message){
+    errorEl.textContent='Please fill in all required fields (marked with *).';
+    errorEl.style.display='block';successEl.style.display='none';return;
+  }
+  var emailPattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailPattern.test(email)){
+    errorEl.textContent='Please enter a valid email address.';
+    errorEl.style.display='block';successEl.style.display='none';return;
+  }
+  errorEl.style.display='none';
+  var data={
+    name:name,email:email,role:role,org:org,country:document.getElementById('saCountry').value.trim(),
+    experience:document.getElementById('saExperience').value.trim(),expertise:expertise,message:message,
+    linkedin:document.getElementById('saLinkedin').value.trim()
+  };
+  var submitBtn=document.getElementById('saSubmitBtn');
+  if(submitBtn){submitBtn.disabled=true;submitBtn.textContent='Submitting...';}
+  submitToGoogleForm(GOOGLE_FORM_SPEAKER,data).then(function(){
+    if(submitBtn){submitBtn.disabled=false;submitBtn.textContent='Submit Application';}
+    var fieldIds=['saName','saEmail','saRole','saOrg','saCountry','saExperience','saExpertise','saMessage','saLinkedin'];
+    for(var i=0;i<fieldIds.length;i++){var el=document.getElementById(fieldIds[i]);if(el)el.value='';}
+    successEl.style.display='block';
+    setTimeout(function(){successEl.style.display='none';},5000);
+  });
 }
 
-var COLLEGE_INQUIRIES = [];
-var SPEAKER_APPLICATIONS = [];
-var activeAdminTab = 'sessions';
+var ADMIN_PASSWORD='t2r-admin-2026';
+var SECRET_ADMIN_HASH='t2r-founders-only-7732';
+var adminUnlocked=false;
+var activeAdminTab='sessions';
 
-function buildOptionsHtml(options, selectedValue) {
-  var html = '';
-  for (var i = 0; i < options.length; i++) {
-    var sel = (options[i] === selectedValue) ? ' selected' : '';
-    html += '<option' + sel + '>' + options[i] + '</option>';
+function buildOptionsHtml(options,selectedValue){
+  var html='';
+  for(var i=0;i<options.length;i++){
+    var sel=(options[i]===selectedValue)?' selected':'';
+    html+='<option'+sel+'>'+options[i]+'</option>';
   }
   return html;
 }
 
-function getCollegeCount() {
-  var colleges = {};
-  for (var i = 0; i < COLLEGE_INQUIRIES.length; i++) { colleges[COLLEGE_INQUIRIES[i].institution] = true; }
-  return Object.keys(colleges).length;
+function updateAdminStats(){
+  var studEl=document.getElementById('adminStatStudents');
+  var sessEl=document.getElementById('adminStatSessions');
+  var spkEl=document.getElementById('adminStatSpeakers');
+  if(studEl)studEl.textContent='300+';
+  if(sessEl)sessEl.textContent=SESSIONS.length;
+  if(spkEl)spkEl.textContent=SPEAKERS.length;
 }
 
-function updateAdminStats() {
-  var studEl = document.getElementById('adminStatStudents');
-  var sessEl = document.getElementById('adminStatSessions');
-  var colEl = document.getElementById('adminStatColleges');
-  var spkEl = document.getElementById('adminStatSpeakers');
-  if (studEl) studEl.textContent = '300+';
-  if (sessEl) sessEl.textContent = SESSIONS.length;
-  if (colEl) colEl.textContent = getCollegeCount();
-  if (spkEl) spkEl.textContent = SPEAKERS.length;
+function renderAdminTabs(){
+  var tabs=document.querySelectorAll('.admin-tab');
+  for(var i=0;i<tabs.length;i++){tabs[i].classList.toggle('active',tabs[i].dataset.admintab===activeAdminTab);}
+  var content=document.getElementById('adminTabContent');
+  if(!content)return;
+  if(activeAdminTab==='sessions')renderAdminSessions(content);
+  else if(activeAdminTab==='speakers')renderAdminSpeakers(content);
+  else if(activeAdminTab==='library')renderAdminLibrary(content);
 }
 
-function renderAdminTabs() {
-  var tabs = document.querySelectorAll('.admin-tab');
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].classList.toggle('active', tabs[i].dataset.admintab === activeAdminTab);
-  }
-  var content = document.getElementById('adminTabContent');
-  if (!content) return;
-  if (activeAdminTab === 'sessions') renderAdminSessions(content);
-  else if (activeAdminTab === 'speakers') renderAdminSpeakers(content);
-  else if (activeAdminTab === 'library') renderAdminLibrary(content);
-}
-
-function renderAdminSessions(content) {
-  var html = '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">' +
-    '<h4 style="font-size:1rem; font-weight:700;">All Sessions (' + SESSIONS.length + ')</h4>' +
-    '<button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openSessionForm()">+ Create Session</button></div>';
-  if (SESSIONS.length === 0) {
-    html += '<div class="admin-empty">No sessions yet.</div>';
-  } else {
-    for (var i = 0; i < SESSIONS.length; i++) {
-      var s = SESSIONS[i];
-      var statusLabel = s.status === 'completed' ? 'Completed' : 'Upcoming';
-      html += '<div class="admin-list-item"><div class="info"><h5>' + s.title + '</h5>' +
-        '<div class="meta">' + s.speaker + ' · ' + formatDate(s.date) + ' · ' + statusLabel + '</div></div>' +
-        '<div class="admin-list-actions">' +
-        '<button class="admin-icon-btn" onclick="openSessionForm(\'' + s.id + '\')" title="Edit">✏️</button>' +
-        '<button class="admin-icon-btn danger" onclick="deleteSession(\'' + s.id + '\')" title="Delete">🗑️</button>' +
-        '</div></div>';
+function renderAdminSessions(content){
+  var html='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><h4 style="font-size:1rem; font-weight:700;">All Sessions ('+SESSIONS.length+')</h4><button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openSessionForm()">+ Create Session</button></div>';
+  if(SESSIONS.length===0){html+='<div class="admin-empty">No sessions yet.</div>';}
+  else{
+    for(var i=0;i<SESSIONS.length;i++){
+      var s=SESSIONS[i];
+      var statusLabel=s.status==='completed'?'Completed':'Upcoming';
+      html+='<div class="admin-list-item"><div class="info"><h5>'+s.title+'</h5><div class="meta">'+s.speaker+' · '+formatDate(s.date)+' · '+statusLabel+'</div></div><div class="admin-list-actions"><button class="admin-icon-btn" onclick="openSessionForm(\''+s.id+'\')" title="Edit">✏️</button><button class="admin-icon-btn danger" onclick="deleteSession(\''+s.id+'\')" title="Delete">🗑️</button></div></div>';
     }
   }
-  content.innerHTML = html;
+  content.innerHTML=html;
 }
 
-function renderAdminSpeakers(content) {
-  var html = '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">' +
-    '<h4 style="font-size:1rem; font-weight:700;">All Speakers (' + SPEAKERS.length + ')</h4>' +
-    '<button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openSpeakerForm()">+ Add Speaker</button></div>';
-  for (var i = 0; i < SPEAKERS.length; i++) {
-    var s = SPEAKERS[i];
-    var founderBadge = s.founder ? (' <span class="speaker-founder-tag" style="margin-left:6px;">Founder</span>') : '';
-    html += '<div class="admin-list-item"><div class="info"><h5>' + s.name + founderBadge + '</h5>' +
-      '<div class="meta">' + s.role + ' · ' + s.org + ' · ' + s.country + '</div></div>' +
-      '<div class="admin-list-actions">' +
-      '<button class="admin-icon-btn" onclick="openSpeakerForm(' + i + ')" title="Edit">✏️</button>' +
-      '<button class="admin-icon-btn danger" onclick="deleteSpeaker(' + i + ')" title="Delete">🗑️</button>' +
-      '</div></div>';
+function renderAdminSpeakers(content){
+  var html='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><h4 style="font-size:1rem; font-weight:700;">All Speakers ('+SPEAKERS.length+')</h4><button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openSpeakerForm()">+ Add Speaker</button></div>';
+  for(var i=0;i<SPEAKERS.length;i++){
+    var s=SPEAKERS[i];
+    var founderBadge=s.founder?(' <span class="speaker-founder-tag" style="margin-left:6px;">Founder</span>'):'';
+    html+='<div class="admin-list-item"><div class="info"><h5>'+s.name+founderBadge+'</h5><div class="meta">'+s.role+' · '+s.org+' · '+s.country+'</div></div><div class="admin-list-actions"><button class="admin-icon-btn" onclick="openSpeakerForm('+i+')" title="Edit">✏️</button><button class="admin-icon-btn danger" onclick="deleteSpeaker('+i+')" title="Delete">🗑️</button></div></div>';
   }
-  content.innerHTML = html;
+  content.innerHTML=html;
 }
 
-function renderAdminLibrary(content) {
-  var html = '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">' +
-    '<h4 style="font-size:1rem; font-weight:700;">All Resources (' + LIBRARY_RESOURCES.length + ')</h4>' +
-    '<button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openLibraryForm()">+ Add Resource</button></div>';
-  for (var i = 0; i < LIBRARY_RESOURCES.length; i++) {
-    var r = LIBRARY_RESOURCES[i];
-    html += '<div class="admin-list-item"><div class="info"><h5>' + r.title + '</h5>' +
-      '<div class="meta">' + r.branch + ' · ' + r.type + '</div></div>' +
-      '<div class="admin-list-actions">' +
-      '<button class="admin-icon-btn" onclick="openLibraryForm(' + i + ')" title="Edit">✏️</button>' +
-      '<button class="admin-icon-btn danger" onclick="deleteLibraryResource(' + i + ')" title="Delete">🗑️</button>' +
-      '</div></div>';
+function renderAdminLibrary(content){
+  var html='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><h4 style="font-size:1rem; font-weight:700;">All Resources ('+LIBRARY_RESOURCES.length+')</h4><button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openLibraryForm()">+ Add Resource</button></div>';
+  for(var i=0;i<LIBRARY_RESOURCES.length;i++){
+    var r=LIBRARY_RESOURCES[i];
+    html+='<div class="admin-list-item"><div class="info"><h5>'+r.title+'</h5><div class="meta">'+r.branch+' · '+r.type+'</div></div><div class="admin-list-actions"><button class="admin-icon-btn" onclick="openLibraryForm('+i+')" title="Edit">✏️</button><button class="admin-icon-btn danger" onclick="deleteLibraryResource('+i+')" title="Delete">🗑️</button></div></div>';
   }
-  content.innerHTML = html;
+  content.innerHTML=html;
 }
 
-function renderAdminInquiries(content) {
-  var heading = 'College Partnership Inquiries (' + COLLEGE_INQUIRIES.length + ')';
-  var html = '<h4 style="font-size:1rem; font-weight:700; margin-bottom:16px;">' + heading + '</h4>';
-  if (COLLEGE_INQUIRIES.length === 0) {
-    html += '<div class="admin-empty">No inquiries yet. Inquiries submitted via the Partner page will appear here.</div>';
-  } else {
-    for (var i = 0; i < COLLEGE_INQUIRIES.length; i++) {
-      var q = COLLEGE_INQUIRIES[i];
-      var phonePart = q.phone ? (' · ' + q.phone) : '';
-      html += '<div class="admin-list-item"><div class="info"><h5>' + q.institution + '</h5>' +
-        '<div class="meta">' + q.contactName + ' · ' + q.email + phonePart + '</div>' +
-        '<div class="meta" style="margin-top:6px;">' + q.message + '</div></div>' +
-        '<div class="admin-list-actions"><button class="admin-icon-btn danger" onclick="deleteInquiry(' + i + ')" title="Delete">🗑️</button></div></div>';
-    }
-  }
-  content.innerHTML = html;
-}
-
-function renderAdminSpeakerApps(content) {
-  var heading = 'Speaker Applications (' + SPEAKER_APPLICATIONS.length + ')';
-  var html = '<h4 style="font-size:1rem; font-weight:700; margin-bottom:16px;">' + heading + '</h4>';
-  if (SPEAKER_APPLICATIONS.length === 0) {
-    html += '<div class="admin-empty">No applications yet. Applications submitted via the Become a Speaker page will appear here.</div>';
-  } else {
-    for (var i = 0; i < SPEAKER_APPLICATIONS.length; i++) {
-      var a = SPEAKER_APPLICATIONS[i];
-      var linkedinHtml = a.linkedin ? (' · <a href="' + a.linkedin + '" target="_blank" rel="noopener">LinkedIn</a>') : '';
-      var countryPart = a.country ? (' · ' + a.country) : '';
-      var expPart = a.experience ? (' · ' + a.experience + ' experience') : '';
-      html += '<div class="admin-list-item"><div class="info"><h5>' + a.name + '</h5>' +
-        '<div class="meta">' + a.role + ' at ' + a.org + countryPart + '</div>' +
-        '<div class="meta">' + a.email + expPart + linkedinHtml + '</div>' +
-        '<div class="meta" style="margin-top:6px;"><strong>' + a.expertise + '</strong> — ' + a.message + '</div></div>' +
-        '<div class="admin-list-actions">' +
-        '<button class="admin-icon-btn" onclick="approveSpeakerApp(' + i + ')" title="Approve & Add as Speaker">✅</button>' +
-        '<button class="admin-icon-btn danger" onclick="deleteSpeakerApp(' + i + ')" title="Delete">🗑️</button>' +
-        '</div></div>';
-    }
-  }
-  content.innerHTML = html;
-}
-
-function deleteSpeakerApp(index) {
-  SPEAKER_APPLICATIONS.splice(index, 1);
-  renderAdminTabs();
-  showToast('Application removed');
-}
-
-function approveSpeakerApp(index) {
-  var a = SPEAKER_APPLICATIONS[index];
-  if (!a) return;
-  SPEAKERS.push({
-    name: a.name,
-    country: a.country || 'Unknown',
-    role: a.role,
-    org: a.org,
-    blurb: a.message,
-    expertise: a.expertise,
-    photo: '',
-    founder: false
-  });
-  SPEAKER_APPLICATIONS.splice(index, 1);
-  renderAdminTabs();
-  updateAdminStats();
-  renderFullSpeakerGrid();
-  refreshMapMarkersForNewSpeaker(a.country);
-  showToast(a.name + ' added to Speakers');
-}
-
-function openSessionForm(sessionId) {
-  var existing = null;
-  if (sessionId) { for (var i = 0; i < SESSIONS.length; i++) { if (SESSIONS[i].id === sessionId) existing = SESSIONS[i]; } }
-  var overlay = document.getElementById('adminFormOverlay');
-  var content = document.getElementById('adminFormContent');
-  var branchOpts = buildOptionsHtml(BRANCHES.slice(1), existing ? existing.branch : null);
-  var statusUpSel = (existing && existing.status === 'upcoming') ? ' selected' : '';
-  var statusCompSel = (existing && existing.status === 'completed') ? ' selected' : '';
-  var titleVal = existing ? existing.title.replace(/"/g,'&quot;') : '';
-  var speakerVal = existing ? existing.speaker.replace(/"/g,'&quot;') : '';
-  var speakerRoleVal = existing ? existing.speakerRole.replace(/"/g,'&quot;') : '';
-  var dateVal = existing ? existing.date : '';
-  var timeVal = existing ? existing.time : '';
-  var durationVal = existing ? existing.duration : '';
-  var descVal = existing ? existing.desc : '';
-  var recordingVal = (existing && existing.recordingUrl) ? existing.recordingUrl : '';
-  var imgVal = existing && existing.img ? existing.img : '';
-  var heading = existing ? 'Edit Session' : 'Create Session';
-  var saveLabel = existing ? 'Save Changes' : 'Create Session';
-
-  var formHtml = '<h3 style="color:var(--green); margin-bottom:16px;">' + heading + '</h3>';
-  formHtml += '<div class="admin-form-group"><label>Title</label><input type="text" id="sfTitle" value="' + titleVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Description</label><textarea id="sfDesc">' + descVal + '</textarea></div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Speaker Name</label><input type="text" id="sfSpeaker" value="' + speakerVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Speaker Role/Org</label><input type="text" id="sfSpeakerRole" value="' + speakerRoleVal + '"></div>';
-  formHtml += '</div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Date</label><input type="date" id="sfDate" value="' + dateVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Time</label><input type="text" id="sfTime" placeholder="e.g. 2:00 PM" value="' + timeVal + '"></div>';
-  formHtml += '</div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Duration</label><input type="text" id="sfDuration" placeholder="e.g. 90 min" value="' + durationVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Branch</label><select id="sfBranch">' + branchOpts + '</select></div>';
-  formHtml += '</div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Status</label><select id="sfStatus"><option value="upcoming"' + statusUpSel + '>Upcoming</option><option value="completed"' + statusCompSel + '>Completed</option></select></div>';
-  formHtml += '<div class="admin-form-group"><label>Recording URL (optional)</label><input type="text" id="sfRecording" value="' + recordingVal + '"></div>';
-  formHtml += '</div>';
-  formHtml += '<div class="admin-form-group"><label>Thumbnail Image URL</label><input type="text" id="sfImg" placeholder="https://..." value="' + imgVal + '"></div>';
-  formHtml += '<button class="btn-go" id="sfSaveBtn">' + saveLabel + '</button>';
-  formHtml += '<a href="#" class="back-link" id="sfCancelBtn">Cancel</a>';
-
-  content.innerHTML = formHtml;
-  overlay.style.display = 'flex';
-  document.getElementById('sfCancelBtn').addEventListener('click', function(e) { e.preventDefault(); overlay.style.display = 'none'; });
-  document.getElementById('sfSaveBtn').addEventListener('click', function() {
-    var data = {
-      title: document.getElementById('sfTitle').value.trim(),
-      desc: document.getElementById('sfDesc').value.trim(),
-      speaker: document.getElementById('sfSpeaker').value.trim(),
-      speakerRole: document.getElementById('sfSpeakerRole').value.trim(),
-      date: document.getElementById('sfDate').value,
-      time: document.getElementById('sfTime').value.trim(),
-      duration: document.getElementById('sfDuration').value.trim(),
-      branch: document.getElementById('sfBranch').value,
-      status: document.getElementById('sfStatus').value,
-      recordingUrl: document.getElementById('sfRecording').value.trim(),
-      img: document.getElementById('sfImg').value.trim()
+function openSessionForm(sessionId){
+  var existing=null;
+  if(sessionId){for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId)existing=SESSIONS[i];}}
+  var overlay=document.getElementById('adminFormOverlay');
+  var content=document.getElementById('adminFormContent');
+  var branchOpts=buildOptionsHtml(BRANCHES.slice(1),existing?existing.branch:null);
+  var statusUpSel=(existing&&existing.status==='upcoming')?' selected':'';
+  var statusCompSel=(existing&&existing.status==='completed')?' selected':'';
+  var titleVal=existing?existing.title.replace(/"/g,'&quot;'):'';
+  var speakerVal=existing?existing.speaker.replace(/"/g,'&quot;'):'';
+  var speakerRoleVal=existing?existing.speakerRole.replace(/"/g,'&quot;'):'';
+  var dateVal=existing?existing.date:'';
+  var timeVal=existing?existing.time:'';
+  var durationVal=existing?existing.duration:'';
+  var descVal=existing?existing.desc:'';
+  var recordingVal=(existing&&existing.recordingUrl)?existing.recordingUrl:'';
+  var imgVal=existing&&existing.img?existing.img:'';
+  var heading=existing?'Edit Session':'Create Session';
+  var saveLabel=existing?'Save Changes':'Create Session';
+  var formHtml='<h3 style="color:var(--green); margin-bottom:16px;">'+heading+'</h3>';
+  formHtml+='<div class="admin-form-group"><label>Title</label><input type="text" id="sfTitle" value="'+titleVal+'"></div>';
+  formHtml+='<div class="admin-form-group"><label>Description</label><textarea id="sfDesc">'+descVal+'</textarea></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Speaker Name</label><input type="text" id="sfSpeaker" value="'+speakerVal+'"></div><div class="admin-form-group"><label>Speaker Role/Org</label><input type="text" id="sfSpeakerRole" value="'+speakerRoleVal+'"></div></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Date</label><input type="date" id="sfDate" value="'+dateVal+'"></div><div class="admin-form-group"><label>Time</label><input type="text" id="sfTime" placeholder="e.g. 2:00 PM" value="'+timeVal+'"></div></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Duration</label><input type="text" id="sfDuration" placeholder="e.g. 90 min" value="'+durationVal+'"></div><div class="admin-form-group"><label>Branch</label><select id="sfBranch">'+branchOpts+'</select></div></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Status</label><select id="sfStatus"><option value="upcoming"'+statusUpSel+'>Upcoming</option><option value="completed"'+statusCompSel+'>Completed</option></select></div><div class="admin-form-group"><label>Recording URL (optional)</label><input type="text" id="sfRecording" value="'+recordingVal+'"></div></div>';
+  formHtml+='<div class="admin-form-group"><label>Thumbnail Image URL</label><input type="text" id="sfImg" placeholder="https://..." value="'+imgVal+'"></div>';
+  formHtml+='<button class="btn-go" id="sfSaveBtn">'+saveLabel+'</button><a href="#" class="back-link" id="sfCancelBtn">Cancel</a>';
+  content.innerHTML=formHtml;
+  overlay.style.display='flex';
+  document.getElementById('sfCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
+  document.getElementById('sfSaveBtn').addEventListener('click',function(){
+    var data={
+      title:document.getElementById('sfTitle').value.trim(),desc:document.getElementById('sfDesc').value.trim(),
+      speaker:document.getElementById('sfSpeaker').value.trim(),speakerRole:document.getElementById('sfSpeakerRole').value.trim(),
+      date:document.getElementById('sfDate').value,time:document.getElementById('sfTime').value.trim(),
+      duration:document.getElementById('sfDuration').value.trim(),branch:document.getElementById('sfBranch').value,
+      status:document.getElementById('sfStatus').value,recordingUrl:document.getElementById('sfRecording').value.trim(),
+      img:document.getElementById('sfImg').value.trim()
     };
-    if (!data.title) { showToast('Title is required'); return; }
-    if (existing) {
-      for (var k in data) { existing[k] = data[k]; }
-      existing.recording = !!data.recordingUrl || existing.recording;
-      showToast('Session updated');
-    } else {
-      data.id = 's' + Date.now();
-      data.guest = true;
-      data.recording = data.status === 'completed';
-      if (!data.img) { data.img = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=70'; }
+    if(!data.title){showToast('Title is required');return;}
+    if(existing){
+      for(var k in data){existing[k]=data[k];}
+      existing.recording=!!data.recordingUrl||existing.recording;
+      showToast('Session updated (this session only — edit data/sessions.json on GitHub to make it permanent)');
+    }else{
+      data.id='s'+Date.now();data.guest=true;data.recording=data.status==='completed';
+      if(!data.img){data.img='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=70';}
       SESSIONS.push(data);
-      showToast('Session created');
+      showToast('Session created (this session only — edit data/sessions.json on GitHub to make it permanent)');
     }
-    overlay.style.display = 'none';
-    renderAdminTabs();
-    updateAdminStats();
-    renderSessions();
-    renderBranchChips();
+    overlay.style.display='none';renderAdminTabs();updateAdminStats();renderSessions();renderBranchChips();
   });
 }
 
-function deleteSession(sessionId) {
-  for (var i = 0; i < SESSIONS.length; i++) {
-    if (SESSIONS[i].id === sessionId) { SESSIONS.splice(i,1); break; }
-  }
-  renderAdminTabs();
-  updateAdminStats();
-  renderSessions();
-  showToast('Session deleted');
+function deleteSession(sessionId){
+  for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){SESSIONS.splice(i,1);break;}}
+  renderAdminTabs();updateAdminStats();renderSessions();
+  showToast('Session deleted (this session only)');
 }
 
-function openSpeakerForm(index) {
-  var existing = (index !== undefined && index !== null) ? SPEAKERS[index] : null;
-  var overlay = document.getElementById('adminFormOverlay');
-  var content = document.getElementById('adminFormContent');
-  var nameVal = existing ? existing.name : '';
-  var roleVal = existing ? existing.role : '';
-  var orgVal = existing ? existing.org : '';
-  var countryVal = existing ? existing.country : '';
-  var expertiseVal = existing ? existing.expertise : '';
-  var blurbVal = existing ? existing.blurb : '';
-  var photoVal = existing ? existing.photo : '';
-  var founderChecked = (existing && existing.founder) ? ' checked' : '';
-  var heading = existing ? 'Edit Speaker' : 'Add Speaker';
-  var saveLabel = existing ? 'Save Changes' : 'Add Speaker';
-
-  var formHtml = '<h3 style="color:var(--green); margin-bottom:16px;">' + heading + '</h3>';
-  formHtml += '<div class="admin-form-group"><label>Full Name</label><input type="text" id="spName" value="' + nameVal + '"></div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Role</label><input type="text" id="spRole" value="' + roleVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Organization</label><input type="text" id="spOrg" value="' + orgVal + '"></div>';
-  formHtml += '</div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Country</label><input type="text" id="spCountry" value="' + countryVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Expertise Area</label><input type="text" id="spExpertise" value="' + expertiseVal + '"></div>';
-  formHtml += '</div>';
-  formHtml += '<div class="admin-form-group"><label>Short Bio / Blurb</label><textarea id="spBlurb">' + blurbVal + '</textarea></div>';
-  formHtml += '<div class="admin-form-group"><label>Photo URL (optional)</label><input type="text" id="spPhoto" placeholder="https://..." value="' + photoVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label><input type="checkbox" id="spFounder" style="width:auto; margin-right:8px;"' + founderChecked + '> Mark as Founder</label></div>';
-  formHtml += '<button class="btn-go" id="spSaveBtn">' + saveLabel + '</button>';
-  formHtml += '<a href="#" class="back-link" id="spCancelBtn">Cancel</a>';
-
-  content.innerHTML = formHtml;
-  overlay.style.display = 'flex';
-  document.getElementById('spCancelBtn').addEventListener('click', function(e) { e.preventDefault(); overlay.style.display = 'none'; });
-  document.getElementById('spSaveBtn').addEventListener('click', function() {
-    var name = document.getElementById('spName').value.trim();
-    if (!name) { showToast('Name is required'); return; }
-    var data = {
-      name: name,
-      role: document.getElementById('spRole').value.trim(),
-      org: document.getElementById('spOrg').value.trim(),
-      country: document.getElementById('spCountry').value.trim(),
-      expertise: document.getElementById('spExpertise').value.trim(),
-      blurb: document.getElementById('spBlurb').value.trim(),
-      photo: document.getElementById('spPhoto').value.trim(),
-      founder: document.getElementById('spFounder').checked
+function openSpeakerForm(index){
+  var existing=(index!==undefined&&index!==null)?SPEAKERS[index]:null;
+  var overlay=document.getElementById('adminFormOverlay');
+  var content=document.getElementById('adminFormContent');
+  var nameVal=existing?existing.name:'';var roleVal=existing?existing.role:'';var orgVal=existing?existing.org:'';
+  var countryVal=existing?existing.country:'';var expertiseVal=existing?existing.expertise:'';var blurbVal=existing?existing.blurb:'';
+  var photoVal=existing?existing.photo:'';var founderChecked=(existing&&existing.founder)?' checked':'';
+  var heading=existing?'Edit Speaker':'Add Speaker';var saveLabel=existing?'Save Changes':'Add Speaker';
+  var formHtml='<h3 style="color:var(--green); margin-bottom:16px;">'+heading+'</h3>';
+  formHtml+='<div class="admin-form-group"><label>Full Name</label><input type="text" id="spName" value="'+nameVal+'"></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Role</label><input type="text" id="spRole" value="'+roleVal+'"></div><div class="admin-form-group"><label>Organization</label><input type="text" id="spOrg" value="'+orgVal+'"></div></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Country</label><input type="text" id="spCountry" value="'+countryVal+'"></div><div class="admin-form-group"><label>Expertise Area</label><input type="text" id="spExpertise" value="'+expertiseVal+'"></div></div>';
+  formHtml+='<div class="admin-form-group"><label>Short Bio / Blurb</label><textarea id="spBlurb">'+blurbVal+'</textarea></div>';
+  formHtml+='<div class="admin-form-group"><label>Photo URL (optional)</label><input type="text" id="spPhoto" placeholder="https://..." value="'+photoVal+'"></div>';
+  formHtml+='<div class="admin-form-group"><label><input type="checkbox" id="spFounder" style="width:auto; margin-right:8px;"'+founderChecked+'> Mark as Founder</label></div>';
+  formHtml+='<button class="btn-go" id="spSaveBtn">'+saveLabel+'</button><a href="#" class="back-link" id="spCancelBtn">Cancel</a>';
+  content.innerHTML=formHtml;
+  overlay.style.display='flex';
+  document.getElementById('spCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
+  document.getElementById('spSaveBtn').addEventListener('click',function(){
+    var name=document.getElementById('spName').value.trim();
+    if(!name){showToast('Name is required');return;}
+    var data={
+      name:name,role:document.getElementById('spRole').value.trim(),org:document.getElementById('spOrg').value.trim(),
+      country:document.getElementById('spCountry').value.trim(),expertise:document.getElementById('spExpertise').value.trim(),
+      blurb:document.getElementById('spBlurb').value.trim(),photo:document.getElementById('spPhoto').value.trim(),
+      founder:document.getElementById('spFounder').checked
     };
-    if (existing) {
-      for (var k in data) { existing[k] = data[k]; }
-      showToast('Speaker updated');
-    } else {
-      SPEAKERS.push(data);
-      showToast('Speaker added');
-    }
-    overlay.style.display = 'none';
-    renderAdminTabs();
-    updateAdminStats();
-    renderFullSpeakerGrid();
-    refreshMapMarkersForNewSpeaker(data.country);
-    renderFoundersGrid();
+    if(existing){for(var k in data){existing[k]=data[k];}showToast('Speaker updated (this session only)');}
+    else{SPEAKERS.push(data);showToast('Speaker added (this session only)');}
+    overlay.style.display='none';renderAdminTabs();updateAdminStats();renderFullSpeakerGrid();refreshMapMarkersForNewSpeaker(data.country);renderFoundersGrid();
   });
 }
 
-function deleteSpeaker(index) {
-  SPEAKERS.splice(index, 1);
-  renderAdminTabs();
-  updateAdminStats();
-  renderFullSpeakerGrid();
-  renderFoundersGrid();
-  showToast('Speaker removed');
+function deleteSpeaker(index){
+  SPEAKERS.splice(index,1);
+  renderAdminTabs();updateAdminStats();renderFullSpeakerGrid();renderFoundersGrid();
+  showToast('Speaker removed (this session only)');
 }
 
-function openLibraryForm(index) {
-  var existing = (index !== undefined && index !== null) ? LIBRARY_RESOURCES[index] : null;
-  var overlay = document.getElementById('adminFormOverlay');
-  var content = document.getElementById('adminFormContent');
-  var branchOptions = ['Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
-  var typeOptions = ['PDF','Recording','Article','Tutorial'];
-  var branchOpts = buildOptionsHtml(branchOptions, existing ? existing.branch : null);
-  var typeOpts = buildOptionsHtml(typeOptions, existing ? existing.type : null);
-  var titleVal = existing ? existing.title.replace(/"/g,'&quot;') : '';
-  var descVal = existing ? existing.desc : '';
-  var heading = existing ? 'Edit Resource' : 'Add Resource';
-  var saveLabel = existing ? 'Save Changes' : 'Add Resource';
-
-  var formHtml = '<h3 style="color:var(--green); margin-bottom:16px;">' + heading + '</h3>';
-  formHtml += '<div class="admin-form-group"><label>Title</label><input type="text" id="lfTitle" value="' + titleVal + '"></div>';
-  formHtml += '<div class="admin-form-group"><label>Description</label><textarea id="lfDesc">' + descVal + '</textarea></div>';
-  formHtml += '<div class="admin-form-row">';
-  formHtml += '<div class="admin-form-group"><label>Branch</label><select id="lfBranch">' + branchOpts + '</select></div>';
-  formHtml += '<div class="admin-form-group"><label>Type</label><select id="lfType">' + typeOpts + '</select></div>';
-  formHtml += '</div>';
-  formHtml += '<button class="btn-go" id="lfSaveBtn">' + saveLabel + '</button>';
-  formHtml += '<a href="#" class="back-link" id="lfCancelBtn">Cancel</a>';
-
-  content.innerHTML = formHtml;
-  overlay.style.display = 'flex';
-  document.getElementById('lfCancelBtn').addEventListener('click', function(e) { e.preventDefault(); overlay.style.display = 'none'; });
-  document.getElementById('lfSaveBtn').addEventListener('click', function() {
-    var title = document.getElementById('lfTitle').value.trim();
-    if (!title) { showToast('Title is required'); return; }
-    var data = {
-      title: title,
-      desc: document.getElementById('lfDesc').value.trim(),
-      branch: document.getElementById('lfBranch').value,
-      type: document.getElementById('lfType').value
+function openLibraryForm(index){
+  var existing=(index!==undefined&&index!==null)?LIBRARY_RESOURCES[index]:null;
+  var overlay=document.getElementById('adminFormOverlay');
+  var content=document.getElementById('adminFormContent');
+  var branchOptions=['Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
+  var typeOptions=['PDF','Recording','Article','Tutorial'];
+  var branchOpts=buildOptionsHtml(branchOptions,existing?existing.branch:null);
+  var typeOpts=buildOptionsHtml(typeOptions,existing?existing.type:null);
+  var titleVal=existing?existing.title.replace(/"/g,'&quot;'):'';
+  var descVal=existing?existing.desc:'';
+  var fileUrlVal=existing&&existing.fileUrl?existing.fileUrl:'';
+  var heading=existing?'Edit Resource':'Add Resource';var saveLabel=existing?'Save Changes':'Add Resource';
+  var formHtml='<h3 style="color:var(--green); margin-bottom:16px;">'+heading+'</h3>';
+  formHtml+='<div class="admin-form-group"><label>Title</label><input type="text" id="lfTitle" value="'+titleVal+'"></div>';
+  formHtml+='<div class="admin-form-group"><label>Description</label><textarea id="lfDesc">'+descVal+'</textarea></div>';
+  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Branch</label><select id="lfBranch">'+branchOpts+'</select></div><div class="admin-form-group"><label>Type</label><select id="lfType">'+typeOpts+'</select></div></div>';
+  formHtml+='<div class="admin-form-group"><label>File URL (PDF link, optional)</label><input type="text" id="lfFileUrl" placeholder="https://..." value="'+fileUrlVal+'"></div>';
+  formHtml+='<button class="btn-go" id="lfSaveBtn">'+saveLabel+'</button><a href="#" class="back-link" id="lfCancelBtn">Cancel</a>';
+  content.innerHTML=formHtml;
+  overlay.style.display='flex';
+  document.getElementById('lfCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
+  document.getElementById('lfSaveBtn').addEventListener('click',function(){
+    var title=document.getElementById('lfTitle').value.trim();
+    if(!title){showToast('Title is required');return;}
+    var data={
+      title:title,desc:document.getElementById('lfDesc').value.trim(),branch:document.getElementById('lfBranch').value,
+      type:document.getElementById('lfType').value,fileUrl:document.getElementById('lfFileUrl').value.trim()
     };
-    if (existing) {
-      for (var k in data) { existing[k] = data[k]; }
-      showToast('Resource updated');
-    } else {
-      LIBRARY_RESOURCES.push(data);
-      showToast('Resource added');
-    }
-    overlay.style.display = 'none';
-    renderAdminTabs();
-    updateAdminStats();
-    renderLibraryGrid();
-    renderDashLibrary();
+    if(existing){for(var k in data){existing[k]=data[k];}showToast('Resource updated (this session only)');}
+    else{LIBRARY_RESOURCES.push(data);showToast('Resource added (this session only)');}
+    overlay.style.display='none';renderAdminTabs();updateAdminStats();renderLibraryGrid();
   });
 }
 
-function deleteLibraryResource(index) {
-  LIBRARY_RESOURCES.splice(index, 1);
-  renderAdminTabs();
-  updateAdminStats();
-  renderLibraryGrid();
-  renderDashLibrary();
-  showToast('Resource removed');
+function deleteLibraryResource(index){
+  LIBRARY_RESOURCES.splice(index,1);
+  renderAdminTabs();updateAdminStats();renderLibraryGrid();
+  showToast('Resource removed (this session only)');
 }
 
-function deleteInquiry(index) {
-  COLLEGE_INQUIRIES.splice(index, 1);
-  renderAdminTabs();
-  updateAdminStats();
-  showToast('Inquiry removed');
-}
-
-var GOOGLE_FORM_PARTNER = {
-  action: 'https://docs.google.com/forms/d/e/1FAIpQLScbrQXKfuzIIDwcGm8G_KhQZvJKHo81ufp81qaPNRfNJZFjXQ/formResponse',
-  fields: {
-    institution: 'entry.1247555719',
-    contactName: 'entry.905747467',
-    designation: 'entry.1493768612',
-    email: 'entry.1923057498',
-    phone: 'entry.621362513',
-    department: 'entry.833819075',
-    studentCount: 'entry.1988630701',
-    message: 'entry.1395325285'
-  }
-};
-
-var GOOGLE_FORM_SPEAKER = {
-  action: 'https://docs.google.com/forms/d/e/1FAIpQLSef3IowOoZ-XZzqQ_v33WJf69zq5i-YIwMDjocXRfxtLO2pDQ/formResponse',
-  fields: {
-    name: 'entry.1569697635',
-    email: 'entry.389772425',
-    role: 'entry.1241882108',
-    org: 'entry.731609774',
-    country: 'entry.799977999',
-    experience: 'entry.1578795549',
-    expertise: 'entry.1160191441',
-    message: 'entry.2002451825',
-    linkedin: 'entry.127104616'
-  }
-};
-
-function submitToGoogleForm(formConfig, dataObj) {
-  return new Promise(function(resolve) {
-    var iframeName = 'hidden_submit_frame_' + Date.now();
-    var iframe = document.createElement('iframe');
-    iframe.name = iframeName;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    var form = document.createElement('form');
-    form.action = formConfig.action;
-    form.method = 'POST';
-    form.target = iframeName;
-
-    var fieldKeys = Object.keys(formConfig.fields);
-    for (var i = 0; i < fieldKeys.length; i++) {
-      var key = fieldKeys[i];
-      var input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = formConfig.fields[key];
-      input.value = dataObj[key] || '';
-      form.appendChild(input);
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-
-    setTimeout(function() {
-      form.remove();
-      iframe.remove();
-      resolve(true);
-    }, 800);
-  });
-}
-
-function handlePartnerFormSubmit() {
-  var institution = document.getElementById('pfInstitution').value.trim();
-  var contactName = document.getElementById('pfContactName').value.trim();
-  var email = document.getElementById('pfEmail').value.trim();
-  var message = document.getElementById('pfMessage').value.trim();
-  var errorEl = document.getElementById('pfErrorMsg');
-  var successEl = document.getElementById('pfSuccessMsg');
-
-  if (!institution || !contactName || !email || !message) {
-    errorEl.textContent = 'Please fill in all required fields (marked with *).';
-    errorEl.style.display = 'block';
-    successEl.style.display = 'none';
-    return;
-  }
-  var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
-    errorEl.textContent = 'Please enter a valid email address.';
-    errorEl.style.display = 'block';
-    successEl.style.display = 'none';
-    return;
-  }
-  errorEl.style.display = 'none';
-
-  var data = {
-    institution: institution,
-    contactName: contactName,
-    designation: document.getElementById('pfDesignation').value.trim(),
-    email: email,
-    phone: document.getElementById('pfPhone').value.trim(),
-    department: document.getElementById('pfDepartment').value.trim(),
-    studentCount: document.getElementById('pfStudentCount').value.trim(),
-    message: message
-  };
-
-  var submitBtn = document.getElementById('pfSubmitBtn');
-  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
-
-  submitToGoogleForm(GOOGLE_FORM_PARTNER, data).then(function() {
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Inquiry'; }
-    var fieldIds = ['pfInstitution','pfContactName','pfDesignation','pfEmail','pfPhone','pfDepartment','pfStudentCount','pfMessage'];
-    for (var i = 0; i < fieldIds.length; i++) {
-      var el = document.getElementById(fieldIds[i]);
-      if (el) el.value = '';
-    }
-    successEl.style.display = 'block';
-    setTimeout(function() { successEl.style.display = 'none'; }, 5000);
-  });
-}
-
-function handleSpeakerApplySubmit() {
-  var name = document.getElementById('saName').value.trim();
-  var email = document.getElementById('saEmail').value.trim();
-  var role = document.getElementById('saRole').value.trim();
-  var org = document.getElementById('saOrg').value.trim();
-  var expertise = document.getElementById('saExpertise').value;
-  var message = document.getElementById('saMessage').value.trim();
-  var errorEl = document.getElementById('saErrorMsg');
-  var successEl = document.getElementById('saSuccessMsg');
-
-  if (!name || !email || !role || !org || !expertise || !message) {
-    errorEl.textContent = 'Please fill in all required fields (marked with *).';
-    errorEl.style.display = 'block';
-    successEl.style.display = 'none';
-    return;
-  }
-  var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
-    errorEl.textContent = 'Please enter a valid email address.';
-    errorEl.style.display = 'block';
-    successEl.style.display = 'none';
-    return;
-  }
-  errorEl.style.display = 'none';
-
-  var data = {
-    name: name,
-    email: email,
-    role: role,
-    org: org,
-    country: document.getElementById('saCountry').value.trim(),
-    experience: document.getElementById('saExperience').value.trim(),
-    expertise: expertise,
-    message: message,
-    linkedin: document.getElementById('saLinkedin').value.trim()
-  };
-
-  var submitBtn = document.getElementById('saSubmitBtn');
-  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
-
-  submitToGoogleForm(GOOGLE_FORM_SPEAKER, data).then(function() {
-    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Application'; }
-    var fieldIds = ['saName','saEmail','saRole','saOrg','saCountry','saExperience','saExpertise','saMessage','saLinkedin'];
-    for (var i = 0; i < fieldIds.length; i++) {
-      var el = document.getElementById(fieldIds[i]);
-      if (el) el.value = '';
-    }
-    successEl.style.display = 'block';
-    setTimeout(function() { successEl.style.display = 'none'; }, 5000);
-  });
-}
-
-var SECRET_ADMIN_HASH = 't2r-founders-only-7732';
-var PAGES = ['home','sessions','speakers','library','about','partner','speakerapply','admin'];
-var adminUnlocked = false;
-
-function navigateTo(page) {
-  if (page === SECRET_ADMIN_HASH) {
-    if (!adminUnlocked) {
-      promptAdminPassword();
-      return;
-    }
-    page = 'admin';
-  }
-  if (PAGES.indexOf(page) === -1) page = 'home';
-
-  if (page === 'admin' && !adminUnlocked) {
-    promptAdminPassword();
-    return;
-  }
-
-  for (var i = 0; i < PAGES.length; i++) {
-    var el = document.getElementById('page-' + PAGES[i]);
-    if (el) el.classList.toggle('page-hidden', PAGES[i] !== page);
-  }
-  if (page === 'home' && leafletMapInstance) {
-    setTimeout(function() { leafletMapInstance.invalidateSize(); }, 100);
-  }
-  var links = document.querySelectorAll('.nav-links a');
-  for (var j = 0; j < links.length; j++) {
-    links[j].classList.toggle('active', links[j].dataset.page === page);
-  }
-
-  if (page === 'sessions') {
-    renderSessions();
-  }
-  if (page === 'speakers') {
-    renderFullSpeakerGrid();
-  }
-  if (page === 'library') {
-    renderLibraryGrid();
-  }
-  if (page === 'about') {
-    renderFoundersGrid();
-  }
-  if (page === 'admin') {
-    updateAdminStats();
-    renderAdminTabs();
-  }
-
-  window.scrollTo({ top: 0, behavior: 'auto' });
-  document.getElementById('navLinks').classList.remove('open');
-  if (page !== 'admin' || window.location.hash.replace('#','') !== SECRET_ADMIN_HASH) {
-    window.location.hash = page === 'admin' ? SECRET_ADMIN_HASH : page;
-  }
-}
-
-function promptAdminPassword() {
-  var overlay = document.createElement('div');
-  overlay.className = 'role-overlay';
-  overlay.id = 'roleOverlay';
-  overlay.innerHTML =
-    '<div class="role-box">' +
-    '<h3>Admin Access</h3>' +
-    '<p>This area is restricted.</p>' +
-    '<input type="password" id="adminPassInput" placeholder="Admin password">' +
-    '<div class="err" id="adminErr">Incorrect password.</div>' +
-    '<button class="btn-go" id="adminGoBtn">Unlock</button>' +
-    '<a href="#" class="back-link" id="roleCancelBtn">Cancel</a>' +
-    '</div>';
+function promptAdminPassword(){
+  var overlay=document.createElement('div');
+  overlay.className='role-overlay';overlay.id='roleOverlay';
+  overlay.innerHTML='<div class="role-box"><h3>Admin Access</h3><p>This area is restricted.</p><input type="password" id="adminPassInput" placeholder="Admin password"><div class="err" id="adminErr">Incorrect password.</div><button class="btn-go" id="adminGoBtn">Unlock</button><a href="#" class="back-link" id="roleCancelBtn">Cancel</a></div>';
   document.body.appendChild(overlay);
-  document.getElementById('adminGoBtn').addEventListener('click', function() {
-    var pass = document.getElementById('adminPassInput').value;
-    if (pass === ADMIN_PASSWORD) {
-      adminUnlocked = true;
-      overlay.remove();
-      navigateTo('admin');
-    } else {
-      document.getElementById('adminErr').style.display = 'block';
-    }
+  document.getElementById('adminGoBtn').addEventListener('click',function(){
+    var pass=document.getElementById('adminPassInput').value;
+    if(pass===ADMIN_PASSWORD){adminUnlocked=true;overlay.remove();navigateTo('admin');}
+    else{document.getElementById('adminErr').style.display='block';}
   });
-  document.getElementById('roleCancelBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    overlay.remove();
-    window.location.hash = 'home';
-  });
+  document.getElementById('roleCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.remove();window.location.hash='home';});
 }
 
-window.addEventListener('hashchange', function() {
-  var page = window.location.hash.replace('#','') || 'home';
+var PAGES=['home','sessions','speakers','library','about','partner','speakerapply','admin'];
+
+function navigateTo(page){
+  if(page===SECRET_ADMIN_HASH){
+    if(!adminUnlocked){promptAdminPassword();return;}
+    page='admin';
+  }
+  if(PAGES.indexOf(page)===-1)page='home';
+  if(page==='admin'&&!adminUnlocked){promptAdminPassword();return;}
+  for(var i=0;i<PAGES.length;i++){
+    var el=document.getElementById('page-'+PAGES[i]);
+    if(el)el.classList.toggle('page-hidden',PAGES[i]!==page);
+  }
+  if(page==='home'&&leafletMapInstance){setTimeout(function(){leafletMapInstance.invalidateSize();},100);}
+  var links=document.querySelectorAll('.nav-links a');
+  for(var j=0;j<links.length;j++){links[j].classList.toggle('active',links[j].dataset.page===page);}
+  if(page==='sessions'){renderSessions();}
+  if(page==='speakers'){renderFullSpeakerGrid();}
+  if(page==='library'){renderLibraryGrid();}
+  if(page==='about'){renderFoundersGrid();}
+  if(page==='admin'){updateAdminStats();renderAdminTabs();}
+  window.scrollTo({top:0,behavior:'auto'});
+  document.getElementById('navLinks').classList.remove('open');
+  if(page!=='admin'||window.location.hash.replace('#','')!==SECRET_ADMIN_HASH){
+    window.location.hash=page==='admin'?SECRET_ADMIN_HASH:page;
+  }
+}
+
+window.addEventListener('hashchange',function(){
+  var page=window.location.hash.replace('#','')||'home';
   navigateTo(page);
 });
 
-var navLinkEls = document.querySelectorAll('.nav-links a');
-for (var nl = 0; nl < navLinkEls.length; nl++) {
-  navLinkEls[nl].addEventListener('click', function(e) {
-    e.preventDefault();
-    navigateTo(this.dataset.page);
-  });
+var navLinkEls=document.querySelectorAll('.nav-links a');
+for(var nl=0;nl<navLinkEls.length;nl++){
+  navLinkEls[nl].addEventListener('click',function(e){e.preventDefault();navigateTo(this.dataset.page);});
 }
 
-document.getElementById('navToggle').addEventListener('click', function() {
+document.getElementById('navToggle').addEventListener('click',function(){
   document.getElementById('navLinks').classList.toggle('open');
 });
 
-window.navigateTo = navigateTo;
-window.showToast = showToast;
-window.cancelRegistration = cancelRegistration;
-window.openSessionModal = openSessionModal;
-window.filterByCountry = filterByCountry;
-window.renderFullSpeakerGrid = renderFullSpeakerGrid;
-window.renderLibraryGrid = renderLibraryGrid;
-window.renderSessions = renderSessions;
-window.renderSpeakerGrid = renderSpeakerGrid;
-window.openSessionForm = openSessionForm;
-window.deleteSession = deleteSession;
-window.openSpeakerForm = openSpeakerForm;
-window.deleteSpeaker = deleteSpeaker;
-window.openLibraryForm = openLibraryForm;
-window.deleteLibraryResource = deleteLibraryResource;
-window.deleteInquiry = deleteInquiry;
-window.deleteSpeakerApp = deleteSpeakerApp;
-window.approveSpeakerApp = approveSpeakerApp;
-window.renderAdminTabs = renderAdminTabs;
-window.updateAdminStats = updateAdminStats;
+window.navigateTo=navigateTo;
+window.showToast=showToast;
+window.openSessionModal=openSessionModal;
+window.filterByCountry=filterByCountry;
+window.openSessionForm=openSessionForm;
+window.deleteSession=deleteSession;
+window.openSpeakerForm=openSpeakerForm;
+window.deleteSpeaker=deleteSpeaker;
+window.openLibraryForm=openLibraryForm;
+window.deleteLibraryResource=deleteLibraryResource;
 
-function initPage() {
+function initPage(){
   setupLogoFallback('navLogoImg');
   setupLogoFallback('footerLogoImg');
   setupHeroVideoFallback();
+  loadCampusPhotos();
   loadAllSiteData();
 
-  var tabUp = document.getElementById('tabUpcoming');
-  var tabPast = document.getElementById('tabPast');
-  if (tabUp) tabUp.addEventListener('click', function() {
-    activeTab = 'upcoming';
-    tabUp.classList.add('active');
-    tabPast.classList.remove('active');
-    renderSessions();
-  });
-  if (tabPast) tabPast.addEventListener('click', function() {
-    activeTab = 'past';
-    tabPast.classList.add('active');
-    tabUp.classList.remove('active');
-    renderSessions();
-  });
+  var tabUp=document.getElementById('tabUpcoming');
+  var tabPast=document.getElementById('tabPast');
+  if(tabUp)tabUp.addEventListener('click',function(){activeTab='upcoming';tabUp.classList.add('active');tabPast.classList.remove('active');renderSessions();});
+  if(tabPast)tabPast.addEventListener('click',function(){activeTab='past';tabPast.classList.add('active');tabUp.classList.remove('active');renderSessions();});
 
-  var sessionSearchEl = document.getElementById('sessionSearch');
-  if (sessionSearchEl) sessionSearchEl.addEventListener('input', renderSessions);
+  var sessionSearchEl=document.getElementById('sessionSearch');
+  if(sessionSearchEl)sessionSearchEl.addEventListener('input',renderSessions);
 
-  var speakerSearchEl = document.getElementById('speakerSearch');
-  if (speakerSearchEl) speakerSearchEl.addEventListener('input', renderFullSpeakerGrid);
-  var speakerExpEl = document.getElementById('speakerExpertiseFilter');
-  if (speakerExpEl) speakerExpEl.addEventListener('change', renderFullSpeakerGrid);
-  var speakerCountryEl = document.getElementById('speakerCountryFilter');
-  if (speakerCountryEl) speakerCountryEl.addEventListener('change', renderFullSpeakerGrid);
-  var speakerClearEl = document.getElementById('speakerClearFilters');
-  if (speakerClearEl) speakerClearEl.addEventListener('click', function() {
-    if (speakerSearchEl) speakerSearchEl.value = '';
-    if (speakerExpEl) speakerExpEl.value = 'All';
-    if (speakerCountryEl) speakerCountryEl.value = 'All';
+  var speakerSearchEl=document.getElementById('speakerSearch');
+  if(speakerSearchEl)speakerSearchEl.addEventListener('input',renderFullSpeakerGrid);
+  var speakerExpEl=document.getElementById('speakerExpertiseFilter');
+  if(speakerExpEl)speakerExpEl.addEventListener('change',renderFullSpeakerGrid);
+  var speakerCountryEl=document.getElementById('speakerCountryFilter');
+  if(speakerCountryEl)speakerCountryEl.addEventListener('change',renderFullSpeakerGrid);
+  var speakerClearEl=document.getElementById('speakerClearFilters');
+  if(speakerClearEl)speakerClearEl.addEventListener('click',function(){
+    if(speakerSearchEl)speakerSearchEl.value='';
+    if(speakerExpEl)speakerExpEl.value='All';
+    if(speakerCountryEl)speakerCountryEl.value='All';
     renderFullSpeakerGrid();
   });
 
-  var libSearchEl = document.getElementById('libSearch');
-  if (libSearchEl) libSearchEl.addEventListener('input', renderLibraryGrid);
-  var libBranchEl = document.getElementById('libBranchFilter');
-  if (libBranchEl) libBranchEl.addEventListener('change', renderLibraryGrid);
-  var libTypeEl = document.getElementById('libTypeFilter');
-  if (libTypeEl) libTypeEl.addEventListener('change', renderLibraryGrid);
+  var libSearchEl=document.getElementById('libSearch');
+  if(libSearchEl)libSearchEl.addEventListener('input',renderLibraryGrid);
+  var libBranchEl=document.getElementById('libBranchFilter');
+  if(libBranchEl)libBranchEl.addEventListener('change',renderLibraryGrid);
+  var libTypeEl=document.getElementById('libTypeFilter');
+  if(libTypeEl)libTypeEl.addEventListener('change',renderLibraryGrid);
 
-  var sessionsViewAllBtn = document.getElementById('sessionsViewAllBtn');
-  if (sessionsViewAllBtn) sessionsViewAllBtn.addEventListener('click', function() { sessionsShowAll = true; renderSessions(); });
-  var speakersViewAllBtn = document.getElementById('speakersViewAllBtn');
-  if (speakersViewAllBtn) speakersViewAllBtn.addEventListener('click', function() { speakersShowAll = true; renderFullSpeakerGrid(); });
-  var libraryViewAllBtn = document.getElementById('libraryViewAllBtn');
-  if (libraryViewAllBtn) libraryViewAllBtn.addEventListener('click', function() { libraryShowAll = true; renderLibraryGrid(); });
-
-  var adminTabEls = document.querySelectorAll('.admin-tab');
-  for (var at = 0; at < adminTabEls.length; at++) {
-    adminTabEls[at].addEventListener('click', function() {
-      activeAdminTab = this.dataset.admintab;
-      renderAdminTabs();
-    });
+  var adminTabEls=document.querySelectorAll('.admin-tab');
+  for(var at=0;at<adminTabEls.length;at++){
+    adminTabEls[at].addEventListener('click',function(){activeAdminTab=this.dataset.admintab;renderAdminTabs();});
   }
 
-  var pfSubmitBtn = document.getElementById('pfSubmitBtn');
-  if (pfSubmitBtn) pfSubmitBtn.addEventListener('click', handlePartnerFormSubmit);
+  var pfSubmitBtn=document.getElementById('pfSubmitBtn');
+  if(pfSubmitBtn)pfSubmitBtn.addEventListener('click',handlePartnerFormSubmit);
+  var saSubmitBtn=document.getElementById('saSubmitBtn');
+  if(saSubmitBtn)saSubmitBtn.addEventListener('click',handleSpeakerApplySubmit);
 
-  var saSubmitBtn = document.getElementById('saSubmitBtn');
-  if (saSubmitBtn) saSubmitBtn.addEventListener('click', handleSpeakerApplySubmit);
+  var sessionsViewAllBtn=document.getElementById('sessionsViewAllBtn');
+  if(sessionsViewAllBtn)sessionsViewAllBtn.addEventListener('click',function(){sessionsShowAll=true;renderSessions();});
+  var speakersViewAllBtn=document.getElementById('speakersViewAllBtn');
+  if(speakersViewAllBtn)speakersViewAllBtn.addEventListener('click',function(){speakersShowAll=true;renderFullSpeakerGrid();});
+  var libraryViewAllBtn=document.getElementById('libraryViewAllBtn');
+  if(libraryViewAllBtn)libraryViewAllBtn.addEventListener('click',function(){libraryShowAll=true;renderLibraryGrid();});
 
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12 });
-  var revealEls = document.querySelectorAll('.reveal');
-  for (var r = 0; r < revealEls.length; r++) observer.observe(revealEls[r]);
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:0.12});
+  var revealEls=document.querySelectorAll('.reveal');
+  for(var r=0;r<revealEls.length;r++)observer.observe(revealEls[r]);
 
-  var initialPage = window.location.hash.replace('#','') || 'home';
+  var initialPage=window.location.hash.replace('#','')||'home';
   navigateTo(initialPage);
 }
 
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  initPage();
-} else {
-  document.addEventListener('DOMContentLoaded', initPage);
-}
+if(document.readyState==='complete'||document.readyState==='interactive'){initPage();}
+else{document.addEventListener('DOMContentLoaded',initPage);}
 </script>
 
 <!-- 
-  ============================================================
-  CURRENT STATUS NOTES (read this before going live)
-  ============================================================
-  
-  WHAT WORKS WITHOUT ANY BACKEND:
-  - Partner inquiry form and Speaker application form submit
-    directly to Google Forms in the background, with responses
-    landing in their connected Google Sheets. No database needed
-    for these two forms.
-  
-  WHAT DOES NOT PERSIST (lives only in this browser's memory):
-  - Anything added/edited/deleted via the Admin page —
-    Sessions, Speakers, and Library resources. These reset to
-    their hardcoded defaults on every page reload, and changes
-    made by one visitor (e.g. you, the admin) are never seen by
-    any other visitor. This is the main remaining gap.
-  
-  WHAT WOULD NEED A REAL BACKEND (e.g. Supabase) TO FIX:
-  - Making Admin's changes to Sessions/Speakers/Library actually
-    persist permanently and show up for all visitors, not just
-    the current browser tab
-  - Real file/photo uploads in Admin instead of pasting external
-    image URLs
-  - Anything requiring real user accounts in the future (there
-    currently are none — public login was intentionally removed)
-  
-  ADMIN ACCESS:
-  - Admin is not linked anywhere in the visible site. It's reached
-    by appending #t2r-founders-only-7732 to the site URL, then
-    entering the ADMIN_PASSWORD defined near the top of the script.
-  - This is obscurity, not real security — the password is visible
-    in this file's source code to anyone who looks. Treat this as
-    a placeholder until real authentication exists.
+DATA FILES (edit on GitHub to add content permanently):
+  data/speakers.json — speakers + founders (founder:true shows on About page)
+  data/sessions.json — sessions (status: "upcoming" or "completed")
+  data/library.json — resource library (add fileUrl for downloads)
+  data/campus.json — campus photos (url + caption per entry)
+
+ADMIN: visit #t2r-founders-only-7732 then enter ADMIN_PASSWORD.
+Admin edits are session-only (not saved) — edit JSON files for permanent changes.
+
+NO STUDENT LOGIN: removed intentionally. Session "Register" just
+collects name/email inline and shows a confirmation toast.
+
+GOOGLE FORMS: Partner and Speaker Apply forms submit directly to
+Google Forms via hidden iframe — see GOOGLE_FORM_PARTNER and
+GOOGLE_FORM_SPEAKER config objects (need to be re-added — see
+earlier conversation for the entry IDs you collected).
 -->
 
 </body>
