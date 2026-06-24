@@ -27,7 +27,7 @@
     "guest": true,
     "recording": true,
     "recordingUrl": "",
-    "img": "images/sessions/ev-session.jpg"
+    "img": "images/sessions/ev-session.png"
   },
   {
     "id": "s3",
@@ -43,7 +43,7 @@
     "guest": true,
     "recording": true,
     "recordingUrl": "",
-    "img": "images/sessions/green-buildings.jpg"
+    "img": "images/sessions/green-buildings.png"
   },
   {
     "id": "s4",
@@ -59,7 +59,7 @@
     "guest": true,
     "recording": true,
     "recordingUrl": "",
-    "img": "images/sessions/hydro-powers.jpg"
+    "img": "images/sessions/hydro-powers.png"
   },
   {
     "id": "s5",
@@ -75,6 +75,6 @@
     "guest": true,
     "recording": true,
     "recordingUrl": "",
-     "img": "images/sessions/edge-detection.jpg"
+     "img": "images/sessions/edge-detection.png"
   }
 ]
