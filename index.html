@@ -191,7 +191,8 @@
   .session-card { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all .25s; background:white; }
   .session-card:hover { box-shadow:0 12px 28px rgba(26,77,58,0.1); transform:translateY(-4px); }
   .session-thumb { aspect-ratio:16/9; position:relative; overflow:hidden; background:linear-gradient(135deg,#2a4f43,#0f2a20); }
-  .session-thumb img { width:100%; height:100%; object-fit:cover; cursor:zoom-in; }
+  .session-thumb img { width:100%; height:100%; object-fit:cover; }
+  .lightbox-trigger { cursor:zoom-in; }
   .img-lightbox-overlay { position:fixed; inset:0; background:rgba(15,29,20,0.88); z-index:3000; display:none; align-items:center; justify-content:center; padding:30px; cursor:zoom-out; }
   .img-lightbox-overlay.open { display:flex; }
   .img-lightbox-content { max-width:92vw; max-height:88vh; display:flex; flex-direction:column; align-items:center; gap:14px; }
@@ -731,6 +732,10 @@
 <script>
 function initials(name){return name.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();}
 
+function escAttr(str){
+  return String(str==null?'':str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 function showToast(msg){
   var t=document.createElement('div');
   t.style.position='fixed';t.style.bottom='24px';t.style.right='24px';t.style.background='#1a4d3a';
@@ -829,7 +834,7 @@ async function loadAllSiteData(){
 
 function speakerAvatarHtml(s,sizeClass){
   if(s.photo){
-    return '<img src="'+s.photo+'" alt="'+s.name+'" class="'+sizeClass+'" style="border-radius:50%; object-fit:cover; cursor:zoom-in;" data-fallback-initials="'+initials(s.name)+'" onclick="openImageLightbox(\''+s.photo.replace(/'/g,"\\'")+'\',\''+s.name.replace(/'/g,"\\'")+'\')">';
+    return '<img src="'+s.photo+'" alt="'+s.name+'" class="'+sizeClass+' lightbox-trigger" style="border-radius:50%; object-fit:cover;" data-fallback-initials="'+initials(s.name)+'" data-fullsrc="'+escAttr(s.photo)+'" data-caption="'+escAttr(s.name)+'">';
   }
   return '<div class="'+sizeClass+'" style="background:var(--sage); color:var(--green); display:flex; align-items:center; justify-content:center; font-weight:700;">'+initials(s.name)+'</div>';
 }
@@ -989,7 +994,8 @@ function renderFullSpeakerGrid(){
   for(var j=0;j<visibleList.length;j++){
     var sp=visibleList[j];
     var founderTag=sp.founder?'<span class="speaker-founder-tag">Founder</span>':'';
-    html+='<div class="speaker-full-card"><div class="speaker-full-head">'+speakerAvatarHtml(sp,'speaker-full-avatar')+'<div><h4>'+sp.name+founderTag+'</h4><div class="loc">🌐 '+sp.country+'</div></div></div><div class="role">'+sp.role+'</div><div class="org">'+sp.org+'</div><span class="speaker-expertise-tag">'+sp.expertise+'</span></div>';
+    var expHtml=sp.experience?('<div style="font-size:0.82rem; color:var(--text-soft); font-weight:500; margin-bottom:10px;">💼 Experience: '+escAttr(sp.experience)+'</div>'):'';
+    html+='<div class="speaker-full-card"><div class="speaker-full-head">'+speakerAvatarHtml(sp,'speaker-full-avatar')+'<div><h4>'+sp.name+founderTag+'</h4><div class="loc">🌐 '+sp.country+'</div></div></div><div class="role">'+sp.role+'</div><div class="org">'+sp.org+'</div>'+expHtml+'<span class="speaker-expertise-tag">'+sp.expertise+'</span></div>';
   }
   grid.innerHTML=html;
   attachAvatarFallbacks(grid);
@@ -1016,11 +1022,12 @@ function renderFoundersGrid(){
     var emailHtml=email?('<a href="mailto:'+email+'" style="font-size:0.82rem; color:var(--text-soft); display:inline-flex; align-items:center; gap:5px; margin-top:8px;">✉️ Email</a>'):'';
     var photoBlock;
     if(s.photo){
-      photoBlock='<img src="'+s.photo+'" alt="'+s.name+'" style="width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in;" data-fallback-initials="'+initials(s.name)+'" onclick="openImageLightbox(\''+s.photo.replace(/'/g,"\\'")+'\',\''+s.name.replace(/'/g,"\\'")+'\')">';
+      photoBlock='<img src="'+s.photo+'" alt="'+s.name+'" class="lightbox-trigger" style="width:100%; height:100%; object-fit:cover; display:block;" data-fallback-initials="'+initials(s.name)+'" data-fullsrc="'+escAttr(s.photo)+'" data-caption="'+escAttr(s.name)+'">';
     }else{
       photoBlock='<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:2.4rem; font-weight:700; color:var(--green); background:var(--sage);">'+initials(s.name)+'</div>';
     }
-    html+='<div class="career-card" style="padding:0; overflow:hidden;"><div style="aspect-ratio:1/1; background:var(--sage-2); overflow:hidden;">'+photoBlock+'</div><div style="padding:20px;"><span class="speaker-founder-tag" style="margin-left:0; margin-bottom:10px; display:inline-block;">Co-Founder</span><h4 style="margin-bottom:3px; font-size:1.05rem;">'+s.name+'</h4><div style="font-size:0.84rem; color:var(--green); font-weight:600; margin-bottom:12px;">'+s.role+', '+s.org+'</div><p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:12px;">'+s.blurb+'</p>'+emailHtml+'</div></div>';
+    var expHtml2=s.experience?('<div style="font-size:0.8rem; color:var(--text-soft); margin-bottom:10px;">💼 Experience: '+escAttr(s.experience)+'</div>'):'';
+    html+='<div class="career-card" style="padding:0; overflow:hidden;"><div style="aspect-ratio:1/1; background:var(--sage-2); overflow:hidden;">'+photoBlock+'</div><div style="padding:20px;"><span class="speaker-founder-tag" style="margin-left:0; margin-bottom:10px; display:inline-block;">Co-Founder</span><h4 style="margin-bottom:3px; font-size:1.05rem;">'+s.name+'</h4><div style="font-size:0.84rem; color:var(--green); font-weight:600; margin-bottom:12px;">'+s.role+', '+s.org+'</div>'+expHtml2+'<p style="font-size:0.85rem; color:var(--text-soft); margin-bottom:12px;">'+s.blurb+'</p>'+emailHtml+'</div></div>';
   }
   grid.innerHTML=html;
   attachAvatarFallbacks(grid);
@@ -1153,7 +1160,7 @@ function renderSessions(){
     var statusBadge=s.status==='completed'?'Completed':'Upcoming';
     var statusClass=s.status==='completed'?'completed':'upcoming';
     var shortDesc=s.desc.length>110?(s.desc.slice(0,110)+'…'):s.desc;
-    html+='<div class="session-card"><div class="session-thumb"><img src="'+s.img+'" alt="'+s.title+'" onclick="openImageLightbox(\''+s.img.replace(/'/g,"\\'")+'\',\''+s.title.replace(/'/g,"\\'")+'\')"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+shortDesc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
+    html+='<div class="session-card"><div class="session-thumb"><img src="'+s.img+'" alt="'+escAttr(s.title)+'" class="lightbox-trigger" data-fullsrc="'+escAttr(s.img)+'" data-caption="'+escAttr(s.title)+'"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+shortDesc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
   }
   grid.innerHTML=html;
   var viewAllBtn=document.getElementById('sessionsViewAllBtn');
@@ -1426,6 +1433,12 @@ function initPage(){
   if(imgLightboxClose)imgLightboxClose.addEventListener('click',closeImageLightbox);
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape')closeImageLightbox();
+  });
+  document.addEventListener('click',function(e){
+    var trigger=e.target.closest?e.target.closest('.lightbox-trigger'):null;
+    if(trigger&&trigger.dataset&&trigger.dataset.fullsrc){
+      openImageLightbox(trigger.dataset.fullsrc,trigger.dataset.caption);
+    }
   });
 
   var sessionsViewAllBtn=document.getElementById('sessionsViewAllBtn');
