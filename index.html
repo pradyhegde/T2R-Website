@@ -8,7 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<link rel="preconnect" href="https://tile.openstreetmap.org">
+<link rel="preconnect" href="https://a.tile.openstreetmap.org">
+<link rel="preconnect" href="https://b.tile.openstreetmap.org">
+<link rel="preconnect" href="https://c.tile.openstreetmap.org">
 <style>
   :root { --green:#1a4d3a; --green-dark:#0f3526; --green-light:#2f7d5e; --sage:#e8f0ea; --sage-2:#f4f8f5; --text:#1c2620; --text-soft:#5a6b62; --border:#e3e9e5; --white:#ffffff; }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -187,7 +190,7 @@
   .session-tab.active { background:var(--green); color:white; }
   .session-card { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all .25s; background:white; }
   .session-card:hover { box-shadow:0 12px 28px rgba(26,77,58,0.1); transform:translateY(-4px); }
-  .session-thumb { aspect-ratio:16/9.5; position:relative; overflow:hidden; background:linear-gradient(135deg,#2a4f43,#0f2a20); }
+  .session-thumb { aspect-ratio:16/9; position:relative; overflow:hidden; background:linear-gradient(135deg,#2a4f43,#0f2a20); }
   .session-thumb img { width:100%; height:100%; object-fit:cover; }
   .session-badge-row { position:absolute; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; }
   .sbadge { font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:20px; }
@@ -230,16 +233,6 @@
   .lib-tag.branch { background:var(--sage); color:var(--green); }
   .lib-tag.type { background:#eef0f4; color:#4a5568; }
   @media (max-width:700px) { #libGrid { grid-template-columns:1fr !important; } }
-  .admin-tab { padding:11px 18px; font-size:0.9rem; font-weight:600; color:var(--text-soft); border-bottom:3px solid transparent; }
-  .admin-tab.active { color:var(--green); border-bottom-color:var(--green); }
-  .admin-list-item { border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
-  .admin-list-item .info h5 { font-size:0.94rem; font-weight:700; margin-bottom:3px; }
-  .admin-list-item .info .meta { font-size:0.8rem; color:var(--text-soft); }
-  .admin-list-actions { display:flex; gap:8px; flex-shrink:0; }
-  .admin-icon-btn { width:32px; height:32px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.95rem; transition:background .2s; }
-  .admin-icon-btn:hover { background:var(--sage-2); }
-  .admin-icon-btn.danger:hover { background:#fdeaea; }
-  .admin-empty { text-align:center; padding:50px 0; color:var(--text-soft); }
   .admin-form-group { margin-bottom:16px; }
   .admin-form-group label { display:block; font-size:0.85rem; font-weight:600; margin-bottom:6px; }
   .admin-form-group input,.admin-form-group select,.admin-form-group textarea { width:100%; padding:11px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:0.9rem; font-family:inherit; }
@@ -701,39 +694,6 @@
   </section>
 </div>
 
-<div id="page-admin" class="page-hidden">
-  <section class="page-section" style="padding-top:40px;">
-    <div style="max-width:1100px; margin:0 auto 8px;"><h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Admin</h2><p style="color:var(--text-soft);">Reference panel for managing content. Permanent changes happen by editing JSON files on GitHub.</p></div>
-    <div style="max-width:1100px; margin:0 auto 24px; background:#fff8e6; border:1px solid #f0d999; border-radius:10px; padding:12px 16px; font-size:0.82rem; color:#7a5c00;">⚠️ Note: changes made here are stored temporarily in this browser session only. To add content permanently, edit the JSON files in the /data folder on GitHub directly.</div>
-    <div style="max-width:1100px; margin:0 auto 24px; background:var(--sage-2); border:1px solid var(--border); border-radius:10px; padding:18px 20px;">
-      <h4 style="font-size:0.92rem; font-weight:700; margin-bottom:12px; color:var(--green);">📐 Image Size Guide — Crop Before Uploading</h4>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; font-size:0.82rem; color:var(--text-soft);">
-        <div><strong style="color:var(--text);">Founder Photos</strong><br>Square (1:1), ~800×800px<br>Top of head ~12% from top, crop ends at collar.<br>Folder: <code>images/founders/</code></div>
-        <div><strong style="color:var(--text);">Speaker Photos (non-founders)</strong><br>Square (1:1), ~400×400px<br>Crop centered on the face — displays as a circle.<br>Folder: <code>images/speakers/</code></div>
-        <div><strong style="color:var(--text);">Session Thumbnails</strong><br>Landscape (16:9), ~800×450px<br>Folder: <code>images/sessions/</code></div>
-        <div><strong style="color:var(--text);">Logo</strong><br>Square (1:1), ~300×300px<br>Folder: <code>images/Logo/</code></div>
-        <div><strong style="color:var(--text);">Hero Video</strong><br>Landscape (16:9), MP4, under ~15MB<br>File: <code>images/t2r-intro.mp4</code></div>
-        <div><strong style="color:var(--text);">Campus Photos</strong><br>Landscape, ~600×420px each<br>Add via <code>data/campus.json</code><br>Folder: <code>images/campus/</code></div>
-        <div><strong style="color:var(--text);">Library Documents</strong><br>PDF preferred. Link via <code>fileUrl</code> in library.json.</div>
-      </div>
-      <p style="font-size:0.78rem; color:var(--text-soft); margin-top:12px; border-top:1px solid var(--border); padding-top:10px;">💡 Tip: keep each image under ~200KB where possible. Most phone gallery apps can crop to a square before upload.</p>
-    </div>
-    <div style="max-width:1100px; margin:0 auto 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
-      <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#eaf0fc;">👥</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatStudents">0</div><span style="font-size:0.8rem;">Total Students</span></div></div>
-      <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic">📅</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatSessions">0</div><span style="font-size:0.8rem;">Total Sessions</span></div></div>
-      <div class="mini-card" style="display:flex; align-items:center; gap:12px; padding:18px;"><div class="builtfor-ic" style="background:#fcefe3;">🎙️</div><div><div style="font-size:1.4rem; font-weight:800;" id="adminStatSpeakers">0</div><span style="font-size:0.8rem;">Speakers</span></div></div>
-    </div>
-    <div style="max-width:1100px; margin:0 auto 22px; display:flex; gap:8px; flex-wrap:wrap; border-bottom:1px solid var(--border);">
-      <button class="admin-tab active" data-admintab="sessions">Sessions</button>
-      <button class="admin-tab" data-admintab="speakers">Speakers</button>
-      <button class="admin-tab" data-admintab="library">Library</button>
-    </div>
-    <div style="max-width:1100px; margin:0 auto;" id="adminTabContent"></div>
-  </section>
-</div>
-
-<div id="adminFormOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:520px; text-align:left; max-height:85vh; overflow-y:auto;" id="adminFormContent"></div></div>
-
 <footer>
   <div class="footer-grid">
     <div>
@@ -752,6 +712,7 @@
   <div class="footer-bottom">© 2026 T2R — Theory to Reality. All rights reserved.</div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
 function initials(name){return name.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();}
 
@@ -912,12 +873,9 @@ function initLeafletMap(){
   setTimeout(function(){if(leafletMapInstance)leafletMapInstance.invalidateSize();},300);
 }
 
-function refreshMapMarkersForNewSpeaker(country){
-  if(!country)return;
-  if(!COUNTRY_COORDS[country]){COUNTRY_COORDS[country]=[20,0];}
-  addCountryMarker(country);
-  renderCountryChips();
-}
+window.addEventListener('resize',function(){
+  if(leafletMapInstance)leafletMapInstance.invalidateSize();
+});
 
 function renderCountryChips(){
   var container=document.getElementById('countryChipsContainer');
@@ -1335,251 +1293,24 @@ function handleSpeakerApplySubmit(){
   });
 }
 
-var ADMIN_PASSWORD='t2r-admin-2026';
-var SECRET_ADMIN_HASH='t2r-founders-only-7732';
-var adminUnlocked=false;
-var activeAdminTab='sessions';
-
-function buildOptionsHtml(options,selectedValue){
-  var html='';
-  for(var i=0;i<options.length;i++){
-    var sel=(options[i]===selectedValue)?' selected':'';
-    html+='<option'+sel+'>'+options[i]+'</option>';
-  }
-  return html;
-}
-
-function updateAdminStats(){
-  var studEl=document.getElementById('adminStatStudents');
-  var sessEl=document.getElementById('adminStatSessions');
-  var spkEl=document.getElementById('adminStatSpeakers');
-  if(studEl)studEl.textContent='300+';
-  if(sessEl)sessEl.textContent=SESSIONS.length;
-  if(spkEl)spkEl.textContent=SPEAKERS.length;
-}
-
-function renderAdminTabs(){
-  var tabs=document.querySelectorAll('.admin-tab');
-  for(var i=0;i<tabs.length;i++){tabs[i].classList.toggle('active',tabs[i].dataset.admintab===activeAdminTab);}
-  var content=document.getElementById('adminTabContent');
-  if(!content)return;
-  if(activeAdminTab==='sessions')renderAdminSessions(content);
-  else if(activeAdminTab==='speakers')renderAdminSpeakers(content);
-  else if(activeAdminTab==='library')renderAdminLibrary(content);
-}
-
-function renderAdminSessions(content){
-  var html='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><h4 style="font-size:1rem; font-weight:700;">All Sessions ('+SESSIONS.length+')</h4><button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openSessionForm()">+ Create Session</button></div>';
-  if(SESSIONS.length===0){html+='<div class="admin-empty">No sessions yet.</div>';}
-  else{
-    for(var i=0;i<SESSIONS.length;i++){
-      var s=SESSIONS[i];
-      var statusLabel=s.status==='completed'?'Completed':'Upcoming';
-      html+='<div class="admin-list-item"><div class="info"><h5>'+s.title+'</h5><div class="meta">'+s.speaker+' · '+formatDate(s.date)+' · '+statusLabel+'</div></div><div class="admin-list-actions"><button class="admin-icon-btn" onclick="openSessionForm(\''+s.id+'\')" title="Edit">✏️</button><button class="admin-icon-btn danger" onclick="deleteSession(\''+s.id+'\')" title="Delete">🗑️</button></div></div>';
-    }
-  }
-  content.innerHTML=html;
-}
-
-function renderAdminSpeakers(content){
-  var html='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><h4 style="font-size:1rem; font-weight:700;">All Speakers ('+SPEAKERS.length+')</h4><button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openSpeakerForm()">+ Add Speaker</button></div>';
-  for(var i=0;i<SPEAKERS.length;i++){
-    var s=SPEAKERS[i];
-    var founderBadge=s.founder?(' <span class="speaker-founder-tag" style="margin-left:6px;">Founder</span>'):'';
-    html+='<div class="admin-list-item"><div class="info"><h5>'+s.name+founderBadge+'</h5><div class="meta">'+s.role+' · '+s.org+' · '+s.country+'</div></div><div class="admin-list-actions"><button class="admin-icon-btn" onclick="openSpeakerForm('+i+')" title="Edit">✏️</button><button class="admin-icon-btn danger" onclick="deleteSpeaker('+i+')" title="Delete">🗑️</button></div></div>';
-  }
-  content.innerHTML=html;
-}
-
-function renderAdminLibrary(content){
-  var html='<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><h4 style="font-size:1rem; font-weight:700;">All Resources ('+LIBRARY_RESOURCES.length+')</h4><button class="btn btn-primary" style="font-size:0.85rem; padding:9px 16px;" onclick="openLibraryForm()">+ Add Resource</button></div>';
-  for(var i=0;i<LIBRARY_RESOURCES.length;i++){
-    var r=LIBRARY_RESOURCES[i];
-    html+='<div class="admin-list-item"><div class="info"><h5>'+r.title+'</h5><div class="meta">'+r.branch+' · '+r.type+'</div></div><div class="admin-list-actions"><button class="admin-icon-btn" onclick="openLibraryForm('+i+')" title="Edit">✏️</button><button class="admin-icon-btn danger" onclick="deleteLibraryResource('+i+')" title="Delete">🗑️</button></div></div>';
-  }
-  content.innerHTML=html;
-}
-
-function openSessionForm(sessionId){
-  var existing=null;
-  if(sessionId){for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId)existing=SESSIONS[i];}}
-  var overlay=document.getElementById('adminFormOverlay');
-  var content=document.getElementById('adminFormContent');
-  var branchOpts=buildOptionsHtml(BRANCHES.slice(1),existing?existing.branch:null);
-  var statusUpSel=(existing&&existing.status==='upcoming')?' selected':'';
-  var statusCompSel=(existing&&existing.status==='completed')?' selected':'';
-  var titleVal=existing?existing.title.replace(/"/g,'&quot;'):'';
-  var speakerVal=existing?existing.speaker.replace(/"/g,'&quot;'):'';
-  var speakerRoleVal=existing?existing.speakerRole.replace(/"/g,'&quot;'):'';
-  var dateVal=existing?existing.date:'';
-  var timeVal=existing?existing.time:'';
-  var durationVal=existing?existing.duration:'';
-  var descVal=existing?existing.desc:'';
-  var recordingVal=(existing&&existing.recordingUrl)?existing.recordingUrl:'';
-  var imgVal=existing&&existing.img?existing.img:'';
-  var heading=existing?'Edit Session':'Create Session';
-  var saveLabel=existing?'Save Changes':'Create Session';
-  var formHtml='<h3 style="color:var(--green); margin-bottom:16px;">'+heading+'</h3>';
-  formHtml+='<div class="admin-form-group"><label>Title</label><input type="text" id="sfTitle" value="'+titleVal+'"></div>';
-  formHtml+='<div class="admin-form-group"><label>Description</label><textarea id="sfDesc">'+descVal+'</textarea></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Speaker Name</label><input type="text" id="sfSpeaker" value="'+speakerVal+'"></div><div class="admin-form-group"><label>Speaker Role/Org</label><input type="text" id="sfSpeakerRole" value="'+speakerRoleVal+'"></div></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Date</label><input type="date" id="sfDate" value="'+dateVal+'"></div><div class="admin-form-group"><label>Time</label><input type="text" id="sfTime" placeholder="e.g. 2:00 PM" value="'+timeVal+'"></div></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Duration</label><input type="text" id="sfDuration" placeholder="e.g. 90 min" value="'+durationVal+'"></div><div class="admin-form-group"><label>Branch</label><select id="sfBranch">'+branchOpts+'</select></div></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Status</label><select id="sfStatus"><option value="upcoming"'+statusUpSel+'>Upcoming</option><option value="completed"'+statusCompSel+'>Completed</option></select></div><div class="admin-form-group"><label>Recording URL (optional)</label><input type="text" id="sfRecording" value="'+recordingVal+'"></div></div>';
-  formHtml+='<div class="admin-form-group"><label>Thumbnail Image URL</label><input type="text" id="sfImg" placeholder="https://..." value="'+imgVal+'"></div>';
-  formHtml+='<button class="btn-go" id="sfSaveBtn">'+saveLabel+'</button><a href="#" class="back-link" id="sfCancelBtn">Cancel</a>';
-  content.innerHTML=formHtml;
-  overlay.style.display='flex';
-  document.getElementById('sfCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
-  document.getElementById('sfSaveBtn').addEventListener('click',function(){
-    var data={
-      title:document.getElementById('sfTitle').value.trim(),desc:document.getElementById('sfDesc').value.trim(),
-      speaker:document.getElementById('sfSpeaker').value.trim(),speakerRole:document.getElementById('sfSpeakerRole').value.trim(),
-      date:document.getElementById('sfDate').value,time:document.getElementById('sfTime').value.trim(),
-      duration:document.getElementById('sfDuration').value.trim(),branch:document.getElementById('sfBranch').value,
-      status:document.getElementById('sfStatus').value,recordingUrl:document.getElementById('sfRecording').value.trim(),
-      img:document.getElementById('sfImg').value.trim()
-    };
-    if(!data.title){showToast('Title is required');return;}
-    if(existing){
-      for(var k in data){existing[k]=data[k];}
-      existing.recording=!!data.recordingUrl||existing.recording;
-      showToast('Session updated (this session only — edit data/sessions.json on GitHub to make it permanent)');
-    }else{
-      data.id='s'+Date.now();data.guest=true;data.recording=data.status==='completed';
-      if(!data.img){data.img='https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=70';}
-      SESSIONS.push(data);
-      showToast('Session created (this session only — edit data/sessions.json on GitHub to make it permanent)');
-    }
-    overlay.style.display='none';renderAdminTabs();updateAdminStats();renderSessions();renderBranchChips();
-  });
-}
-
-function deleteSession(sessionId){
-  for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){SESSIONS.splice(i,1);break;}}
-  renderAdminTabs();updateAdminStats();renderSessions();
-  showToast('Session deleted (this session only)');
-}
-
-function openSpeakerForm(index){
-  var existing=(index!==undefined&&index!==null)?SPEAKERS[index]:null;
-  var overlay=document.getElementById('adminFormOverlay');
-  var content=document.getElementById('adminFormContent');
-  var nameVal=existing?existing.name:'';var roleVal=existing?existing.role:'';var orgVal=existing?existing.org:'';
-  var countryVal=existing?existing.country:'';var expertiseVal=existing?existing.expertise:'';var blurbVal=existing?existing.blurb:'';
-  var photoVal=existing?existing.photo:'';var founderChecked=(existing&&existing.founder)?' checked':'';
-  var heading=existing?'Edit Speaker':'Add Speaker';var saveLabel=existing?'Save Changes':'Add Speaker';
-  var formHtml='<h3 style="color:var(--green); margin-bottom:16px;">'+heading+'</h3>';
-  formHtml+='<div class="admin-form-group"><label>Full Name</label><input type="text" id="spName" value="'+nameVal+'"></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Role</label><input type="text" id="spRole" value="'+roleVal+'"></div><div class="admin-form-group"><label>Organization</label><input type="text" id="spOrg" value="'+orgVal+'"></div></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Country</label><input type="text" id="spCountry" value="'+countryVal+'"></div><div class="admin-form-group"><label>Expertise Area</label><input type="text" id="spExpertise" value="'+expertiseVal+'"></div></div>';
-  formHtml+='<div class="admin-form-group"><label>Short Bio / Blurb</label><textarea id="spBlurb">'+blurbVal+'</textarea></div>';
-  formHtml+='<div class="admin-form-group"><label>Photo URL (optional)</label><input type="text" id="spPhoto" placeholder="https://..." value="'+photoVal+'"></div>';
-  formHtml+='<div class="admin-form-group"><label><input type="checkbox" id="spFounder" style="width:auto; margin-right:8px;"'+founderChecked+'> Mark as Founder</label></div>';
-  formHtml+='<button class="btn-go" id="spSaveBtn">'+saveLabel+'</button><a href="#" class="back-link" id="spCancelBtn">Cancel</a>';
-  content.innerHTML=formHtml;
-  overlay.style.display='flex';
-  document.getElementById('spCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
-  document.getElementById('spSaveBtn').addEventListener('click',function(){
-    var name=document.getElementById('spName').value.trim();
-    if(!name){showToast('Name is required');return;}
-    var data={
-      name:name,role:document.getElementById('spRole').value.trim(),org:document.getElementById('spOrg').value.trim(),
-      country:document.getElementById('spCountry').value.trim(),expertise:document.getElementById('spExpertise').value.trim(),
-      blurb:document.getElementById('spBlurb').value.trim(),photo:document.getElementById('spPhoto').value.trim(),
-      founder:document.getElementById('spFounder').checked
-    };
-    if(existing){for(var k in data){existing[k]=data[k];}showToast('Speaker updated (this session only)');}
-    else{SPEAKERS.push(data);showToast('Speaker added (this session only)');}
-    overlay.style.display='none';renderAdminTabs();updateAdminStats();renderFullSpeakerGrid();refreshMapMarkersForNewSpeaker(data.country);renderFoundersGrid();
-  });
-}
-
-function deleteSpeaker(index){
-  SPEAKERS.splice(index,1);
-  renderAdminTabs();updateAdminStats();renderFullSpeakerGrid();renderFoundersGrid();
-  showToast('Speaker removed (this session only)');
-}
-
-function openLibraryForm(index){
-  var existing=(index!==undefined&&index!==null)?LIBRARY_RESOURCES[index]:null;
-  var overlay=document.getElementById('adminFormOverlay');
-  var content=document.getElementById('adminFormContent');
-  var branchOptions=['Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
-  var typeOptions=['PDF','Recording','Article','Tutorial'];
-  var branchOpts=buildOptionsHtml(branchOptions,existing?existing.branch:null);
-  var typeOpts=buildOptionsHtml(typeOptions,existing?existing.type:null);
-  var titleVal=existing?existing.title.replace(/"/g,'&quot;'):'';
-  var descVal=existing?existing.desc:'';
-  var fileUrlVal=existing&&existing.fileUrl?existing.fileUrl:'';
-  var heading=existing?'Edit Resource':'Add Resource';var saveLabel=existing?'Save Changes':'Add Resource';
-  var formHtml='<h3 style="color:var(--green); margin-bottom:16px;">'+heading+'</h3>';
-  formHtml+='<div class="admin-form-group"><label>Title</label><input type="text" id="lfTitle" value="'+titleVal+'"></div>';
-  formHtml+='<div class="admin-form-group"><label>Description</label><textarea id="lfDesc">'+descVal+'</textarea></div>';
-  formHtml+='<div class="admin-form-row"><div class="admin-form-group"><label>Branch</label><select id="lfBranch">'+branchOpts+'</select></div><div class="admin-form-group"><label>Type</label><select id="lfType">'+typeOpts+'</select></div></div>';
-  formHtml+='<div class="admin-form-group"><label>File URL (PDF link, optional)</label><input type="text" id="lfFileUrl" placeholder="https://..." value="'+fileUrlVal+'"></div>';
-  formHtml+='<button class="btn-go" id="lfSaveBtn">'+saveLabel+'</button><a href="#" class="back-link" id="lfCancelBtn">Cancel</a>';
-  content.innerHTML=formHtml;
-  overlay.style.display='flex';
-  document.getElementById('lfCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.style.display='none';});
-  document.getElementById('lfSaveBtn').addEventListener('click',function(){
-    var title=document.getElementById('lfTitle').value.trim();
-    if(!title){showToast('Title is required');return;}
-    var data={
-      title:title,desc:document.getElementById('lfDesc').value.trim(),branch:document.getElementById('lfBranch').value,
-      type:document.getElementById('lfType').value,fileUrl:document.getElementById('lfFileUrl').value.trim()
-    };
-    if(existing){for(var k in data){existing[k]=data[k];}showToast('Resource updated (this session only)');}
-    else{LIBRARY_RESOURCES.push(data);showToast('Resource added (this session only)');}
-    overlay.style.display='none';renderAdminTabs();updateAdminStats();renderLibraryGrid();
-  });
-}
-
-function deleteLibraryResource(index){
-  LIBRARY_RESOURCES.splice(index,1);
-  renderAdminTabs();updateAdminStats();renderLibraryGrid();
-  showToast('Resource removed (this session only)');
-}
-
-function promptAdminPassword(){
-  var overlay=document.createElement('div');
-  overlay.className='role-overlay';overlay.id='roleOverlay';
-  overlay.innerHTML='<div class="role-box"><h3>Admin Access</h3><p>This area is restricted.</p><input type="password" id="adminPassInput" placeholder="Admin password"><div class="err" id="adminErr">Incorrect password.</div><button class="btn-go" id="adminGoBtn">Unlock</button><a href="#" class="back-link" id="roleCancelBtn">Cancel</a></div>';
-  document.body.appendChild(overlay);
-  document.getElementById('adminGoBtn').addEventListener('click',function(){
-    var pass=document.getElementById('adminPassInput').value;
-    if(pass===ADMIN_PASSWORD){adminUnlocked=true;overlay.remove();navigateTo('admin');}
-    else{document.getElementById('adminErr').style.display='block';}
-  });
-  document.getElementById('roleCancelBtn').addEventListener('click',function(e){e.preventDefault();overlay.remove();window.location.hash='home';});
-}
-
-var PAGES=['home','sessions','speakers','library','about','partner','speakerapply','admin'];
+var PAGES=['home','sessions','speakers','library','about','partner','speakerapply'];
 
 function navigateTo(page){
-  if(page===SECRET_ADMIN_HASH){
-    if(!adminUnlocked){promptAdminPassword();return;}
-    page='admin';
-  }
   if(PAGES.indexOf(page)===-1)page='home';
-  if(page==='admin'&&!adminUnlocked){promptAdminPassword();return;}
   for(var i=0;i<PAGES.length;i++){
     var el=document.getElementById('page-'+PAGES[i]);
     if(el)el.classList.toggle('page-hidden',PAGES[i]!==page);
   }
-  if(page==='home'&&leafletMapInstance){setTimeout(function(){leafletMapInstance.invalidateSize();},100);}
+  if(page==='speakers'&&leafletMapInstance){setTimeout(function(){leafletMapInstance.invalidateSize();},150);}
   var links=document.querySelectorAll('.nav-links a');
   for(var j=0;j<links.length;j++){links[j].classList.toggle('active',links[j].dataset.page===page);}
   if(page==='sessions'){renderSessions();}
   if(page==='speakers'){renderFullSpeakerGrid();}
   if(page==='library'){renderLibraryGrid();}
   if(page==='about'){renderFoundersGrid();}
-  if(page==='admin'){updateAdminStats();renderAdminTabs();}
   window.scrollTo({top:0,behavior:'auto'});
   document.getElementById('navLinks').classList.remove('open');
-  if(page!=='admin'||window.location.hash.replace('#','')!==SECRET_ADMIN_HASH){
-    window.location.hash=page==='admin'?SECRET_ADMIN_HASH:page;
-  }
+  window.location.hash=page;
 }
 
 window.addEventListener('hashchange',function(){
@@ -1600,12 +1331,6 @@ window.navigateTo=navigateTo;
 window.showToast=showToast;
 window.openSessionModal=openSessionModal;
 window.filterByCountry=filterByCountry;
-window.openSessionForm=openSessionForm;
-window.deleteSession=deleteSession;
-window.openSpeakerForm=openSpeakerForm;
-window.deleteSpeaker=deleteSpeaker;
-window.openLibraryForm=openLibraryForm;
-window.deleteLibraryResource=deleteLibraryResource;
 
 function initPage(){
   setupLogoFallback('navLogoImg');
@@ -1655,11 +1380,6 @@ function initPage(){
   var libTypeEl=document.getElementById('libTypeFilter');
   if(libTypeEl)libTypeEl.addEventListener('change',renderLibraryGrid);
 
-  var adminTabEls=document.querySelectorAll('.admin-tab');
-  for(var at=0;at<adminTabEls.length;at++){
-    adminTabEls[at].addEventListener('click',function(){activeAdminTab=this.dataset.admintab;renderAdminTabs();});
-  }
-
   var pfSubmitBtn=document.getElementById('pfSubmitBtn');
   if(pfSubmitBtn)pfSubmitBtn.addEventListener('click',handlePartnerFormSubmit);
   var saSubmitBtn=document.getElementById('saSubmitBtn');
@@ -1693,16 +1413,33 @@ DATA FILES (edit on GitHub to add content permanently):
   data/library.json — resource library (add fileUrl for downloads)
   data/campus.json — campus photos (url + caption per entry)
 
-ADMIN: visit #t2r-founders-only-7732 then enter ADMIN_PASSWORD.
-Admin edits are session-only (not saved) — edit JSON files for permanent changes.
+ADMIN PANEL: removed for now (kept the site simpler — no password gate,
+no session-only edits). To add or update content, edit the JSON files
+in /data directly on GitHub, and upload matching images/files to the
+folders below. Crop before uploading:
+
+  Founder Photos        images/founders/   square 1:1, ~800x800px
+                         top of head ~12% from top, crop ends at collar
+  Speaker Photos         images/speakers/   square 1:1, ~400x400px
+  (non-founders)                            crop centered on the face
+                                             (displays as a circle)
+  Session Thumbnails    images/sessions/   landscape 16:9, ~800x450px
+  Logo                  images/Logo/       square 1:1, ~300x300px
+  Hero Video             images/t2r-intro.mp4
+                                             landscape 16:9, MP4, <~15MB
+  Campus Photos          images/campus/     landscape ~600x420px each,
+                                             listed in data/campus.json
+  Library Documents     —                  PDF preferred, link via
+                                             fileUrl in library.json
+
+  Tip: keep each image under ~200KB where possible.
 
 NO STUDENT LOGIN: removed intentionally. Session "Register" just
 collects name/email inline and shows a confirmation toast.
 
 GOOGLE FORMS: Partner and Speaker Apply forms submit directly to
 Google Forms via hidden iframe — see GOOGLE_FORM_PARTNER and
-GOOGLE_FORM_SPEAKER config objects (need to be re-added — see
-earlier conversation for the entry IDs you collected).
+GOOGLE_FORM_SPEAKER config objects.
 -->
 
 </body>
