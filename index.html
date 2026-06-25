@@ -191,7 +191,14 @@
   .session-card { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:all .25s; background:white; }
   .session-card:hover { box-shadow:0 12px 28px rgba(26,77,58,0.1); transform:translateY(-4px); }
   .session-thumb { aspect-ratio:16/9; position:relative; overflow:hidden; background:linear-gradient(135deg,#2a4f43,#0f2a20); }
-  .session-thumb img { width:100%; height:100%; object-fit:cover; }
+  .session-thumb img { width:100%; height:100%; object-fit:cover; cursor:zoom-in; }
+  .img-lightbox-overlay { position:fixed; inset:0; background:rgba(15,29,20,0.88); z-index:3000; display:none; align-items:center; justify-content:center; padding:30px; cursor:zoom-out; }
+  .img-lightbox-overlay.open { display:flex; }
+  .img-lightbox-content { max-width:92vw; max-height:88vh; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .img-lightbox-content img { max-width:100%; max-height:78vh; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.45); cursor:default; display:block; }
+  .img-lightbox-caption { color:white; font-size:0.92rem; font-weight:600; text-align:center; max-width:700px; }
+  .img-lightbox-close { position:absolute; top:18px; right:22px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.15); color:white; font-size:1.3rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s; }
+  .img-lightbox-close:hover { background:rgba(255,255,255,0.3); }
   .session-badge-row { position:absolute; top:10px; left:10px; right:10px; display:flex; justify-content:space-between; }
   .sbadge { font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:20px; }
   .sbadge.completed { background:rgba(255,255,255,0.92); color:var(--green); }
@@ -468,6 +475,14 @@
 </div>
 
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
+
+<div class="img-lightbox-overlay" id="imgLightboxOverlay">
+  <div class="img-lightbox-close" id="imgLightboxClose">✕</div>
+  <div class="img-lightbox-content" id="imgLightboxContent">
+    <img src="" alt="" id="imgLightboxImg">
+    <div class="img-lightbox-caption" id="imgLightboxCaption"></div>
+  </div>
+</div>
 
 <div id="page-speakers" class="page-hidden">
   <section class="page-section" style="padding-bottom:30px;">
@@ -1138,7 +1153,7 @@ function renderSessions(){
     var statusBadge=s.status==='completed'?'Completed':'Upcoming';
     var statusClass=s.status==='completed'?'completed':'upcoming';
     var shortDesc=s.desc.length>110?(s.desc.slice(0,110)+'…'):s.desc;
-    html+='<div class="session-card"><div class="session-thumb"><img src="'+s.img+'" alt="'+s.title+'"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+shortDesc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
+    html+='<div class="session-card"><div class="session-thumb"><img src="'+s.img+'" alt="'+s.title+'" onclick="openImageLightbox(\''+s.img.replace(/'/g,"\\'")+'\',\''+s.title.replace(/'/g,"\\'")+'\')"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+shortDesc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
   }
   grid.innerHTML=html;
   var viewAllBtn=document.getElementById('sessionsViewAllBtn');
