@@ -856,8 +856,13 @@ function attachPlayOverlay(videoId,overlayId){
   var v=document.getElementById(videoId);
   var o=document.getElementById(overlayId);
   if(!v||!o)return;
+  v.style.cursor='pointer';
   o.addEventListener('click',function(){
     v.play().catch(function(){});
+  });
+  v.addEventListener('click',function(){
+    if(v.paused){v.play().catch(function(){});}
+    else{v.pause();}
   });
   v.addEventListener('play',function(){o.classList.add('hidden');});
   v.addEventListener('pause',function(){o.classList.remove('hidden');});
