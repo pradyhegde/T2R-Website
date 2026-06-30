@@ -204,6 +204,7 @@
   .video-seek-row button { width:30px; height:30px; border-radius:50%; background:rgba(15,29,20,0.55); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,0.25); color:white; display:flex; align-items:center; justify-content:center; font-size:0.82rem; cursor:pointer; flex-shrink:0; transition:background .2s; }
   .video-seek-row button:hover { background:rgba(15,29,20,0.75); }
   .video-seek-row input[type="range"] { flex:1; height:4px; accent-color:white; cursor:pointer; }
+  .about-hero-video-wrap video { width:100%; height:100%; object-fit:cover; display:block; }
   .video-seek-row .vc-time { color:white; font-size:0.68rem; flex-shrink:0; min-width:74px; text-align:right; text-shadow:0 1px 3px rgba(0,0,0,0.6); }
   @media (max-width:600px) { .video-seek-row { bottom:54px; } .video-seek-row .vc-time { display:none; } }
   .hero-image:fullscreen,.about-hero-video-wrap:fullscreen,.hero-image:-webkit-full-screen,.about-hero-video-wrap:-webkit-full-screen { background:black; }
@@ -608,7 +609,7 @@
         <p style="color:var(--text-soft); font-size:1.05rem;">T2R is an initiative designed to bridge the gap between academic learning and real-world engineering practice — helping students understand how theory becomes impact.</p>
       </div>
       <div class="reveal about-hero-video-wrap" id="aboutVideoWrap">
-        <video id="aboutVideo" muted loop playsinline poster="images/t2r-about-poster.jpg" style="width:100%; height:100%; object-fit:cover; display:block;">
+        <video id="aboutVideo" muted loop playsinline poster="images/t2r-about-poster.jpg">
           <source src="Videos/about.mp4" type="video/mp4">
         </video>
         <div class="video-play-overlay" id="aboutPlayOverlay"><div class="play-ic">▶</div></div>
@@ -955,6 +956,25 @@ function attachSeekBar(videoId,seekId,timeId,ppBtnId){
   }
 }
 
+function lockLandscapeOrientation(){
+  if(screen.orientation&&screen.orientation.lock){
+    screen.orientation.lock('landscape').catch(function(){});
+  }
+}
+
+function unlockOrientation(){
+  if(screen.orientation&&screen.orientation.unlock){
+    try{screen.orientation.unlock();}catch(e){}
+  }
+}
+
+document.addEventListener('fullscreenchange',function(){
+  if(!document.fullscreenElement)unlockOrientation();
+});
+document.addEventListener('webkitfullscreenchange',function(){
+  if(!document.webkitFullscreenElement)unlockOrientation();
+});
+
 function attachFullscreenToggle(videoId,containerId,btnId){
   var v=document.getElementById(videoId);
   var c=document.getElementById(containerId);
@@ -963,9 +983,16 @@ function attachFullscreenToggle(videoId,containerId,btnId){
   b.addEventListener('click',function(){
     var fsEl=document.fullscreenElement||document.webkitFullscreenElement;
     if(!fsEl){
-      if(c.requestFullscreen)c.requestFullscreen();
-      else if(c.webkitRequestFullscreen)c.webkitRequestFullscreen();
-      else if(v.webkitEnterFullscreen)v.webkitEnterFullscreen();
+      if(c.requestFullscreen){
+        var req=c.requestFullscreen();
+        if(req&&req.then){req.then(lockLandscapeOrientation).catch(function(){});}
+        else{setTimeout(lockLandscapeOrientation,300);}
+      }else if(c.webkitRequestFullscreen){
+        c.webkitRequestFullscreen();
+        setTimeout(lockLandscapeOrientation,300);
+      }else if(v.webkitEnterFullscreen){
+        v.webkitEnterFullscreen();
+      }
     }else{
       if(document.exitFullscreen)document.exitFullscreen();
       else if(document.webkitExitFullscreen)document.webkitExitFullscreen();
