@@ -1018,8 +1018,8 @@ function attachAutoHideControls(containerId,videoId){
       hideTimer=setTimeout(function(){c.classList.add('controls-hidden');},2500);
     }
   }
-  c.addEventListener('mousemove',showControls);
   c.addEventListener('mouseenter',showControls);
+  c.addEventListener('click',showControls);
   c.addEventListener('touchstart',showControls,{passive:true});
   v.addEventListener('play',showControls);
   v.addEventListener('pause',function(){
