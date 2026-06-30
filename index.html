@@ -136,28 +136,21 @@
   .map-side p { font-size:0.85rem; color:var(--text-soft); margin-bottom:14px; }
   .country-chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
   .country-chip { background:var(--sage-2); border:1px solid var(--border); font-size:0.78rem; padding:5px 12px; border-radius:20px; color:var(--green); font-weight:600; cursor:pointer; transition:all .2s; }
-  .speaker-wall-banner { position:relative; width:100%; aspect-ratio:21/9; max-height:380px; overflow:hidden; }
-  .speaker-wall-banner img { width:100%; height:100%; object-fit:cover; object-position:center 0%; display:block; filter:grayscale(1) contrast(1.05) brightness(0.92); animation:panFaces 22s ease-in-out infinite alternate; }
-  @keyframes panFaces { 0%{ object-position:center 0%; } 100%{ object-position:center 100%; } }
-  @media (prefers-reduced-motion:reduce) { .speaker-wall-banner img { animation:none; object-position:center 15%; } }
-  .speaker-wall-tint { position:absolute; inset:0; background:linear-gradient(180deg, rgba(15,42,32,0.1) 0%, rgba(15,42,32,0.55) 65%, rgba(10,30,22,0.9) 100%); }
-  .speaker-wall-content { position:absolute; left:0; right:0; bottom:0; padding:30px 8% 26px; color:white; }
-  .speaker-wall-content .tag-pill { background:rgba(255,255,255,0.15); color:white; }
-  .speaker-wall-content h3 { font-size:clamp(1.2rem,2.8vw,1.85rem); font-weight:800; margin:8px 0 6px; letter-spacing:-0.02em; }
-  .speaker-wall-content p { color:rgba(255,255,255,0.82); font-size:0.9rem; max-width:540px; margin-bottom:4px; }
-  .speaker-wall-stats { display:flex; gap:26px; margin-top:14px; flex-wrap:wrap; }
-  .speaker-wall-stats .num { font-size:1.4rem; font-weight:800; color:white; line-height:1.1; }
-  .speaker-wall-stats .lbl { font-size:0.68rem; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:1px; }
-  @media (max-width:700px) {
-    .speaker-wall-banner { aspect-ratio:16/9; max-height:240px; }
-    .speaker-wall-content { padding:16px 6% 14px; }
-    .speaker-wall-content .tag-pill { display:none; }
-    .speaker-wall-content p { display:none; }
-    .speaker-wall-content h3 { font-size:1.02rem; margin:0 0 6px; }
-    .speaker-wall-stats { gap:14px; margin-top:4px; }
-    .speaker-wall-stats .num { font-size:1.05rem; }
-    .speaker-wall-stats .lbl { font-size:0.6rem; }
-  }
+  .speaker-wall-flex { display:grid; grid-template-columns:0.95fr 1.05fr; gap:56px; align-items:center; max-width:1200px; margin:0 auto; }
+  @media (max-width:900px) { .speaker-wall-flex { grid-template-columns:1fr; gap:34px; } }
+  .speaker-wall-stats-row { display:flex; gap:14px; flex-wrap:wrap; margin-top:22px; }
+  .speaker-wall-stat-chip { background:var(--sage-2); border:1px solid var(--border); border-radius:12px; padding:14px 18px; min-width:90px; }
+  .speaker-wall-stat-chip .num { font-size:1.5rem; font-weight:800; color:var(--green); line-height:1.1; }
+  .speaker-wall-stat-chip .lbl { font-size:0.7rem; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; font-weight:700; }
+  .speaker-wall-photo-wrap { position:relative; }
+  .speaker-wall-photo-accent { position:absolute; inset:16px -16px -16px 16px; background:var(--sage); border-radius:18px; z-index:0; }
+  .speaker-wall-photo-card { position:relative; z-index:1; border-radius:18px; overflow:hidden; border:1px solid var(--border); background:white; box-shadow:0 24px 50px rgba(26,77,58,0.14); transition:transform .4s ease; }
+  .speaker-wall-photo-card:hover { transform:translateY(-4px); }
+  .speaker-wall-photo-card img { width:100%; height:auto; display:block; object-fit:contain; filter:grayscale(1) contrast(1.05) brightness(0.97); }
+  .speaker-wall-badge { position:absolute; bottom:-18px; right:22px; background:var(--green); color:white; padding:13px 20px; border-radius:14px; box-shadow:0 12px 26px rgba(15,53,38,0.28); z-index:2; text-align:center; }
+  .speaker-wall-badge .num { font-size:1.3rem; font-weight:800; line-height:1.1; }
+  .speaker-wall-badge .lbl { font-size:0.66rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.8); }
+  @media (max-width:700px) { .speaker-wall-photo-accent { inset:10px -10px -10px 10px; } .speaker-wall-badge { right:14px; bottom:-14px; padding:10px 16px; } }
   .speaker-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; max-width:1100px; margin:0 auto; }
   @media (max-width:900px) { .speaker-grid { grid-template-columns:repeat(2,1fr); } }
   @media (max-width:560px) { .speaker-grid { grid-template-columns:1fr; } }
@@ -511,28 +504,31 @@
 </div>
 
 <div id="page-speakers" class="page-hidden">
-  <section class="page-section" style="padding-bottom:26px; text-align:center;">
-    <span class="tag-pill"><span class="pill-dot"></span>Global Experts</span>
-    <h2 style="font-size:2.1rem; font-weight:800; margin-bottom:14px; letter-spacing:-0.02em;">Our Speakers</h2>
-    <p style="color:var(--text-soft); font-size:1.02rem; margin:0 auto 8px; max-width:620px;">Professionals from across the globe, bringing real-world knowledge and industry experience directly into the classroom.</p>
-    <p style="color:var(--green); font-weight:600; font-size:0.92rem; margin-bottom:22px;">Speakers from 5+ countries working on real engineering projects</p>
-    <a href="#speakerapply" class="btn btn-green" onclick="navigateTo('speakerapply')" style="font-size:0.88rem; padding:12px 22px;">🎙️ Become a Speaker</a>
-  </section>
-
-  <section class="speaker-wall-banner reveal">
-    <img src="images/speakers/speakerss.jpg" alt="T2R speakers and founders from around the world">
-    <div class="speaker-wall-tint"></div>
-    <div class="speaker-wall-content">
-      <span class="tag-pill"><span class="pill-dot" style="background:white;"></span>The People Behind T2R</span>
-      <h3>30+ Engineers. 5+ Countries. One Mission.</h3>
-      <p>Real engineers, researchers and founders — sharing the work behind the theory.</p>
-      <div class="speaker-wall-stats">
-        <div><div class="num">30+</div><div class="lbl">Speakers</div></div>
-        <div><div class="num">5+</div><div class="lbl">Countries</div></div>
-        <div><div class="num">3</div><div class="lbl">Founders</div></div>
+  <section class="page-section" style="padding-bottom:50px;">
+    <div class="speaker-wall-flex">
+      <div class="reveal">
+        <span class="tag-pill"><span class="pill-dot"></span>The People Behind T2R</span>
+        <h2 style="font-size:2rem; font-weight:800; margin:12px 0 14px; letter-spacing:-0.02em;">30+ Engineers. 5+ Countries. One Mission.</h2>
+        <p style="color:var(--text-soft); font-size:1.02rem; margin-bottom:8px;">Professionals from across the globe, bringing real-world knowledge and industry experience directly into the classroom.</p>
+        <p style="color:var(--green); font-weight:600; font-size:0.92rem; margin-bottom:8px;">Speakers from 5+ countries working on real engineering projects</p>
+        <div class="speaker-wall-stats-row">
+          <div class="speaker-wall-stat-chip"><div class="num">30+</div><div class="lbl">Speakers</div></div>
+          <div class="speaker-wall-stat-chip"><div class="num">5+</div><div class="lbl">Countries</div></div>
+          <div class="speaker-wall-stat-chip"><div class="num">3</div><div class="lbl">Founders</div></div>
+        </div>
+        <a href="#speakerapply" class="btn btn-green" onclick="navigateTo('speakerapply')" style="font-size:0.88rem; padding:12px 22px; margin-top:24px;">🎙️ Become a Speaker</a>
+      </div>
+      <div class="reveal speaker-wall-photo-wrap">
+        <div class="speaker-wall-photo-accent"></div>
+        <div class="speaker-wall-photo-card">
+          <img src="images/speakers/speakerss.jpg" alt="T2R speakers and founders from around the world">
+        </div>
+        <div class="speaker-wall-badge"><div class="num">30+</div><div class="lbl">Voices</div></div>
       </div>
     </div>
   </section>
+
+  <div class="divider"></div>
 
   <section class="page-section" style="padding-top:50px; padding-bottom:30px;">
     <div class="section-head reveal">
