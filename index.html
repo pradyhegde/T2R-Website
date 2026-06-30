@@ -161,7 +161,7 @@
   .campus-filmstrip-wrap::before { left:0; background:linear-gradient(to right,white,transparent); }
   .campus-filmstrip-wrap::after { right:0; background:linear-gradient(to left,white,transparent); }
   .campus-filmstrip { display:flex; gap:16px; width:max-content; animation:campusScroll 40s linear infinite; }
-  .campus-filmstrip:hover { animation-play-state:paused; }
+  @media (hover:hover) { .campus-filmstrip:hover { animation-play-state:paused; } }
   .campus-filmstrip-item { flex-shrink:0; width:280px; height:190px; border-radius:14px; overflow:hidden; position:relative; background:var(--sage-2); box-shadow:0 4px 14px rgba(26,77,58,0.08); }
   .campus-filmstrip-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s; }
   .campus-filmstrip-item:hover img { transform:scale(1.06); }
@@ -897,8 +897,10 @@ function manageVideoPlayback(activePage){
   for(var i=0;i<pages.length;i++){
     var v=document.getElementById(VIDEO_PAGE_MAP[pages[i]]);
     if(!v)continue;
-    v.pause();
-    v.currentTime=0;
+    if(v.currentTime>0){
+      v.pause();
+      v.load();
+    }
   }
 }
 
@@ -1015,7 +1017,7 @@ function renderCampusFilmstrip(photos){
   for(var i=0;i<doubled.length;i++){
     var p=doubled[i];
     var captionHtml=p.caption?('<div class="campus-filmstrip-caption">'+p.caption+'</div>'):'';
-    html+='<div class="campus-filmstrip-item"><img src="'+p.url+'" alt="'+(p.caption||'Campus session')+'" loading="lazy">'+captionHtml+'</div>';
+    html+='<div class="campus-filmstrip-item"><img src="'+p.url+'" alt="'+(p.caption||'Campus session')+'" loading="lazy" class="lightbox-trigger" data-fullsrc="'+escAttr(p.url)+'" data-caption="'+escAttr(p.caption||'Campus session')+'">'+captionHtml+'</div>';
   }
   strip.innerHTML=html;
 }
@@ -1620,10 +1622,20 @@ function initPage(){
   loadCampusPhotos();
   loadAllSiteData();
 
+  var tabAll=document.getElementById('tabAll');
   var tabUp=document.getElementById('tabUpcoming');
   var tabPast=document.getElementById('tabPast');
-  if(tabUp)tabUp.addEventListener('click',function(){activeTab='upcoming';tabUp.classList.add('active');tabPast.classList.remove('active');renderSessions();});
-  if(tabPast)tabPast.addEventListener('click',function(){activeTab='past';tabPast.classList.add('active');tabUp.classList.remove('active');renderSessions();});
+  var sessionTabBtns=[tabAll,tabUp,tabPast];
+  function setActiveSessionTab(tab,clickedBtn){
+    activeTab=tab;
+    for(var t=0;t<sessionTabBtns.length;t++){
+      if(sessionTabBtns[t])sessionTabBtns[t].classList.toggle('active',sessionTabBtns[t]===clickedBtn);
+    }
+    renderSessions();
+  }
+  if(tabAll)tabAll.addEventListener('click',function(){setActiveSessionTab('all',tabAll);});
+  if(tabUp)tabUp.addEventListener('click',function(){setActiveSessionTab('upcoming',tabUp);});
+  if(tabPast)tabPast.addEventListener('click',function(){setActiveSessionTab('past',tabPast);});
 
   var sessionSearchEl=document.getElementById('sessionSearch');
   if(sessionSearchEl)sessionSearchEl.addEventListener('input',renderSessions);
