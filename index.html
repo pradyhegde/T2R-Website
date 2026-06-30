@@ -343,7 +343,7 @@
         </div>
       </div>
       <div class="hero-image reveal" id="heroImageWrap">
-        <video id="heroVideo" muted loop playsinline poster="images/t2r-intro-poster.jpg">
+        <video id="heroVideo" loop playsinline poster="images/t2r-intro-poster.jpg">
           <source src="Videos/intro.mp4" type="video/mp4">
         </video>
         <div class="video-play-overlay" id="heroPlayOverlay"><div class="play-ic">▶</div></div>
@@ -353,8 +353,8 @@
           <span class="vc-time" id="heroTimeLabel">0:00 / 0:00</span>
         </div>
         <div class="video-sound-control">
-          <button id="heroSoundToggle" aria-label="Toggle video sound" type="button">🔇</button>
-          <input type="range" id="heroVolumeSlider" min="0" max="100" value="0" aria-label="Video volume">
+          <button id="heroSoundToggle" aria-label="Toggle video sound" type="button">🔊</button>
+          <input type="range" id="heroVolumeSlider" min="0" max="100" value="20" aria-label="Video volume">
           <button id="heroFullscreenBtn" aria-label="Toggle fullscreen" type="button">⛶</button>
         </div>
         <div class="hero-image-tag"><div class="big">Idea Behind T2R</div></div>
@@ -609,7 +609,7 @@
         <p style="color:var(--text-soft); font-size:1.05rem;">T2R is an initiative designed to bridge the gap between academic learning and real-world engineering practice — helping students understand how theory becomes impact.</p>
       </div>
       <div class="reveal about-hero-video-wrap" id="aboutVideoWrap">
-        <video id="aboutVideo" muted loop playsinline poster="images/t2r-about-poster.jpg">
+        <video id="aboutVideo" loop playsinline poster="images/t2r-about-poster.jpg">
           <source src="Videos/about.mp4" type="video/mp4">
         </video>
         <div class="video-play-overlay" id="aboutPlayOverlay"><div class="play-ic">▶</div></div>
@@ -619,8 +619,8 @@
           <span class="vc-time" id="aboutTimeLabel">0:00 / 0:00</span>
         </div>
         <div class="video-sound-control">
-          <button id="aboutSoundToggle" aria-label="Toggle video sound" type="button">🔇</button>
-          <input type="range" id="aboutVolumeSlider" min="0" max="100" value="0" aria-label="Video volume">
+          <button id="aboutSoundToggle" aria-label="Toggle video sound" type="button">🔊</button>
+          <input type="range" id="aboutVolumeSlider" min="0" max="100" value="20" aria-label="Video volume">
           <button id="aboutFullscreenBtn" aria-label="Toggle fullscreen" type="button">⛶</button>
         </div>
         <div class="hero-image-tag"><div class="big">Meet Our Experts</div></div>
@@ -850,12 +850,13 @@ function attachSoundToggle(videoId,btnId,sliderId){
   var b=document.getElementById(btnId);
   var s=document.getElementById(sliderId);
   if(!v||!b)return;
-  v.volume=0.6;
+  v.volume=0.2;
+  v.muted=false;
   b.addEventListener('click',function(){
     if(v.muted||v.volume===0){
       v.muted=false;
-      v.volume=0.6;
-      if(s)s.value=60;
+      v.volume=0.2;
+      if(s)s.value=20;
       b.textContent='🔊';
       v.play().catch(function(){});
     }else{
@@ -1011,17 +1012,20 @@ function attachAutoHideControls(containerId,videoId){
   var v=document.getElementById(videoId);
   if(!c||!v)return;
   var hideTimer=null;
-  function showControls(){
-    c.classList.remove('controls-hidden');
+  function scheduleHide(){
     if(hideTimer)clearTimeout(hideTimer);
-    if(!v.paused){
-      hideTimer=setTimeout(function(){c.classList.add('controls-hidden');},2500);
-    }
+    hideTimer=setTimeout(function(){c.classList.add('controls-hidden');},2500);
   }
-  c.addEventListener('mouseenter',showControls);
-  c.addEventListener('click',showControls);
-  c.addEventListener('touchstart',showControls,{passive:true});
-  v.addEventListener('play',showControls);
+  function revealTemporarily(){
+    c.classList.remove('controls-hidden');
+    if(!v.paused)scheduleHide();
+  }
+  c.addEventListener('mouseenter',revealTemporarily);
+  c.addEventListener('touchstart',revealTemporarily,{passive:true});
+  v.addEventListener('play',function(){
+    c.classList.add('controls-hidden');
+    if(hideTimer)clearTimeout(hideTimer);
+  });
   v.addEventListener('pause',function(){
     c.classList.remove('controls-hidden');
     if(hideTimer)clearTimeout(hideTimer);
