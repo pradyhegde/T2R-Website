@@ -578,9 +578,10 @@
         <p style="color:var(--text-soft); font-size:1.05rem;">T2R is an initiative designed to bridge the gap between academic learning and real-world engineering practice — helping students understand how theory becomes impact.</p>
       </div>
       <div class="reveal" style="border-radius:16px; overflow:hidden; aspect-ratio:4/3; position:relative; background:linear-gradient(135deg,#2a4f43,#0f2a20);">
-        <video id="aboutVideo" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; display:block;">
-          <source src="images/t2r-about.mp4" type="video/mp4">
+        <video id="aboutVideo" autoplay muted loop playsinline poster="images/t2r-about-poster.jpg" style="width:100%; height:100%; object-fit:cover; display:block;">
+          <source src="Videos/about.mp4" type="video/mp4">
         </video>
+        <button class="video-sound-toggle" id="aboutSoundToggle" aria-label="Toggle video sound" type="button">🔇</button>
       </div>
     </div>
   </section>
@@ -1528,17 +1529,16 @@ folders below. Crop before uploading:
                                              (displays as a circle)
   Session Thumbnails    images/sessions/   landscape 16:9, ~800x450px
   Logo                  images/Logo/       square 1:1, ~300x300px
-  Hero Video             images/t2r-intro.mp4
-                                             same file plays in two boxes
-                                             with different shapes:
-                                             - Homepage hero: ~1.39:1
-                                               (e.g. 1000x720px)
-                                             - About page: 4:3 (e.g. 800x600px)
-                                             Frame the subject centered
-                                             with margin on all sides so
-                                             both crops look fine; avoid
-                                             a true 16:9 edge-to-edge cut,
-                                             it will lose the sides in both.
+  Hero Video             Videos/intro.mp4   homepage hero, with poster
+                                             images/t2r-intro-poster.jpg
+  About Video            Videos/about.mp4   About page, with poster
+                                             images/t2r-about-poster.jpg
+                                             Both videos: landscape MP4,
+                                             muted+autoplay+loop by default,
+                                             with a sound toggle button.
+                                             H.264 codec required (not
+                                             HEVC/H.265 — unsupported in
+                                             most browsers besides Safari).
   Campus Photos          images/campus/     landscape ~600x408px each
                                              (slightly taller than 600x420),
                                              listed in data/campus.json
