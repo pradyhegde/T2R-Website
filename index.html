@@ -136,9 +136,10 @@
   .map-side p { font-size:0.85rem; color:var(--text-soft); margin-bottom:14px; }
   .country-chips { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
   .country-chip { background:var(--sage-2); border:1px solid var(--border); font-size:0.78rem; padding:5px 12px; border-radius:20px; color:var(--green); font-weight:600; cursor:pointer; transition:all .2s; }
-  .speaker-wall-banner { position:relative; width:100%; aspect-ratio:21/9; max-height:340px; overflow:hidden; }
-  .speaker-wall-banner img { width:100%; height:100%; object-fit:cover; display:block; filter:grayscale(1) contrast(1.05) brightness(0.92); transition:transform 6s ease; }
-  .speaker-wall-banner:hover img { transform:scale(1.04); }
+  .speaker-wall-banner { position:relative; width:100%; aspect-ratio:21/9; max-height:380px; overflow:hidden; }
+  .speaker-wall-banner img { width:100%; height:100%; object-fit:cover; object-position:center 0%; display:block; filter:grayscale(1) contrast(1.05) brightness(0.92); animation:panFaces 22s ease-in-out infinite alternate; }
+  @keyframes panFaces { 0%{ object-position:center 0%; } 100%{ object-position:center 100%; } }
+  @media (prefers-reduced-motion:reduce) { .speaker-wall-banner img { animation:none; object-position:center 15%; } }
   .speaker-wall-tint { position:absolute; inset:0; background:linear-gradient(180deg, rgba(15,42,32,0.1) 0%, rgba(15,42,32,0.55) 65%, rgba(10,30,22,0.9) 100%); }
   .speaker-wall-content { position:absolute; left:0; right:0; bottom:0; padding:30px 8% 26px; color:white; }
   .speaker-wall-content .tag-pill { background:rgba(255,255,255,0.15); color:white; }
