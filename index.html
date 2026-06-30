@@ -514,7 +514,7 @@
     <div style="max-width:1100px; margin:0 auto 28px;"><h2 style="font-size:1.7rem; font-weight:800; margin-bottom:6px;">Sessions</h2><p style="color:var(--text-soft);">Register for upcoming sessions or revisit past ones with recordings.</p></div>
     <div style="max-width:1100px; margin:0 auto 18px;"><input type="text" id="sessionSearch" placeholder="Search sessions or speakers..." style="width:100%; padding:13px 16px; border-radius:10px; border:1.5px solid var(--border); font-size:0.92rem; font-family:inherit;"></div>
     <div style="max-width:1100px; margin:0 auto 18px; display:flex; gap:8px; flex-wrap:wrap;" id="branchFilterRow"></div>
-    <div style="max-width:1100px; margin:0 auto 26px; display:flex; gap:8px;"><button class="session-tab active" data-tab="upcoming" id="tabUpcoming">Upcoming (<span id="countUpcoming">0</span>)</button><button class="session-tab" data-tab="past" id="tabPast">Past & Recordings (<span id="countPast">0</span>)</button></div>
+    <div style="max-width:1100px; margin:0 auto 26px; display:flex; gap:8px;"><button class="session-tab active" data-tab="all" id="tabAll">All (<span id="countAll">0</span>)</button><button class="session-tab" data-tab="upcoming" id="tabUpcoming">Upcoming (<span id="countUpcoming">0</span>)</button><button class="session-tab" data-tab="past" id="tabPast">Past & Recordings (<span id="countPast">0</span>)</button></div>
     <div id="sessionGrid" style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:22px;"></div>
     <div id="sessionEmptyState" style="display:none; max-width:1100px; margin:0 auto; text-align:center; padding:60px 0; color:var(--text-soft);">No sessions match your search.</div>
     <div style="max-width:1100px; margin:30px auto 0; text-align:center;"><button id="sessionsViewAllBtn" class="btn btn-secondary" style="display:none;">View All Sessions</button></div>
@@ -1315,7 +1315,7 @@ function renderLibraryGrid(){
 
 var BRANCHES=['All Branches','Mechanical','Electrical','Computer Science','Civil','Electronics','General'];
 var activeBranchFilter='All Branches';
-var activeTab='upcoming';
+var activeTab='all';
 var sessionsShowAll=false;
 
 function renderBranchChips(){
@@ -1363,6 +1363,7 @@ function renderSessions(){
   var list=getFilteredSessions();
   var cu=document.getElementById('countUpcoming');
   var cp=document.getElementById('countPast');
+  var ca=document.getElementById('countAll');
   var upCount=0,pastCount=0;
   for(var i=0;i<SESSIONS.length;i++){
     if(activeBranchFilter!=='All Branches'&&SESSIONS[i].branch!==activeBranchFilter)continue;
@@ -1370,6 +1371,7 @@ function renderSessions(){
     if(SESSIONS[i].status==='completed')pastCount++;
   }
   if(cu)cu.textContent=upCount;if(cp)cp.textContent=pastCount;
+  if(ca)ca.textContent=upCount+pastCount;
   if(list.length===0){
     grid.style.display='none';if(emptyState)emptyState.style.display='block';
     var vab0=document.getElementById('sessionsViewAllBtn');if(vab0)vab0.style.display='none';
