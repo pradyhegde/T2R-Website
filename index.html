@@ -102,11 +102,7 @@
   @media (max-width:900px) { .three-col { grid-template-columns:1fr; } }
   .industry-card { border:1px solid var(--border); border-radius:14px; padding:22px; }
   .industry-card .tag { font-size:0.74rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:14px; display:flex; align-items:center; }
-  .stats-bar { background:var(--green); padding:50px 8%; }
-  .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; max-width:1100px; margin:0 auto; text-align:center; }
-  @media (max-width:700px) { .stats-grid { grid-template-columns:repeat(2,1fr); } }
-  .stat-num { font-size:2.8rem; font-weight:800; color:white; letter-spacing:-0.03em; }
-  .stat-label { color:rgba(255,255,255,0.75); font-size:0.88rem; margin-top:4px; }
+
   .career-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1200px; margin:0 auto; }
   @media (max-width:900px) { .career-grid { grid-template-columns:1fr; } }
   .career-card { border:1px solid var(--border); border-radius:14px; padding:22px; transition:all .25s; }
@@ -425,14 +421,7 @@
     </div>
   </section>
 
-  <section class="stats-bar">
-    <div class="stats-grid reveal">
-      <div><div class="stat-num">300+</div><div class="stat-label">Students Enrolled</div></div>
-      <div><div class="stat-num">12+</div><div class="stat-label">Sessions Delivered</div></div>
-      <div><div class="stat-num">30+</div><div class="stat-label">Global Experts</div></div>
-      <div><div class="stat-num">5+</div><div class="stat-label">Countries Reached</div></div>
-    </div>
-  </section>
+
 
   <section class="page-section">
     <div class="section-head reveal">
@@ -541,12 +530,8 @@
     <span class="tag-pill"><span class="pill-dot"></span>The People Behind T2R</span>
     <h2 style="font-size:2rem; font-weight:800; margin:12px 0 14px; letter-spacing:-0.02em;">30+ Engineers. 5+ Countries. One Mission.</h2>
     <p style="color:var(--text-soft); font-size:1.02rem; margin:0 auto 8px; max-width:620px;">Professionals from across the globe, bringing real-world knowledge and industry experience directly into the classroom.</p>
-    <p style="color:var(--green); font-weight:600; font-size:0.92rem; margin-bottom:8px;">Speakers from 5+ countries working on real engineering projects</p>
-    <div class="speaker-wall-stats-row">
-      <div class="speaker-wall-stat-chip"><div class="num">30+</div><div class="lbl">Speakers</div></div>
-      <div class="speaker-wall-stat-chip"><div class="num">5+</div><div class="lbl">Countries</div></div>
-    </div>
-    <a href="#speakerapply" class="btn btn-green" onclick="navigateTo('speakerapply')" style="font-size:0.88rem; padding:12px 22px; margin-top:24px;">🎙️ Become a Speaker</a>
+    <p style="color:var(--green); font-weight:600; font-size:0.92rem; margin-bottom:24px;">Speakers from 7+ countries working on real engineering projects</p>
+    <a href="#speakerapply" class="btn btn-green" onclick="navigateTo('speakerapply')" style="font-size:0.88rem; padding:12px 22px; margin-top:0px;">🎙️ Become a Speaker</a>
 
     <div class="speaker-wall-photo-frame reveal" id="speakerWallPhotoFrame">
       <img src="images/speakers/speakerss.jpg" alt="T2R speakers and founders from around the world">
