@@ -1017,31 +1017,29 @@ function attachAutoHideControls(containerId,videoId){
   var v=document.getElementById(videoId);
   if(!c||!v)return;
   var hideTimer=null;
-  var ignoreMove=false;
   function scheduleHide(){
     if(hideTimer)clearTimeout(hideTimer);
     hideTimer=setTimeout(function(){c.classList.add('controls-hidden');},3000);
   }
-  function revealTemporarily(){
-    c.classList.remove('controls-hidden');
-    if(!v.paused)scheduleHide();
-  }
-  c.addEventListener('mousemove',function(){
-    if(ignoreMove)return;
-    revealTemporarily();
+  c.addEventListener('click',function(){
+    if(!v.paused){
+      c.classList.remove('controls-hidden');
+      scheduleHide();
+    }
   });
   c.addEventListener('touchstart',function(){
-    revealTemporarily();
+    if(!v.paused){
+      c.classList.remove('controls-hidden');
+      scheduleHide();
+    }
   },{passive:true});
   v.addEventListener('play',function(){
-    ignoreMove=true;
-    setTimeout(function(){ignoreMove=false;},600);
-    c.classList.add('controls-hidden');
     if(hideTimer)clearTimeout(hideTimer);
+    c.classList.add('controls-hidden');
   });
   v.addEventListener('pause',function(){
-    c.classList.remove('controls-hidden');
     if(hideTimer)clearTimeout(hideTimer);
+    c.classList.remove('controls-hidden');
   });
 }
 
