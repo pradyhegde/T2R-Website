@@ -247,6 +247,20 @@
   .session-action-link { font-size:0.82rem; font-weight:700; color:var(--green); background:none; border:none; cursor:pointer; }
   .session-register-btn { font-size:0.82rem; font-weight:700; color:white; background:var(--green); padding:7px 14px; border-radius:7px; }
   .session-register-btn:hover { background:var(--green-dark); }
+  .session-detail-overlay { position:fixed; inset:0; background:rgba(15,29,20,0.72); z-index:2000; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+  .session-detail-overlay.open { display:flex; }
+  .session-detail-box { background:white; border-radius:20px; max-width:680px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 30px 70px rgba(0,0,0,0.3); animation:detailPop .25s cubic-bezier(.22,.61,.36,1); position:relative; }
+  @keyframes detailPop { from { opacity:0; transform:scale(0.94) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .session-detail-img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:20px 20px 0 0; display:block; }
+  .session-detail-body { padding:28px 30px 30px; }
+  .session-detail-body h2 { font-size:1.3rem; font-weight:800; margin-bottom:12px; letter-spacing:-0.02em; }
+  .session-detail-meta { display:flex; gap:14px; flex-wrap:wrap; font-size:0.82rem; color:var(--text-soft); margin-bottom:16px; }
+  .session-detail-desc { font-size:0.93rem; color:var(--text-soft); line-height:1.7; margin-bottom:20px; }
+  .session-detail-speaker { display:flex; align-items:center; gap:12px; padding:16px; background:var(--sage-2); border-radius:12px; margin-bottom:20px; }
+  .session-detail-speaker .info h5 { font-size:0.95rem; font-weight:700; margin-bottom:2px; }
+  .session-detail-speaker .info span { font-size:0.82rem; color:var(--text-soft); }
+  .session-detail-footer { display:flex; justify-content:space-between; align-items:center; padding-top:16px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+  .session-detail-close { position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; border:none; box-shadow:0 2px 8px rgba(0,0,0,0.2); z-index:1; }
   @media (max-width:900px) { #sessionGrid { grid-template-columns:repeat(2,1fr) !important; } }
   @media (max-width:600px) { #sessionGrid { grid-template-columns:1fr !important; } }
   .speaker-full-card { border:1px solid var(--border); border-radius:14px; padding:22px; background:white; transition:all .25s; }
@@ -604,6 +618,21 @@
 </div>
 
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
+
+<div class="session-detail-overlay" id="sessionDetailOverlay">
+  <div class="session-detail-box" id="sessionDetailBox">
+    <button class="session-detail-close" id="sessionDetailClose">✕</button>
+    <img src="" alt="" id="sessionDetailImg" class="session-detail-img">
+    <div class="session-detail-body">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;" id="sessionDetailBadges"></div>
+      <h2 id="sessionDetailTitle"></h2>
+      <div class="session-detail-meta" id="sessionDetailMeta"></div>
+      <div class="session-detail-speaker" id="sessionDetailSpeaker"></div>
+      <p class="session-detail-desc" id="sessionDetailDesc"></p>
+      <div class="session-detail-footer" id="sessionDetailFooter"></div>
+    </div>
+  </div>
+</div>
 
 <div class="img-lightbox-overlay" id="imgLightboxOverlay">
   <div class="img-lightbox-close" id="imgLightboxClose">✕</div>
@@ -1519,7 +1548,8 @@ function renderSessions(){
     var guestBadge=s.guest?'<span class="sbadge guest">Guest Lecture</span>':'';
     var statusBadge=s.status==='completed'?'Completed':'Upcoming';
     var statusClass=s.status==='completed'?'completed':'upcoming';
-    html+='<div class="session-card"><div class="session-thumb"><img src="'+s.img+'" alt="'+escAttr(s.title)+'" class="lightbox-trigger" data-fullsrc="'+escAttr(s.img)+'" data-caption="'+escAttr(s.title)+'"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+s.desc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
+    var shortDesc=s.desc.length>110?(s.desc.slice(0,110)+'…'):s.desc;
+    html+='<div class="session-card" onclick="openSessionDetail(\''+s.id+'\')" style="cursor:pointer;"><div class="session-thumb"><img src="'+s.img+'" alt="'+escAttr(s.title)+'" class="lightbox-trigger" data-fullsrc="'+escAttr(s.img)+'" data-caption="'+escAttr(s.title)+'"><div class="session-badge-row"><span class="sbadge '+statusClass+'">'+statusBadge+'</span>'+guestBadge+'</div></div><div class="session-body"><h4>'+s.title+'</h4><p class="desc">'+shortDesc+'</p><div class="session-speaker"><div class="mini-avatar" style="width:32px;height:32px;font-size:0.78rem;">'+initials(s.speaker)+'</div><div class="session-speaker-info"><h6>'+s.speaker+'</h6><span>'+s.speakerRole+'</span></div></div><div class="session-meta-row"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div><div class="session-footer"><span class="session-branch-tag">'+s.branch+'</span>'+footerRight+'</div></div></div>';
   }
   grid.innerHTML=html;
   var viewAllBtn=document.getElementById('sessionsViewAllBtn');
@@ -1542,6 +1572,39 @@ function openImageLightbox(src,caption){
 function closeImageLightbox(){
   var overlay=document.getElementById('imgLightboxOverlay');
   if(overlay)overlay.classList.remove('open');
+}
+
+function openSessionDetail(sessionId){
+  var s=null;
+  for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){s=SESSIONS[i];break;}}
+  if(!s)return;
+  var overlay=document.getElementById('sessionDetailOverlay');
+  document.getElementById('sessionDetailImg').src=s.img;
+  document.getElementById('sessionDetailImg').alt=s.title;
+  document.getElementById('sessionDetailTitle').textContent=s.title;
+  var badges='<span class="sbadge '+(s.status==='completed'?'completed':'upcoming')+'" style="position:relative;top:0;left:0;">'+(s.status==='completed'?'Completed':'Upcoming')+'</span>';
+  if(s.guest)badges+='<span class="sbadge guest" style="position:relative;top:0;left:0;">Guest Lecture</span>';
+  badges+='<span class="session-branch-tag">'+s.branch+'</span>';
+  document.getElementById('sessionDetailBadges').innerHTML=badges;
+  document.getElementById('sessionDetailMeta').innerHTML='<span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span>';
+  document.getElementById('sessionDetailSpeaker').innerHTML='<div class="mini-avatar" style="width:44px;height:44px;font-size:0.95rem;flex-shrink:0;">'+initials(s.speaker)+'</div><div class="info"><h5>'+s.speaker+'</h5><span>'+s.speakerRole+'</span></div>';
+  document.getElementById('sessionDetailDesc').textContent=s.desc;
+  var footer='';
+  if(s.status==='completed'&&s.recording){
+    footer+=s.recordingUrl?('<a href="'+s.recordingUrl+'" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;">▶ Watch Recording</a>'):('<span style="font-size:0.85rem;color:var(--text-soft);">Recording coming soon</span>');
+  }else if(s.status==='upcoming'){
+    footer+='<button class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;" onclick="closeSessionDetail();openSessionModal(\''+s.id+'\')">Register for this Session</button>';
+  }
+  footer+='<button class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;" onclick="closeSessionDetail()">Close</button>';
+  document.getElementById('sessionDetailFooter').innerHTML=footer;
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeSessionDetail(){
+  var overlay=document.getElementById('sessionDetailOverlay');
+  overlay.classList.remove('open');
+  document.body.style.overflow='';
 }
 
 function openSessionModal(sessionId){
@@ -1727,6 +1790,8 @@ document.getElementById('navToggle').addEventListener('click',function(){
 window.navigateTo=navigateTo;
 window.showToast=showToast;
 window.openSessionModal=openSessionModal;
+window.openSessionDetail=openSessionDetail;
+window.closeSessionDetail=closeSessionDetail;
 window.openImageLightbox=openImageLightbox;
 window.filterByCountry=filterByCountry;
 
