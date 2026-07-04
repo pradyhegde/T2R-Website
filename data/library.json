@@ -14,19 +14,13 @@
     "fileUrl": "documents/Hecras.pdf"
   },
   {
-    "title": "Introduction to HEC-RAS> Flood Modelling",
-    "desc": "Never heard of flood modelling? No Problem. This guide starts from scratch and takes you all the way to understanding how to predict flood",
-    "branch": "Civil",
-    "type": "PDF",
-    "fileUrl": "documents/Hecras.pdf"
-  },
-  {
-    "title": "Soil Mechanics: A real Geotechnical Project Walkthrough",
+    "title": "Soil Mechanics: A real Geotechnical Project Walkthroug",
     "desc": "The ground beneath every building, bridge, and road is not just DIRT. The guide explains what soil really is, how and why it behaves.",
     "branch": "Civil",
-    "type": " "PDF",
+    "type": "PDF",
     "fileUrl": "documents/Soilmechanics.pdf"
   },
+
   {
     "title": "Python for Data Science — Crash Course Recording",
     "desc": "A 2-hour recording covering NumPy, Pandas, Matplotlib, and basic ML with scikit-learn.",
