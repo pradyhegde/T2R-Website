@@ -247,20 +247,8 @@
   .session-action-link { font-size:0.82rem; font-weight:700; color:var(--green); background:none; border:none; cursor:pointer; }
   .session-register-btn { font-size:0.82rem; font-weight:700; color:white; background:var(--green); padding:7px 14px; border-radius:7px; }
   .session-register-btn:hover { background:var(--green-dark); }
-  .session-detail-overlay { position:fixed; inset:0; background:rgba(15,29,20,0.72); z-index:2000; display:none; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
-  .session-detail-overlay.open { display:flex; }
-  .session-detail-box { background:white; border-radius:20px; max-width:680px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 30px 70px rgba(0,0,0,0.3); animation:detailPop .25s cubic-bezier(.22,.61,.36,1); position:relative; }
-  @keyframes detailPop { from { opacity:0; transform:scale(0.94) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
-  .session-detail-img { width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:20px 20px 0 0; display:block; }
-  .session-detail-body { padding:28px 30px 30px; }
-  .session-detail-body h2 { font-size:1.3rem; font-weight:800; margin-bottom:12px; letter-spacing:-0.02em; }
-  .session-detail-meta { display:flex; gap:14px; flex-wrap:wrap; font-size:0.82rem; color:var(--text-soft); margin-bottom:16px; }
-  .session-detail-desc { font-size:0.93rem; color:var(--text-soft); line-height:1.7; margin-bottom:20px; }
-  .session-detail-speaker { display:flex; align-items:center; gap:12px; padding:16px; background:var(--sage-2); border-radius:12px; margin-bottom:20px; }
-  .session-detail-speaker .info h5 { font-size:0.95rem; font-weight:700; margin-bottom:2px; }
-  .session-detail-speaker .info span { font-size:0.82rem; color:var(--text-soft); }
-  .session-detail-footer { display:flex; justify-content:space-between; align-items:center; padding-top:16px; border-top:1px solid var(--border); gap:12px; flex-wrap:wrap; }
-  .session-detail-close { position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; border:none; box-shadow:0 2px 8px rgba(0,0,0,0.2); z-index:1; }
+  #sessionDetailDialog { border:none; padding:0; border-radius:20px; max-width:680px; width:calc(100% - 40px); max-height:90vh; overflow-y:auto; box-shadow:0 30px 70px rgba(0,0,0,0.3); position:relative; }
+  #sessionDetailDialog::backdrop { background:rgba(15,29,20,0.75); backdrop-filter:blur(4px); }
   @media (max-width:900px) { #sessionGrid { grid-template-columns:repeat(2,1fr) !important; } }
   @media (max-width:600px) { #sessionGrid { grid-template-columns:1fr !important; } }
   .speaker-full-card { border:1px solid var(--border); border-radius:14px; padding:22px; background:white; transition:all .25s; }
@@ -619,9 +607,9 @@
 
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
 
-<div id="sessionDetailOverlay" style="position:fixed;inset:0;background:rgba(15,29,20,0.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);cursor:pointer;">
-  <div id="sessionDetailBox" style="background:white;border-radius:20px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.3);position:relative;cursor:default;"></div>
-</div>
+<dialog id="sessionDetailDialog">
+  <div id="sessionDetailBox"></div>
+</dialog>
 
 <div class="img-lightbox-overlay" id="imgLightboxOverlay">
   <div class="img-lightbox-close" id="imgLightboxClose">✕</div>
@@ -1567,9 +1555,9 @@ function openSessionDetail(sessionId){
   var s=null;
   for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){s=SESSIONS[i];break;}}
   if(!s)return;
-  var sdOverlay=document.getElementById('sessionDetailOverlay');
+  var dialog=document.getElementById('sessionDetailDialog');
   var sdBox=document.getElementById('sessionDetailBox');
-  if(!sdOverlay||!sdBox)return;
+  if(!dialog||!sdBox)return;
   var statusLabel=s.status==='completed'?'Completed':'Upcoming';
   var statusClass=s.status==='completed'?'completed':'upcoming';
   var guestBadge=s.guest?'<span class="sbadge guest" style="position:static;margin-left:4px;">Guest Lecture</span>':'';
@@ -1582,7 +1570,7 @@ function openSessionDetail(sessionId){
     actionBtn='<span style="font-size:0.85rem;color:var(--text-soft);">Recording coming soon</span>';
   }
   sdBox.innerHTML=
-    '<button id="sdCloseX" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:none;font-size:1.1rem;line-height:1;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);">✕</button>'
+    '<button id="sdCloseX" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:1px solid #ddd;font-size:1.1rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;">✕</button>'
    +'<img src="'+s.img+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px 20px 0 0;display:block;">'
    +'<div style="padding:28px 30px 30px;">'
    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"><span class="sbadge '+statusClass+'" style="position:static;">'+statusLabel+'</span>'+guestBadge+'<span class="session-branch-tag">'+s.branch+'</span></div>'
@@ -1591,22 +1579,18 @@ function openSessionDetail(sessionId){
    +'<div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--sage-2);border-radius:12px;margin-bottom:18px;"><div class="mini-avatar" style="width:44px;height:44px;font-size:0.95rem;flex-shrink:0;">'+initials(s.speaker)+'</div><div><div style="font-size:0.95rem;font-weight:700;">'+s.speaker+'</div><div style="font-size:0.82rem;color:var(--text-soft);">'+s.speakerRole+'</div></div></div>'
    +'<p style="font-size:0.93rem;color:var(--text-soft);line-height:1.75;margin-bottom:22px;">'+s.desc+'</p>'
    +'<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;">'+actionBtn
-   +'<button id="sdCloseBtn" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button>'
-   +'</div></div>';
-  sdOverlay.style.display='flex';
+   +'<button id="sdCloseBtn" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button></div></div>';
+  dialog.showModal();
   document.body.style.overflow='hidden';
-  var sdCloseX=document.getElementById('sdCloseX');
-  var sdCloseBtn=document.getElementById('sdCloseBtn');
-  var sdRegBtn=document.getElementById('sdRegisterBtn');
-  if(sdCloseX)sdCloseX.addEventListener('click',function(e){e.stopPropagation();closeSessionDetail();});
-  if(sdCloseBtn)sdCloseBtn.addEventListener('click',function(e){e.stopPropagation();closeSessionDetail();});
-  if(sdRegBtn)sdRegBtn.addEventListener('click',function(e){e.stopPropagation();closeSessionDetail();setTimeout(function(){openSessionModal(s.id);},50);});
+  document.getElementById('sdCloseX').addEventListener('click',function(){dialog.close();});
+  document.getElementById('sdCloseBtn').addEventListener('click',function(){dialog.close();});
+  var reg=document.getElementById('sdRegisterBtn');
+  if(reg)reg.addEventListener('click',function(){dialog.close();setTimeout(function(){openSessionModal(s.id);},80);});
 }
 
 function closeSessionDetail(){
-  var sdOverlay=document.getElementById('sessionDetailOverlay');
-  if(sdOverlay)sdOverlay.style.display='none';
-  document.body.style.overflow='';
+  var dialog=document.getElementById('sessionDetailDialog');
+  if(dialog&&dialog.open)dialog.close();
 }
 
 function closeSessionDetail(){
