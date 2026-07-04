@@ -14,25 +14,31 @@
     "fileUrl": "documents/Hecras.pdf"
   },
   {
-    "title": "Soil Mechanics: A real Geotechnical Project Walkthroug",
+    "title": "Soil Mechanics: A real Geotechnical Project Walkthrough",
     "desc": "The ground beneath every building, bridge, and road is not just DIRT. The guide explains what soil really is, how and why it behaves.",
     "branch": "Civil",
     "type": "PDF",
     "fileUrl": "documents/Soilmechanics.pdf"
   },
-
   {
-    "title": "Python for Data Science — Crash Course Recording",
-    "desc": "A 2-hour recording covering NumPy, Pandas, Matplotlib, and basic ML with scikit-learn.",
-    "branch": "Computer Science",
-    "type": "Recording",
-    "fileUrl": ""
+    "title": "Python for Engineers — 5 Real use Cases",
+    "desc": "Python is not just for computer science students. All engineers use it everyday to solve real problem faster.",
+    "branch": "All Engineering Branches",
+    "type": "PDF",
+    "fileUrl": "documents/python.pdf"
   },
   {
-    "title": "Arduino IoT Projects — Step-by-Step Tutorial",
-    "desc": "Build 5 real IoT projects with Arduino including temperature monitoring, smart irrigation, and home automation.",
-    "branch": "Electronics",
-    "type": "Tutorial",
-    "fileUrl": ""
+    "title": "Introduction to Finite Element Analysis (FEA)",
+    "desc": "How do engineers know a car door will survive a crash before building a single prototype, how do they design turbine blades etc.",
+    "branch": "Mechanical",
+    "type": "PDF",
+    "fileUrl": "documents/FEA.pdf"
+  },
+  {
+    "title": "How Solar Wind Hybrid Grids Work> Student Guide",
+    "desc": "India is building the world's largest renewable energy network. This guide explains from absolute basics.",
+    "branch": "Electrical",
+    "type": "PDF",
+    "fileUrl": "documents/solarwind.pdf"
   }
 ]
