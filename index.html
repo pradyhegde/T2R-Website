@@ -247,7 +247,7 @@
   .session-action-link { font-size:0.82rem; font-weight:700; color:var(--green); background:none; border:none; cursor:pointer; }
   .session-register-btn { font-size:0.82rem; font-weight:700; color:white; background:var(--green); padding:7px 14px; border-radius:7px; }
   .session-register-btn:hover { background:var(--green-dark); }
-  #sessionDetailDialog { border:none; padding:0; border-radius:20px; max-width:680px; width:calc(100% - 40px); max-height:90vh; overflow-y:auto; box-shadow:0 30px 70px rgba(0,0,0,0.3); position:relative; }
+  #sessionDetailDialog { border:none; padding:0; border-radius:20px; max-width:680px; width:calc(100% - 40px); max-height:90vh; overflow-y:auto; box-shadow:0 30px 70px rgba(0,0,0,0.3); position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); margin:0; }
   #sessionDetailDialog::backdrop { background:rgba(15,29,20,0.75); backdrop-filter:blur(4px); }
   @media (max-width:900px) { #sessionGrid { grid-template-columns:repeat(2,1fr) !important; } }
   @media (max-width:600px) { #sessionGrid { grid-template-columns:1fr !important; } }
