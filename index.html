@@ -619,8 +619,8 @@
 
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
 
-<div id="sessionDetailOverlay" style="position:fixed;inset:0;background:rgba(15,29,20,0.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);">
-  <div id="sessionDetailBox" style="background:white;border-radius:20px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.3);position:relative;"></div>
+<div id="sessionDetailOverlay" style="position:fixed;inset:0;background:rgba(15,29,20,0.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);cursor:pointer;">
+  <div id="sessionDetailBox" style="background:white;border-radius:20px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.3);position:relative;cursor:default;"></div>
 </div>
 
 <div class="img-lightbox-overlay" id="imgLightboxOverlay">
@@ -1593,6 +1593,7 @@ function openSessionDetail(sessionId){
    +'<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;">'+actionBtn
    +'<button id="sdCloseBtn" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button>'
    +'</div></div>';
+  sdBox.addEventListener('click',function(e){e.stopPropagation();});
   sdOverlay.style.display='flex';
   document.body.style.overflow='hidden';
   document.getElementById('sdCloseX').onclick=function(){closeSessionDetail();};
@@ -1962,4 +1963,3 @@ GOOGLE_FORM_SPEAKER config objects.
 
 </body>
 </html>
-
