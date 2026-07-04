@@ -619,21 +619,6 @@
 
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
 
-<div class="session-detail-overlay" id="sessionDetailOverlay">
-  <div class="session-detail-box" id="sessionDetailBox">
-    <button class="session-detail-close" id="sessionDetailClose">✕</button>
-    <img src="" alt="" id="sessionDetailImg" class="session-detail-img">
-    <div class="session-detail-body">
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;" id="sessionDetailBadges"></div>
-      <h2 id="sessionDetailTitle"></h2>
-      <div class="session-detail-meta" id="sessionDetailMeta"></div>
-      <div class="session-detail-speaker" id="sessionDetailSpeaker"></div>
-      <p class="session-detail-desc" id="sessionDetailDesc"></p>
-      <div class="session-detail-footer" id="sessionDetailFooter"></div>
-    </div>
-  </div>
-</div>
-
 <div class="img-lightbox-overlay" id="imgLightboxOverlay">
   <div class="img-lightbox-close" id="imgLightboxClose">✕</div>
   <div class="img-lightbox-content" id="imgLightboxContent">
@@ -1578,27 +1563,44 @@ function openSessionDetail(sessionId){
   var s=null;
   for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){s=SESSIONS[i];break;}}
   if(!s)return;
-  var overlay=document.getElementById('sessionDetailOverlay');
-  document.getElementById('sessionDetailImg').src=s.img;
-  document.getElementById('sessionDetailImg').alt=s.title;
-  document.getElementById('sessionDetailTitle').textContent=s.title;
-  var badges='<span class="sbadge '+(s.status==='completed'?'completed':'upcoming')+'" style="position:relative;top:0;left:0;">'+(s.status==='completed'?'Completed':'Upcoming')+'</span>';
-  if(s.guest)badges+='<span class="sbadge guest" style="position:relative;top:0;left:0;">Guest Lecture</span>';
-  badges+='<span class="session-branch-tag">'+s.branch+'</span>';
-  document.getElementById('sessionDetailBadges').innerHTML=badges;
-  document.getElementById('sessionDetailMeta').innerHTML='<span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span>';
-  document.getElementById('sessionDetailSpeaker').innerHTML='<div class="mini-avatar" style="width:44px;height:44px;font-size:0.95rem;flex-shrink:0;">'+initials(s.speaker)+'</div><div class="info"><h5>'+s.speaker+'</h5><span>'+s.speakerRole+'</span></div>';
-  document.getElementById('sessionDetailDesc').textContent=s.desc;
-  var footer='';
+  var statusLabel=s.status==='completed'?'Completed':'Upcoming';
+  var statusClass=s.status==='completed'?'completed':'upcoming';
+  var guestBadge=s.guest?'<span class="sbadge guest" style="position:static;">Guest Lecture</span>':'';
+  var actionBtn='';
   if(s.status==='completed'&&s.recording){
-    footer+=s.recordingUrl?('<a href="'+s.recordingUrl+'" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;">▶ Watch Recording</a>'):('<span style="font-size:0.85rem;color:var(--text-soft);">Recording coming soon</span>');
+    actionBtn=s.recordingUrl?('<a href="'+s.recordingUrl+'" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;">▶ Watch Recording</a>'):'<span style="font-size:0.85rem;color:var(--text-soft);">Recording coming soon</span>';
   }else if(s.status==='upcoming'){
-    footer+='<button class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;" onclick="closeSessionDetail();openSessionModal(\''+s.id+'\')">Register for this Session</button>';
+    actionBtn='<button class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;" id="detailRegisterBtn">Register</button>';
   }
-  footer+='<button class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;" onclick="closeSessionDetail()">Close</button>';
-  document.getElementById('sessionDetailFooter').innerHTML=footer;
-  overlay.classList.add('open');
+  var html='<div style="position:fixed;inset:0;background:rgba(15,29,20,0.75);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);" id="sessionDetailOverlayInner">'
+    +'<div style="background:white;border-radius:20px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.3);animation:detailPop .25s cubic-bezier(.22,.61,.36,1);position:relative;" onclick="event.stopPropagation();">'
+    +'<button onclick="closeSessionDetail()" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:none;font-size:1rem;cursor:pointer;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;">✕</button>'
+    +'<img src="'+s.img+'" alt="'+escAttr(s.title)+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px 20px 0 0;display:block;">'
+    +'<div style="padding:28px 30px 30px;">'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"><span class="sbadge '+statusClass+'" style="position:static;">'+statusLabel+'</span>'+guestBadge+'<span class="session-branch-tag">'+s.branch+'</span></div>'
+    +'<h2 style="font-size:1.3rem;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;font-family:\'Plus Jakarta Sans\',sans-serif;">'+s.title+'</h2>'
+    +'<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem;color:var(--text-soft);margin-bottom:16px;"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div>'
+    +'<div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--sage-2);border-radius:12px;margin-bottom:18px;"><div class="mini-avatar" style="width:44px;height:44px;font-size:0.95rem;flex-shrink:0;">'+initials(s.speaker)+'</div><div><div style="font-size:0.95rem;font-weight:700;">'+s.speaker+'</div><div style="font-size:0.82rem;color:var(--text-soft);">'+s.speakerRole+'</div></div></div>'
+    +'<p style="font-size:0.93rem;color:var(--text-soft);line-height:1.75;margin-bottom:22px;">'+s.desc+'</p>'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;">'+actionBtn
+    +'<button onclick="closeSessionDetail()" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button></div>'
+    +'</div></div></div>';
+  var container=document.createElement('div');
+  container.id='sessionDetailContainer';
+  container.innerHTML=html;
+  document.body.appendChild(container);
   document.body.style.overflow='hidden';
+  document.getElementById('sessionDetailOverlayInner').addEventListener('click',function(e){
+    if(e.target===this)closeSessionDetail();
+  });
+  var regBtn=document.getElementById('detailRegisterBtn');
+  if(regBtn)regBtn.addEventListener('click',function(){closeSessionDetail();openSessionModal(s.id);});
+}
+
+function closeSessionDetail(){
+  var c=document.getElementById('sessionDetailContainer');
+  if(c)c.remove();
+  document.body.style.overflow='';
 }
 
 function closeSessionDetail(){
