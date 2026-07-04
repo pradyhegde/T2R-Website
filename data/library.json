@@ -1,8 +1,8 @@
 [
   {
-    "title": "Introduction to AutoCAD for Civil Engineers",
-    "desc": "A beginner-friendly guide covering 2D drafting, layer management, and creating construction drawings in AutoCAD.",
-    "branch": "Civil",
+    "title": "Introduction to AutoCAD for Engineers",
+    "desc": "The guide explains what AutoCAD is, why every engineer needs it, and how you can learn it from scratch - for free.",
+    "branch": "Civil/Mechanical",
     "type": "PDF",
     "fileUrl": "documents/autocad-guide.pdf"
   },
