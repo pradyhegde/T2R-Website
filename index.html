@@ -619,6 +619,10 @@
 
 <div id="sessionModalOverlay" class="role-overlay" style="display:none;"><div class="role-box" style="max-width:440px; text-align:left;" id="sessionModalContent"></div></div>
 
+<div id="sessionDetailOverlay" style="position:fixed;inset:0;background:rgba(15,29,20,0.75);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);">
+  <div id="sessionDetailBox" style="background:white;border-radius:20px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.3);position:relative;"></div>
+</div>
+
 <div class="img-lightbox-overlay" id="imgLightboxOverlay">
   <div class="img-lightbox-close" id="imgLightboxClose">✕</div>
   <div class="img-lightbox-content" id="imgLightboxContent">
@@ -1563,85 +1567,43 @@ function openSessionDetail(sessionId){
   var s=null;
   for(var i=0;i<SESSIONS.length;i++){if(SESSIONS[i].id===sessionId){s=SESSIONS[i];break;}}
   if(!s)return;
-
-  var existing=document.getElementById('sessionDetailContainer');
-  if(existing)existing.remove();
-
-  var overlay=document.createElement('div');
-  overlay.id='sessionDetailContainer';
-  overlay.style.cssText='position:fixed;inset:0;background:rgba(15,29,20,0.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);';
-
+  var sdOverlay=document.getElementById('sessionDetailOverlay');
+  var sdBox=document.getElementById('sessionDetailBox');
+  if(!sdOverlay||!sdBox)return;
   var statusLabel=s.status==='completed'?'Completed':'Upcoming';
   var statusClass=s.status==='completed'?'completed':'upcoming';
   var guestBadge=s.guest?'<span class="sbadge guest" style="position:static;margin-left:4px;">Guest Lecture</span>':'';
-
-  var box=document.createElement('div');
-  box.style.cssText='background:white;border-radius:20px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,0.3);position:relative;animation:detailPop .25s cubic-bezier(.22,.61,.36,1);';
-  box.innerHTML=
-    '<img src="'+s.img+'" alt="'+escAttr(s.title)+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px 20px 0 0;display:block;">'
-   +'<div style="padding:28px 30px 30px;">'
-   +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">'
-   +'<span class="sbadge '+statusClass+'" style="position:static;">'+statusLabel+'</span>'+guestBadge
-   +'<span class="session-branch-tag">'+s.branch+'</span></div>'
-   +'<h2 style="font-size:1.3rem;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;font-family:\'Plus Jakarta Sans\',sans-serif;">'+s.title+'</h2>'
-   +'<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem;color:var(--text-soft);margin-bottom:16px;">'
-   +'<span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div>'
-   +'<div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--sage-2);border-radius:12px;margin-bottom:18px;">'
-   +'<div class="mini-avatar" style="width:44px;height:44px;font-size:0.95rem;flex-shrink:0;">'+initials(s.speaker)+'</div>'
-   +'<div><div style="font-size:0.95rem;font-weight:700;">'+s.speaker+'</div>'
-   +'<div style="font-size:0.82rem;color:var(--text-soft);">'+s.speakerRole+'</div></div></div>'
-   +'<p style="font-size:0.93rem;color:var(--text-soft);line-height:1.75;margin-bottom:22px;">'+s.desc+'</p>'
-   +'<div id="sdFooter" style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;"></div>'
-   +'</div>';
-
-  // Close X button
-  var closeX=document.createElement('button');
-  closeX.style.cssText='position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:none;font-size:1rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
-  closeX.textContent='✕';
-  box.appendChild(closeX);
-
-  overlay.appendChild(box);
-  document.body.appendChild(overlay);
-  document.body.style.overflow='hidden';
-
-  // Footer buttons
-  var footer=box.querySelector('#sdFooter');
+  var actionBtn='';
   if(s.status==='upcoming'){
-    var regBtn=document.createElement('button');
-    regBtn.className='btn btn-primary';
-    regBtn.style.cssText='font-size:0.88rem;padding:11px 20px;';
-    regBtn.textContent='Register for this Session';
-    regBtn.addEventListener('click',function(){closeSessionDetail();openSessionModal(s.id);});
-    footer.appendChild(regBtn);
+    actionBtn='<button id="sdRegisterBtn" class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;">Register for this Session</button>';
   }else if(s.status==='completed'&&s.recording&&s.recordingUrl){
-    var watchBtn=document.createElement('a');
-    watchBtn.href=s.recordingUrl;watchBtn.target='_blank';watchBtn.rel='noopener';
-    watchBtn.className='btn btn-primary';
-    watchBtn.style.cssText='font-size:0.88rem;padding:11px 20px;';
-    watchBtn.textContent='▶ Watch Recording';
-    footer.appendChild(watchBtn);
-  }else if(s.status==='completed'){
-    var soon=document.createElement('span');
-    soon.style.cssText='font-size:0.85rem;color:var(--text-soft);';
-    soon.textContent='Recording coming soon';
-    footer.appendChild(soon);
+    actionBtn='<a href="'+s.recordingUrl+'" target="_blank" rel="noopener" class="btn btn-primary" style="font-size:0.88rem;padding:11px 20px;">▶ Watch Recording</a>';
+  }else{
+    actionBtn='<span style="font-size:0.85rem;color:var(--text-soft);">Recording coming soon</span>';
   }
-  var closeBtn=document.createElement('button');
-  closeBtn.className='btn btn-secondary';
-  closeBtn.style.cssText='font-size:0.85rem;padding:10px 18px;';
-  closeBtn.textContent='Close';
-  footer.appendChild(closeBtn);
-
-  // All close handlers
-  function doClose(){closeSessionDetail();}
-  closeX.addEventListener('click',doClose);
-  closeBtn.addEventListener('click',doClose);
-  overlay.addEventListener('click',function(e){if(e.target===overlay)doClose();});
+  sdBox.innerHTML=
+    '<button id="sdCloseX" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:none;font-size:1rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);">✕</button>'
+   +'<img src="'+s.img+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px 20px 0 0;display:block;">'
+   +'<div style="padding:28px 30px 30px;">'
+   +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"><span class="sbadge '+statusClass+'" style="position:static;">'+statusLabel+'</span>'+guestBadge+'<span class="session-branch-tag">'+s.branch+'</span></div>'
+   +'<h2 style="font-size:1.3rem;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em;font-family:Plus Jakarta Sans,sans-serif;">'+s.title+'</h2>'
+   +'<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem;color:var(--text-soft);margin-bottom:16px;"><span>📅 '+formatDate(s.date)+'</span><span>🕐 '+s.time+'</span><span>⏱ '+s.duration+'</span></div>'
+   +'<div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--sage-2);border-radius:12px;margin-bottom:18px;"><div class="mini-avatar" style="width:44px;height:44px;font-size:0.95rem;flex-shrink:0;">'+initials(s.speaker)+'</div><div><div style="font-size:0.95rem;font-weight:700;">'+s.speaker+'</div><div style="font-size:0.82rem;color:var(--text-soft);">'+s.speakerRole+'</div></div></div>'
+   +'<p style="font-size:0.93rem;color:var(--text-soft);line-height:1.75;margin-bottom:22px;">'+s.desc+'</p>'
+   +'<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;">'+actionBtn
+   +'<button id="sdCloseBtn" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button>'
+   +'</div></div>';
+  sdOverlay.style.display='flex';
+  document.body.style.overflow='hidden';
+  document.getElementById('sdCloseX').onclick=function(){closeSessionDetail();};
+  document.getElementById('sdCloseBtn').onclick=function(){closeSessionDetail();};
+  var regBtn=document.getElementById('sdRegisterBtn');
+  if(regBtn)regBtn.onclick=function(){closeSessionDetail();openSessionModal(s.id);};
 }
 
 function closeSessionDetail(){
-  var c=document.getElementById('sessionDetailContainer');
-  if(c)c.remove();
+  var sdOverlay=document.getElementById('sessionDetailOverlay');
+  if(sdOverlay)sdOverlay.style.display='none';
   document.body.style.overflow='';
 }
 
