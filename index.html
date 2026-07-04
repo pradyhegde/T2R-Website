@@ -1630,7 +1630,6 @@ function openSessionDetail(sessionId){
    +'<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;">'+actionBtn
    +'<button id="sdCloseBtn" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button></div></div>';
   dialog.showModal();
-  document.body.style.overflow='hidden';
   document.getElementById('sdCloseX').addEventListener('click',function(){dialog.close();});
   document.getElementById('sdCloseBtn').addEventListener('click',function(){dialog.close();});
   var reg=document.getElementById('sdRegisterBtn');
@@ -1640,6 +1639,7 @@ function openSessionDetail(sessionId){
 function closeSessionDetail(){
   var dialog=document.getElementById('sessionDetailDialog');
   if(dialog&&dialog.open)dialog.close();
+  document.body.style.overflow='';
 }
 
 function closeSessionDetail(){
