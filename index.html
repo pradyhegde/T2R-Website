@@ -314,6 +314,9 @@
     .journey-step h4 { font-size:1rem; }
     .journey-step p { font-size:0.84rem; }
   }
+  .feature-cards-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; max-width:1200px; margin:0 auto 50px; }
+  @media (max-width:900px) { .feature-cards-grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:500px) { .feature-cards-grid { grid-template-columns:1fr 1fr; gap:10px; } .feature-cards-grid h4 { font-size:0.88rem; } }
   .how-it-works-grid { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:start; gap:0; }
   @media (max-width:900px) {
     .how-it-works-grid { grid-template-columns:1fr; gap:14px; }
@@ -413,7 +416,7 @@
     </div>
 
     <!-- 4 Feature Cards -->
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; max-width:1200px; margin:0 auto 50px;" class="reveal">
+    <div class="feature-cards-grid reveal">
       <div style="background:var(--sage-2); border:1px solid var(--border); border-radius:14px; padding:22px;">
         <div style="width:40px; height:40px; border-radius:10px; background:var(--green); display:flex; align-items:center; justify-content:center; font-size:1.1rem; margin-bottom:14px;">🎥</div>
         <h4 style="font-size:0.95rem; font-weight:700; margin-bottom:6px;">Expert-led Sessions</h4>
