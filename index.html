@@ -1582,7 +1582,7 @@ function openSessionDetail(sessionId){
     actionBtn='<span style="font-size:0.85rem;color:var(--text-soft);">Recording coming soon</span>';
   }
   sdBox.innerHTML=
-    '<button id="sdCloseX" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:none;font-size:1rem;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);">✕</button>'
+    '<button id="sdCloseX" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.95);border:none;font-size:1.1rem;line-height:1;cursor:pointer;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.2);">✕</button>'
    +'<img src="'+s.img+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:20px 20px 0 0;display:block;">'
    +'<div style="padding:28px 30px 30px;">'
    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"><span class="sbadge '+statusClass+'" style="position:static;">'+statusLabel+'</span>'+guestBadge+'<span class="session-branch-tag">'+s.branch+'</span></div>'
@@ -1593,13 +1593,14 @@ function openSessionDetail(sessionId){
    +'<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid var(--border);gap:12px;flex-wrap:wrap;">'+actionBtn
    +'<button id="sdCloseBtn" class="btn btn-secondary" style="font-size:0.85rem;padding:10px 18px;">Close</button>'
    +'</div></div>';
-  sdBox.addEventListener('click',function(e){e.stopPropagation();});
   sdOverlay.style.display='flex';
   document.body.style.overflow='hidden';
-  document.getElementById('sdCloseX').onclick=function(){closeSessionDetail();};
-  document.getElementById('sdCloseBtn').onclick=function(){closeSessionDetail();};
-  var regBtn=document.getElementById('sdRegisterBtn');
-  if(regBtn)regBtn.onclick=function(){closeSessionDetail();openSessionModal(s.id);};
+  var sdCloseX=document.getElementById('sdCloseX');
+  var sdCloseBtn=document.getElementById('sdCloseBtn');
+  var sdRegBtn=document.getElementById('sdRegisterBtn');
+  if(sdCloseX)sdCloseX.addEventListener('click',function(e){e.stopPropagation();closeSessionDetail();});
+  if(sdCloseBtn)sdCloseBtn.addEventListener('click',function(e){e.stopPropagation();closeSessionDetail();});
+  if(sdRegBtn)sdRegBtn.addEventListener('click',function(e){e.stopPropagation();closeSessionDetail();setTimeout(function(){openSessionModal(s.id);},50);});
 }
 
 function closeSessionDetail(){
