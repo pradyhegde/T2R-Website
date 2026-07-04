@@ -7,18 +7,18 @@
     "fileUrl": "documents/autocad-guide.pdf"
   },
   {
-    "title": "GATE Preparation: Electrical Engineering Formula Sheet",
-    "desc": "Quick-reference formula sheet covering Circuit Theory, Power Systems, Control Systems, and Electromagnetics for GATE EE.",
-    "branch": "Electrical",
+    "title": "Introduction to HEC-RAS> Flood Modelling",
+    "desc": "Never heard of flood modelling? No Problem. This guide starts from scratch and takes you all the way to understanding how to predict flood",
+    "branch": "Civil",
     "type": "PDF",
-    "fileUrl": "documents/gate-ee-formulas.pdf"
+    "fileUrl": "documents/Hecras.pdf"
   },
   {
-    "title": "Resume Building Workshop Notes",
-    "desc": "Learn how to craft an ATS-friendly resume that gets noticed by recruiters at Indian IT and core companies.",
-    "branch": "General",
-    "type": "Article",
-    "fileUrl": "documents/resume-workshop-notes.docx"
+    "title": "Soil Mechanics: A real Geotechnical Project Walkthrough",
+    "desc": "The ground beneath every building, bridge, and road is not just DIRT. The guide explains what soil really is, how and why it behaves.",
+    "branch": "Civil",
+    "type": " "PDF",
+    "fileUrl": "documents/Soilmechanics.pdf"
   },
   {
     "title": "Python for Data Science — Crash Course Recording",
